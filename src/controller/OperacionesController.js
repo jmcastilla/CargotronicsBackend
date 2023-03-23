@@ -15,6 +15,11 @@ var gmAPI = new GoogleMapsAPI(publicConfig);
 
 // FUNCION QUE RETORNA EL LISTADO DE CONTRATOS HISTORICOS ENTRE UN RANGO DE FECHA
 controller.list_historicos = async (req, res) => {
+    try{
+
+    }catch(err){
+
+    }
     var log = req.session.loggedin;
     if (log == true) {
         var desde=req.body.desde;
@@ -39,6 +44,11 @@ controller.list_historicos = async (req, res) => {
 
 // FUNCION QUE RETORNA EL LISTADO DE TRAYECTOS
 controller.get_eventos = async (req, res) => {
+    try{
+
+    }catch(err){
+
+    }
     var log = req.session.loggedin;
     if (log == true) {
         var consulta= "SELECT ID_Evento, Descripcion FROM Valitronics_eventos WHERE FK_Proyecto="+req.session.proyecto;
@@ -51,6 +61,11 @@ controller.get_eventos = async (req, res) => {
 
 // FUNCION QUE RETORNA EL LISTADO DE TRAYECTOS
 controller.get_trayectos = async (req, res) => {
+    try{
+
+    }catch(err){
+
+    }
     var log = req.session.loggedin;
     if (log == true) {
         var consulta= "SELECT * FROM Trayectos";
@@ -64,9 +79,14 @@ controller.get_trayectos = async (req, res) => {
 // FUNCION QUE ACTUALIZAR EL TRAYECTO EN EL CONTRATO
 controller.update_contratotrayectos = async (req, res) => {
     try{
-        var consulta = "UPDATE LokcontractID SET FKTrayecto='"+req.body.Trayecto+"' WHERE ContractID='"+req.body.Contrato+"'";
-        console.log(consulta);
-        res.json({success : await sqlconfig.query(consulta)});
+        var log = req.session.loggedin;
+        if (log == true) {
+            var consulta = "UPDATE LokcontractID SET FKTrayecto='"+req.body.Trayecto+"' WHERE ContractID='"+req.body.Contrato+"'";
+            console.log(consulta);
+            res.json({success : await sqlconfig.query(consulta)});
+        }else{
+            res.json({success : false});
+        }
     }catch(error){
         res.json({success : false});
     }
@@ -74,127 +94,151 @@ controller.update_contratotrayectos = async (req, res) => {
 
 // FUNCION QUE RETORNA EL LISTADO DE CONTRATOS ACTIVOS, GRILLA DE TRAFICO
 controller.get_contratostrafico = async (req, res) => {
-    var log = req.session.loggedin;
-    if (log == true) {
-        var consulta= "SELECT ContractID, FKLokDeviceID, e.NombreEmpresa, c.PlacaTruck, '"+req.session.username+"' as username, CONVERT(varchar,DATEADD(MINUTE,1,c.FechaHoraInicio),20) as fecha, CONCAT(c.LastMsgLat,',',c.LastMsgLong) as pos, ISNULL(c.FKTrayecto, 0) as trayecto, r.DescripcionRuta, t.DescripcionTrayecto FROM LokcontractID as c "+
-        "LEFT JOIN ICEmpresa as e ON e.IdEmpresa = c.FKICEmpresa "+
-        "LEFT JOIN ICRutas as r ON r.IdRuta = c.FKICRutas "+
-        "LEFT JOIN Trayectos as t ON c.FKTrayecto =  t.IDTrayecto "+
-        "WHERE c.Active=1 AND c.FKLokProyecto="+req.session.proyecto;
-        console.log(consulta);
-        let resultado=await sqlconfig.query(consulta);
-        res.json({success : true, data : resultado.recordsets[0]});
-    }else{
+    try{
+        var log = req.session.loggedin;
+        if (log == true) {
+            var consulta= "SELECT ContractID, FKLokDeviceID, e.NombreEmpresa, c.PlacaTruck, '"+req.session.username+"' as username, CONVERT(varchar,DATEADD(MINUTE,1,c.FechaHoraInicio),20) as fecha, CONCAT(c.LastMsgLat,',',c.LastMsgLong) as pos, ISNULL(c.FKTrayecto, 0) as trayecto, r.DescripcionRuta, t.DescripcionTrayecto FROM LokcontractID as c "+
+            "LEFT JOIN ICEmpresa as e ON e.IdEmpresa = c.FKICEmpresa "+
+            "LEFT JOIN ICRutas as r ON r.IdRuta = c.FKICRutas "+
+            "LEFT JOIN Trayectos as t ON c.FKTrayecto =  t.IDTrayecto "+
+            "WHERE c.Active=1 AND c.FKLokProyecto="+req.session.proyecto;
+            console.log(consulta);
+            let resultado=await sqlconfig.query(consulta);
+            res.json({success : true, data : resultado.recordsets[0]});
+        }else{
+            res.json({success : false});
+        }
+    }catch(err){
         res.json({success : false});
     }
+
 }
 
 //FUNCION QUE GUARDA O ACTUALIZA EL TRAYECTO
 controller.save_trayecto = async (req, res) => {
-    if(req.body.ID == -1){
-        var consulta = "INSERT INTO Trayectos (DescripcionTrayecto, Origen, NombreOrigen, Destino, NombreDestino, WayPoints, Tolerancia, DistanciaOrigen, Polyline) VALUES ("+
-        "'"+req.body.descripciontrayecto+"','"+req.body.origen+"','"+req.body.nombreorigen+"','"+req.body.destino+"','"+req.body.nombredestino+"','"+
-        req.body.waypoints+"',"+req.body.tolerancia+","+req.body.distanciaorigen+",'"+req.body.poly +"')";
-        console.log(consulta);
-        res.json({success : true, data : await sqlconfig.query(consulta)});
-    }else{
-        try{
-            var consulta = "UPDATE Trayectos SET DescripcionTrayecto='"+req.body.descripciontrayecto+"', Origen='"+req.body.origen+"', NombreOrigen='"+req.body.nombreorigen+"', Destino='"+req.body.destino+"', NombreDestino='"+req.body.nombredestino+"', WayPoints='"+req.body.waypoints+"', Tolerancia="+req.body.tolerancia+", DistanciaOrigen="+req.body.distanciaorigen+", Polyline='"+req.body.poly+"' WHERE IDTrayecto="+req.body.ID;
-            console.log(consulta);
-            res.json({success : await sqlconfig.query(consulta)});
+    try{
+        var log = req.session.loggedin;
+        if (log == true) {
+            if(req.body.ID == -1){
+                var consulta = "INSERT INTO Trayectos (DescripcionTrayecto, Origen, NombreOrigen, Destino, NombreDestino, WayPoints, Tolerancia, DistanciaOrigen, Polyline) VALUES ("+
+                "'"+req.body.descripciontrayecto+"','"+req.body.origen+"','"+req.body.nombreorigen+"','"+req.body.destino+"','"+req.body.nombredestino+"','"+
+                req.body.waypoints+"',"+req.body.tolerancia+","+req.body.distanciaorigen+",'"+req.body.poly +"')";
+                console.log(consulta);
+                res.json({success : true, data : await sqlconfig.query(consulta)});
+            }else{
+                try{
+                    var consulta = "UPDATE Trayectos SET DescripcionTrayecto='"+req.body.descripciontrayecto+"', Origen='"+req.body.origen+"', NombreOrigen='"+req.body.nombreorigen+"', Destino='"+req.body.destino+"', NombreDestino='"+req.body.nombredestino+"', WayPoints='"+req.body.waypoints+"', Tolerancia="+req.body.tolerancia+", DistanciaOrigen="+req.body.distanciaorigen+", Polyline='"+req.body.poly+"' WHERE IDTrayecto="+req.body.ID;
+                    console.log(consulta);
+                    res.json({success : await sqlconfig.query(consulta)});
 
-        }catch(error){
+                }catch(error){
+                    res.json({success : false});
+                }
+            }
+        }else{
             res.json({success : false});
         }
-
+    }catch(err){
+        res.json({success : false});
     }
+
 }
 
 // FUNCION QUE RETORNA LA POLILINEA DE ACUERDO DE UN ORIGEN Y UN DESTINO
 controller.get_poly = async (req, res) => {
-    var log = req.session.loggedin;
-    if (log == true) {
-        var origen=req.body.origen;
-        var destino=req.body.destino;
-        var obj = {
-            "origin": origen,
-            "destination": destino,
-            "travelMode": "DRIVING"
-        }
+    try{
+        var log = req.session.loggedin;
+        if (log == true) {
+            var origen=req.body.origen;
+            var destino=req.body.destino;
+            var obj = {
+                "origin": origen,
+                "destination": destino,
+                "travelMode": "DRIVING"
+            }
 
-        gmAPI.directions(obj, function(err, result){
-          var path = result.routes[0];
-          var polyline = path.overview_polyline.points;
-          res.json({data : polyline});
-        });
-    }else{
+            gmAPI.directions(obj, function(err, result){
+              var path = result.routes[0];
+              var polyline = path.overview_polyline.points;
+              res.json({success : true, data : polyline});
+            });
+        }else{
+            res.json({success : false});
+        }
+    }catch(err){
         res.json({success : false});
     }
+
 }
 
 // FUNCION QUE RETORNA SI SE ENCUENTRA EN LA RUTA
 controller.get_find2 = async (req, res) => {
-    var id=parseInt(req.body.ID);
-    var latnow=req.body.latitud;
-    var lngnow=req.body.longitud;
-    var consulta= "SELECT * FROM Trayectos WHERE IDTrayecto="+id;
-    console.log(consulta);
-    let resultado=await sqlconfig.query(consulta);
-    let trayecto = resultado.recordset[0];
-    console.log(trayecto)
-    var posOrigen = trayecto.Origen.split(",");
-    var posDestino = trayecto.Destino.split(",");
-    var kmrecorrido=calcularDistancia(posOrigen[0], posOrigen[1], latnow, lngnow);
-    console.log(kmrecorrido);
-    var listado=[];
-    var obj;
-    var polylineaArray = trayecto.Polyline.split("%|%");
-    console.log(polylineaArray.length);
-    var polyseleccionada=polylineaArray.length-1;
-    if(trayecto.WayPoints != ""){
+    try{
+        var id=parseInt(req.body.ID);
+        var latnow=req.body.latitud;
+        var lngnow=req.body.longitud;
+        var consulta= "SELECT * FROM Trayectos WHERE IDTrayecto="+id;
+        console.log(consulta);
+        let resultado=await sqlconfig.query(consulta);
+        let trayecto = resultado.recordset[0];
+        console.log(trayecto)
+        var posOrigen = trayecto.Origen.split(",");
+        var posDestino = trayecto.Destino.split(",");
+        var kmrecorrido=calcularDistancia(posOrigen[0], posOrigen[1], latnow, lngnow);
+        console.log(kmrecorrido);
+        var listado=[];
+        var obj;
+        var polylineaArray = trayecto.Polyline.split("%|%");
+        console.log(polylineaArray.length);
+        var polyseleccionada=polylineaArray.length-1;
+        if(trayecto.WayPoints != ""){
 
-        var wp = trayecto.WayPoints.split("|");
-        var puntopenultimo=wp[wp.length-1].split(",");
-         obj = {
-            "origin": puntopenultimo[0]+","+puntopenultimo[1],
-            "destination": trayecto.Destino,
-            "travelMode": "DRIVING"
-        }
-        for(var i =0; i< wp.length; i++){
-            var punto = wp[i].split(",");
-            if(kmrecorrido <= parseFloat(punto[2]) ){
-                if(i == 0){
-                    obj = {
-                        "origin": trayecto.Origen,
-                        "destination": punto[0]+","+punto[1],
-                        "travelMode": "DRIVING"
-                    }
-                    polyseleccionada=i;
-                }else{
-                  var puntoOrigen = wp[i-1].split(",");
-                  obj = {
-                      "origin": puntoOrigen[0]+","+puntoOrigen[1],
-                      "destination": punto[0]+","+punto[1],
-                      "travelMode": "DRIVING"
-                  }
-                  polyseleccionada=i;
-                }
-                break;
+            var wp = trayecto.WayPoints.split("|");
+            var puntopenultimo=wp[wp.length-1].split(",");
+             obj = {
+                "origin": puntopenultimo[0]+","+puntopenultimo[1],
+                "destination": trayecto.Destino,
+                "travelMode": "DRIVING"
             }
+            for(var i =0; i< wp.length; i++){
+                var punto = wp[i].split(",");
+                if(kmrecorrido <= parseFloat(punto[2]) ){
+                    if(i == 0){
+                        obj = {
+                            "origin": trayecto.Origen,
+                            "destination": punto[0]+","+punto[1],
+                            "travelMode": "DRIVING"
+                        }
+                        polyseleccionada=i;
+                    }else{
+                      var puntoOrigen = wp[i-1].split(",");
+                      obj = {
+                          "origin": puntoOrigen[0]+","+puntoOrigen[1],
+                          "destination": punto[0]+","+punto[1],
+                          "travelMode": "DRIVING"
+                      }
+                      polyseleccionada=i;
+                    }
+                    break;
+                }
+            }
+        }else{
+            polyseleccionada=0;
         }
-    }else{
-        polyseleccionada=0;
+
+        let response =  Poly.PolyUtil.isLocationOnEdge(
+          {lat: latnow, lng: lngnow}, // point object {lat, lng}
+          decodePolyline(polylineaArray[polyseleccionada]),
+          trayecto.Tolerancia,
+          true
+        );
+
+        console.log(response);
+        res.json({success:true, data : response});
+    }catch(err){
+        res.json({success:false});
     }
 
-    let response =  Poly.PolyUtil.isLocationOnEdge(
-      {lat: latnow, lng: lngnow}, // point object {lat, lng}
-      decodePolyline(polylineaArray[polyseleccionada]),
-      trayecto.Tolerancia,
-      true
-    );
-
-    console.log(response);
-    res.json({data : response});
 }
 
 // FUNCION PARA CONVERTIR GRADOS A RADIANES
