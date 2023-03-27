@@ -16,64 +16,65 @@ var gmAPI = new GoogleMapsAPI(publicConfig);
 // FUNCION QUE RETORNA EL LISTADO DE CONTRATOS HISTORICOS ENTRE UN RANGO DE FECHA
 controller.list_historicos = async (req, res) => {
     try{
-
-    }catch(err){
-
-    }
-    var log = req.session.loggedin;
-    if (log == true) {
-        var desde=req.body.desde;
-        var hasta=req.body.hasta;
-        var placa=req.body.placa;
-        var empresa=req.body.empresa;
-        var consulta= "SELECT ContractID, FKLokDeviceID, e.NombreEmpresa, c.PlacaTruck, '"+req.session.username+"' as username, CONVERT(varchar,DATEADD(MINUTE,1,c.FechaHoraInicio),20) as fecha, CONCAT(c.LastMsgLat,',',c.LastMsgLong) as pos, ISNULL(c.FKTrayecto, 0) as trayecto, r.DescripcionRuta, t.DescripcionTrayecto FROM LokcontractID as c "+
-        "LEFT JOIN ICEmpresa as e ON e.IdEmpresa = c.FKICEmpresa "+
-        "LEFT JOIN ICRutas as r ON r.IdRuta = c.FKICRutas "+
-        "LEFT JOIN Trayectos as t ON c.FKTrayecto =  t.IDTrayecto "+
-        "WHERE c.FKLokProyecto="+req.session.proyecto +" AND c.FechaHoraFin BETWEEN '"+desde+"' AND '"+hasta+"' AND c.PlacaTruck LIKE'%"+placa+"%'";
-        if(empresa != 0){
-          consulta+=" AND e.IdEmpresa="+empresa;
+        var log = req.session.loggedin;
+        if (log == true) {
+            var desde=req.body.desde;
+            var hasta=req.body.hasta;
+            var placa=req.body.placa;
+            var empresa=req.body.empresa;
+            var consulta= "SELECT ContractID, FKLokDeviceID, e.NombreEmpresa, c.PlacaTruck, '"+req.session.username+"' as username, CONVERT(varchar,DATEADD(MINUTE,1,c.FechaHoraInicio),20) as fecha, CONCAT(c.LastMsgLat,',',c.LastMsgLong) as pos, ISNULL(c.FKTrayecto, 0) as trayecto, r.DescripcionRuta, t.DescripcionTrayecto FROM LokcontractID as c "+
+            "LEFT JOIN ICEmpresa as e ON e.IdEmpresa = c.FKICEmpresa "+
+            "LEFT JOIN ICRutas as r ON r.IdRuta = c.FKICRutas "+
+            "LEFT JOIN Trayectos as t ON c.FKTrayecto =  t.IDTrayecto "+
+            "WHERE c.FKLokProyecto="+req.session.proyecto +" AND c.FechaHoraFin BETWEEN '"+desde+"' AND '"+hasta+"' AND c.PlacaTruck LIKE'%"+placa+"%'";
+            if(empresa != 0){
+              consulta+=" AND e.IdEmpresa="+empresa;
+            }
+            console.log(consulta);
+            let resultado=await sqlconfig.query(consulta);
+            res.json({success : true, data : resultado.recordsets[0]});
+        }else{
+            res.json({success : false});
         }
-        console.log(consulta);
-        let resultado=await sqlconfig.query(consulta);
-        res.json({success : true, data : resultado.recordsets[0]});
-    }else{
+    }catch(err){
         res.json({success : false});
     }
+
 }
 
 // FUNCION QUE RETORNA EL LISTADO DE TRAYECTOS
 controller.get_eventos = async (req, res) => {
     try{
-
+        var log = req.session.loggedin;
+        if (log == true) {
+            var consulta= "SELECT ID_Evento, Descripcion FROM Valitronics_eventos WHERE FK_Proyecto="+req.session.proyecto;
+            let resultado=await sqlconfig.query(consulta);
+            res.json({success : true, data : resultado.recordset});
+        }else{
+            res.json({success : false});
+        }
     }catch(err){
-
-    }
-    var log = req.session.loggedin;
-    if (log == true) {
-        var consulta= "SELECT ID_Evento, Descripcion FROM Valitronics_eventos WHERE FK_Proyecto="+req.session.proyecto;
-        let resultado=await sqlconfig.query(consulta);
-        res.json({success : true, data : resultado.recordset});
-    }else{
         res.json({success : false});
     }
+
 }
 
 // FUNCION QUE RETORNA EL LISTADO DE TRAYECTOS
 controller.get_trayectos = async (req, res) => {
+    console.log(req.session);
     try{
-
+        var log = req.session.loggedin;
+        if (log == true) {
+            var consulta= "SELECT * FROM Trayectos";
+            let resultado=await sqlconfig.query(consulta);
+            res.json({success : true, data : resultado.recordset});
+        }else{
+            res.json({success : false});
+        }
     }catch(err){
-
-    }
-    var log = req.session.loggedin;
-    if (log == true) {
-        var consulta= "SELECT * FROM Trayectos";
-        let resultado=await sqlconfig.query(consulta);
-        res.json({success : true, data : resultado.recordset});
-    }else{
         res.json({success : false});
     }
+
 }
 
 // FUNCION QUE ACTUALIZAR EL TRAYECTO EN EL CONTRATO
@@ -104,6 +105,30 @@ controller.get_contratostrafico = async (req, res) => {
             "WHERE c.Active=1 AND c.FKLokProyecto="+req.session.proyecto;
             console.log(consulta);
             let resultado=await sqlconfig.query(consulta);
+            res.json({success : true, data : resultado.recordsets[0]});
+        }else{
+            res.json({success : false});
+        }
+    }catch(err){
+        res.json({success : false});
+    }
+
+}
+
+// FUNCION QUE RETORNA EL LISTADO DE CONTRATOS ACTIVOS, GRILLA DE TRAFICO
+controller.get_fotoscontrato = async (req, res) => {
+    console.log(req.session);
+    try{
+        var log = req.session.loggedin;
+
+        if (log == true) {
+            var contrato=req.body.contrato;
+            console.log(contrato);
+            console.log("ENTRO A LOGIN1");
+            var consulta= "SELECT * from dbo.Photos('"+contrato+"')";
+            console.log(consulta);
+            let resultado=await sqlconfig.query(consulta);
+            console.log(resultado.recordsets[0]);
             res.json({success : true, data : resultado.recordsets[0]});
         }else{
             res.json({success : false});
@@ -259,4 +284,6 @@ function calcularDistancia(lat1, lng1, lat2, lng2){
     let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     return RADIO_TIERRA_EN_KILOMETROS * c;
 }
+
+
 module.exports = controller;
