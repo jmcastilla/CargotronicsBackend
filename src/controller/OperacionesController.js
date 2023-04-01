@@ -22,10 +22,16 @@ controller.list_historicos = async (req, res) => {
             var hasta=req.body.hasta;
             var placa=req.body.placa;
             var empresa=req.body.empresa;
-            var consulta= "SELECT ContractID, FKLokDeviceID, e.NombreEmpresa, c.PlacaTruck, '"+req.session.username+"' as username, CONVERT(varchar,DATEADD(MINUTE,1,c.FechaHoraInicio),20) as fecha, CONCAT(c.LastMsgLat,',',c.LastMsgLong) as pos, ISNULL(c.FKTrayecto, 0) as trayecto, r.DescripcionRuta, t.DescripcionTrayecto FROM LokcontractID as c "+
+            var consulta= "SELECT ContractID, FKLokDeviceID, e.NombreEmpresa, c.PlacaTruck, '"+req.session.username+"' as username, "+
+            "CONVERT(varchar,DATEADD(MINUTE,1,c.FechaHoraInicio),20) as fecha, CONCAT(c.LastMsgLat,',',c.LastMsgLong) as pos, "+
+            "ISNULL(c.FKTrayecto, 0) as trayecto, r.DescripcionRuta, t.DescripcionTrayecto, c.ContainerNum, c.NombreConductor, "+
+            "c.Ref, tp.NombreTranspo, c.MovilConductor, c.PlacaTrailer, CONVERT(varchar,c.FechaHoraInicio,20) as fechainicio, "+
+            "CONVERT(varchar,c.FechaHoraFin,20) as fechafin "+
+            "FROM LokcontractID as c "+
             "LEFT JOIN ICEmpresa as e ON e.IdEmpresa = c.FKICEmpresa "+
             "LEFT JOIN ICRutas as r ON r.IdRuta = c.FKICRutas "+
             "LEFT JOIN Trayectos as t ON c.FKTrayecto =  t.IDTrayecto "+
+            "LEFT JOIN ICTransportadora as tp ON tp.IdTransportadora = c.FKICTransportadora "+
             "WHERE c.FKLokProyecto="+req.session.proyecto +" AND c.FechaHoraFin BETWEEN '"+desde+"' AND '"+hasta+"' AND c.PlacaTruck LIKE'%"+placa+"%'";
             if(empresa != 0){
               consulta+=" AND e.IdEmpresa="+empresa;
@@ -98,10 +104,16 @@ controller.get_contratostrafico = async (req, res) => {
     try{
         var log = req.session.loggedin;
         if (log == true) {
-            var consulta= "SELECT ContractID, FKLokDeviceID, e.NombreEmpresa, c.PlacaTruck, '"+req.session.username+"' as username, CONVERT(varchar,DATEADD(MINUTE,1,c.FechaHoraInicio),20) as fecha, CONCAT(c.LastMsgLat,',',c.LastMsgLong) as pos, ISNULL(c.FKTrayecto, 0) as trayecto, r.DescripcionRuta, t.DescripcionTrayecto FROM LokcontractID as c "+
+            var consulta= "SELECT c.ContractID, c.FKLokDeviceID, e.NombreEmpresa, c.PlacaTruck, '"+req.session.username+"' as username, "+
+            "CONVERT(varchar,DATEADD(MINUTE,1,c.FechaHoraInicio),20) as fecha, CONCAT(c.LastMsgLat,',',c.LastMsgLong) as pos, "+
+            "ISNULL(c.FKTrayecto, 0) as trayecto, r.DescripcionRuta, t.DescripcionTrayecto, c.ContainerNum, c.NombreConductor, "+
+            "c.Ref, tp.NombreTranspo, c.MovilConductor, c.PlacaTrailer, CONVERT(varchar,c.FechaHoraInicio,20) as fechainicio, "+
+            "CONVERT(varchar,c.FechaHoraFin,20) as fechafin "+
+            "FROM LokcontractID as c "+
             "LEFT JOIN ICEmpresa as e ON e.IdEmpresa = c.FKICEmpresa "+
             "LEFT JOIN ICRutas as r ON r.IdRuta = c.FKICRutas "+
             "LEFT JOIN Trayectos as t ON c.FKTrayecto =  t.IDTrayecto "+
+            "LEFT JOIN ICTransportadora as tp ON tp.IdTransportadora = c.FKICTransportadora "+
             "WHERE c.Active=1 AND c.FKLokProyecto="+req.session.proyecto;
             console.log(consulta);
             let resultado=await sqlconfig.query(consulta);

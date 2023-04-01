@@ -4,7 +4,7 @@ var sql = require("mssql");
 var config = {
     user: 'juan',
     password: 'Logiset.1',
-    server: 'JUANCASTILLA\\SQLEXPRESS',
+    server: '10.19.1.189',
     database: 'infocarga',
     synchronize: true,
     trustServerCertificate: true,
