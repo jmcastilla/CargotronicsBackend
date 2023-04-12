@@ -182,7 +182,7 @@ controller.get_reportestrafico = async (req, res) => {
 
         if (log == true) {
             var contrato=req.body.contrato;
-            var consulta= "SELECT r.XTime, ta.TipoAccion, tr.TipoReporte, r.Ubicacion, r.Nota, r.XUser from LokReport as r "+
+            var consulta= "SELECT r.IdReport, r.XTime, ta.TipoAccion, tr.TipoReporte, r.Ubicacion, r.Nota, r.XUser from LokReport as r "+
             "INNER JOIN LokTipoAccion as ta ON ta.IdTipoAccion = r.FKLokTipoAccion "+
             "INNER JOIN ICTipoReporte as tr ON tr.idTipoReporte = r.FKICTipoReporte "+
             "WHERE r.FKLokContractID='"+contrato+"'";
