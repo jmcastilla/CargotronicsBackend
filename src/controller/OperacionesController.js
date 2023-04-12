@@ -26,7 +26,7 @@ controller.list_historicos = async (req, res) => {
             "CONVERT(varchar,DATEADD(MINUTE,1,c.FechaHoraInicio),20) as fecha, CONCAT(c.LastMsgLat,',',c.LastMsgLong) as pos, "+
             "ISNULL(c.FKTrayecto, 0) as trayecto, r.DescripcionRuta, t.DescripcionTrayecto, c.ContainerNum, c.NombreConductor, "+
             "c.Ref, tp.NombreTranspo, c.MovilConductor, c.PlacaTrailer, CONVERT(varchar,c.FechaHoraInicio,20) as fechainicio, "+
-            "CONVERT(varchar,c.FechaHoraFin,20) as fechafin "+
+            "ISNULL(CONVERT(varchar,c.FechaHoraFin,20), CONVERT(varchar,GETDATE(),20)) as fechafin, c.LastMsgLat, c.LastMsgLong "+
             "FROM LokcontractID as c "+
             "LEFT JOIN ICEmpresa as e ON e.IdEmpresa = c.FKICEmpresa "+
             "LEFT JOIN ICRutas as r ON r.IdRuta = c.FKICRutas "+
@@ -108,7 +108,7 @@ controller.get_contratostrafico = async (req, res) => {
             "CONVERT(varchar,DATEADD(MINUTE,1,c.FechaHoraInicio),20) as fecha, CONCAT(c.LastMsgLat,',',c.LastMsgLong) as pos, "+
             "ISNULL(c.FKTrayecto, 0) as trayecto, r.DescripcionRuta, t.DescripcionTrayecto, c.ContainerNum, c.NombreConductor, "+
             "c.Ref, tp.NombreTranspo, c.MovilConductor, c.PlacaTrailer, CONVERT(varchar,c.FechaHoraInicio,20) as fechainicio, "+
-            "CONVERT(varchar,c.FechaHoraFin,20) as fechafin "+
+            "ISNULL(CONVERT(varchar,c.FechaHoraFin,20), CONVERT(varchar,GETDATE(),20)) as fechafin, c.LastMsgLat, c.LastMsgLong "+
             "FROM LokcontractID as c "+
             "LEFT JOIN ICEmpresa as e ON e.IdEmpresa = c.FKICEmpresa "+
             "LEFT JOIN ICRutas as r ON r.IdRuta = c.FKICRutas "+
@@ -124,7 +124,30 @@ controller.get_contratostrafico = async (req, res) => {
     }catch(err){
         res.json({success : false});
     }
+}
 
+// FUNCION QUE RETORNA EL LISTADO DE CONTRATOS ACTIVOS, GRILLA DE TRAFICO
+controller.get_reportesdevice = async (req, res) => {
+    console.log("entro a get reportes");
+    console.log(req.body);
+    try{
+        var log = req.session.loggedin;
+
+        if (log == true) {
+            var fechainicio=req.body.fechainicio;
+            var fechafin=req.body.fechafin;
+            var device=req.body.device;
+            var utcMinutos=req.body.utcMinutos;
+            var allreport=req.body.allreport;
+            let resultado=await sqlconfig.query2Procedure('SelectJ701TrackMsg', req.body);
+            console.log(resultado.recordsets[0]);
+            res.json({success : true, data : resultado.recordsets[0]});
+        }else{
+            res.json({success : false});
+        }
+    }catch(err){
+        res.json({success : false});
+    }
 }
 
 // FUNCION QUE RETORNA EL LISTADO DE CONTRATOS ACTIVOS, GRILLA DE TRAFICO
@@ -139,6 +162,30 @@ controller.get_fotoscontrato = async (req, res) => {
             console.log("ENTRO A LOGIN1");
             var consulta= "SELECT * from dbo.Photos('"+contrato+"')";
             console.log(consulta);
+            let resultado=await sqlconfig.query(consulta);
+            console.log(resultado.recordsets[0]);
+            res.json({success : true, data : resultado.recordsets[0]});
+        }else{
+            res.json({success : false});
+        }
+    }catch(err){
+        res.json({success : false});
+    }
+
+}
+
+// FUNCION QUE RETORNA EL LISTADO DE REPORTES DE TRAFICO DE UN CONTRATO
+controller.get_reportestrafico = async (req, res) => {
+    console.log(req.session);
+    try{
+        var log = req.session.loggedin;
+
+        if (log == true) {
+            var contrato=req.body.contrato;
+            var consulta= "SELECT r.XTime, ta.TipoAccion, tr.TipoReporte, r.Ubicacion, r.Nota, r.XUser from LokReport as r "+
+            "INNER JOIN LokTipoAccion as ta ON ta.IdTipoAccion = r.FKLokTipoAccion "+
+            "INNER JOIN ICTipoReporte as tr ON tr.idTipoReporte = r.FKICTipoReporte "+
+            "WHERE r.FKLokContractID='"+contrato+"'";
             let resultado=await sqlconfig.query(consulta);
             console.log(resultado.recordsets[0]);
             res.json({success : true, data : resultado.recordsets[0]});
