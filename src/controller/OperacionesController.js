@@ -88,7 +88,7 @@ controller.update_contratotrayectos = async (req, res) => {
     try{
         var log = req.session.loggedin;
         if (log == true) {
-            var consulta = "UPDATE LokcontractID SET FKTrayecto='"+req.body.Trayecto+"' WHERE ContractID='"+req.body.Contrato+"'";
+            var consulta = "UPDATE LokcontractID SET FKTrayecto='"+req.body.Trayecto+"', actualizarbk=2 WHERE ContractID='"+req.body.Contrato+"'";
             console.log(consulta);
             res.json({success : await sqlconfig.query(consulta)});
         }else{
