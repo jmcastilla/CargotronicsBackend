@@ -46,7 +46,9 @@ app.post('/login', async (req, res) =>{
     try{
         let user=req.body.user;
         let pass=req.body.pass;
-        var consulta= "SELECT Pwd, Salt, FKProyecto FROM ICUsers WHERE IdUser='"+user+"'";
+        var consulta= "SELECT u.Pwd, u.Salt, u.FKProyecto, p.DiferenciaServidor FROM ICUsers as u "+
+        "INNER JOIN LokProyectos as p on p.IDProyecto = u.FKProyecto "+
+        "WHERE u.IdUser='"+user+"'";
         console.log(consulta);
         let resultado=await sqlconfig.query(consulta);
         console.log(resultado);
@@ -59,6 +61,7 @@ app.post('/login', async (req, res) =>{
                 req.session.loggedin = true;
                 req.session.username = user;
                 req.session.proyecto = resultado.recordset[0].FKProyecto;
+                req.session.diffhorario = resultado.recordset[0].DiferenciaServidor;
                 res.json({success : true});
             }else{
                 if (req.session) {
