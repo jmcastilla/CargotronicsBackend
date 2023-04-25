@@ -272,7 +272,7 @@ controller.get_find2 = async (req, res) => {
         console.log(kmrecorrido);
         var listado=[];
         var obj;
-        var polylineaArray = trayecto.Polyline.split("%|%");
+        var polylineaArray = trayecto.Polyline.split("||||");
         console.log(polylineaArray.length);
         var polyseleccionada=polylineaArray.length-1;
         if(trayecto.WayPoints != ""){
