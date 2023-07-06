@@ -54,7 +54,9 @@ controller.get_eventos = async (req, res) => {
         var log = req.session.loggedin;
         if (log == true) {
             var consulta= "SELECT ID_Evento, Descripcion FROM Valitronics_eventos WHERE FK_Proyecto="+req.session.proyecto;
+
             let resultado=await sqlconfig.query(consulta);
+
             res.json({success : true, data : resultado.recordset});
         }else{
             res.json({success : false});
@@ -128,11 +130,8 @@ controller.get_contratostrafico = async (req, res) => {
 
 // FUNCION QUE RETORNA EL LISTADO DE CONTRATOS ACTIVOS, GRILLA DE TRAFICO
 controller.get_reportesdevice = async (req, res) => {
-    console.log("entro a get reportes");
-    console.log(req.body);
     try{
         var log = req.session.loggedin;
-
         if (log == true) {
             var fechainicio=req.body.fechainicio;
             var fechafin=req.body.fechafin;
@@ -246,6 +245,7 @@ controller.get_poly = async (req, res) => {
               var polyline = path.overview_polyline.points;
               res.json({success : true, data : polyline});
             });
+
         }else{
             res.json({success : false});
         }
@@ -321,6 +321,84 @@ controller.get_find2 = async (req, res) => {
         res.json({success:true, data : response});
     }catch(err){
         res.json({success:false});
+    }
+
+}
+
+//FUNCION QUE GUARDA O ACTUALIZA EL TRAYECTO
+controller.set_ultimopunto = async (req, res) => {
+    try{
+        var log = req.session.loggedin;
+        if (log == true) {
+            try{
+                var consulta = "UPDATE LokcontractID SET LastMsgID='"+req.body.id+"', LastMsgLat="+req.body.lat+", LastMsgLong="+req.body.lng+" WHERE ContractID='"+req.body.contrato+"'";
+                console.log(consulta);
+                res.json({success : await sqlconfig.query(consulta)});
+
+            }catch(error){
+                res.json({success : false});
+            }
+        }else{
+            res.json({success : false});
+        }
+    }catch(err){
+        res.json({success : false});
+    }
+
+}
+
+//FUNCION QUE ACTUALIZA EL CONTRATO EN EL DEVICE
+controller.set_lastcontractdevice = async (req, res) => {
+    try{
+        var log = req.session.loggedin;
+        if (log == true) {
+            try{
+                var consulta = "UPDATE LokDeviceID SET LastContractID='"+req.body.Contrato+"' WHERE DeviceID='"+req.body.Device+"'";
+                console.log(consulta);
+                res.json({success:true, res : await sqlconfig.query(consulta)});
+
+            }catch(error){
+                res.json({success : false});
+            }
+        }else{
+            res.json({success : false});
+        }
+    }catch(err){
+        res.json({success : false});
+    }
+
+}
+
+controller.set_reporteautomatico = async (req, res) => {
+    try{
+        var log = req.session.loggedin;
+        if (log == true) {
+            try{
+              console.log(req.body);
+              let data = {
+                  "FKICTipoReporte": -1,
+                  "FKLokTipoAccion": -1,
+                  "Ubicacion": req.body.ubicacion,
+                  "Nota": null,
+                  "XTime": null,
+                  "XUser": req.session.username,
+                  "FKLokContractID": req.body.contrato,
+                  "Individual": true
+              };
+              console.log(data);
+              let resultado=await sqlconfig.queryProcedure('LokInsertReport', data);
+              console.log(resultado);
+              res.json({success : true, data : resultado.recordsets[0]});
+
+            }catch(error){
+                console.log(error);
+                res.json({success : false});
+            }
+        }else{
+            res.json({success : false});
+        }
+    }catch(err){
+        res.json({success : false});
     }
 
 }

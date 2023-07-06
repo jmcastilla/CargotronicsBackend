@@ -9,14 +9,17 @@ var crypto = require('crypto');
 var hash = crypto.createHash('sha1');
 var sqlconfig = require("./model/dbpool");
 const sharp = require('sharp');
-
+const XlsxPopulate = require('xlsx-populate');
+const bodyParser = require('body-parser');
 const net = require('net');
 const fs = require('fs');
 const { Readable } = require('stream');
 
 const upload = multer();
 
-app.use(express.json());
+app.use(express.json({ limit: '50mb' }));
+app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 app.use(cors({
   origin : 'http://localhost:3000',
   credentials: true
@@ -38,8 +41,54 @@ app.use(session({
 
 const operacionesRouters = require('./routes/OperacionesRoute');
 const empresasRouters = require('./routes/EmpresasRoute');
+const dianRouters = require('./routes/DianRoute');
 app.use('/operaciones', operacionesRouters);
 app.use('/empresas', empresasRouters);
+app.use('/dian', dianRouters);
+
+app.post('/editar-excel', async (req, res) => {
+  try {
+    let datos=req.body;
+    // Leer el archivo de Excel localmente utilizando el módulo fs
+    const filePath = './plantilla1.xlsx';
+    const fileData = await fs.promises.readFile(filePath);
+
+    // Cargar el archivo de Excel con XlsxPopulate
+    const workbook = await XlsxPopulate.fromDataAsync(fileData);
+
+    // Editar el archivo de Excel
+    const sheet = workbook.sheet('Hoja1');
+
+    const generadopor = sheet.cell('F2');
+    generadopor.value(req.session.username);
+    const generadoen = sheet.cell('F3');
+    const now = new Date();
+    generadoen.value(`${now.getFullYear()}-${(now.getMonth() + 1).toString().padStart(2, '0')}-${now.getDate().toString().padStart(2, '0')} ${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}`);
+
+    let startCell = sheet.cell('A6');
+    datos.forEach((objeto, indice) => {
+      // Obtener la fila correspondiente a este objeto (por ejemplo, A3+indice)
+      const row = startCell.row(indice);
+      console.log(row);
+      row.cell(1).value(objeto.ContractID);
+      row.cell(2).value(objeto.FKLokDeviceID);
+      row.cell(3).value(objeto.NombreEmpresa);
+      row.cell(4).value(objeto.PlacaTruck);
+      row.cell(5).value(objeto.DescripcionRuta);
+      row.cell(6).value(objeto.NombreTranspo);
+      row.cell(7).value(objeto.fechainicio);
+      startCell = startCell.relativeCell(1, 0);
+
+    });
+
+    // Convertir el archivo de Excel editado en un ArrayBuffer y enviarlo al cliente
+    const editedData = await workbook.outputAsync({ type: 'arraybuffer' });
+    res.send(Buffer.from(editedData));
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error al editar el archivo de Excel.');
+  }
+});
 
 // FUNCION PARA LOGUEARSE EN EL SISTEMA
 app.post('/login', async (req, res) =>{

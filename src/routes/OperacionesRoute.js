@@ -12,6 +12,9 @@ router.post('/getfind2', OperacionesController.get_find2);
 router.get('/getcontratostrafico', OperacionesController.get_contratostrafico);
 router.post('/updatecontratotrayecto', OperacionesController.update_contratotrayectos);
 router.post('/getreportestrafico', OperacionesController.get_reportestrafico);
+router.post('/setreporteautomatico', OperacionesController.set_reporteautomatico);
+router.post('/setultimopunto', OperacionesController.set_ultimopunto);
+router.post('/setlastcontractdevice', OperacionesController.set_lastcontractdevice);
 
 
 router.post('/getreportesdevice', OperacionesController.get_reportesdevice);
