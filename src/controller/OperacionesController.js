@@ -133,6 +133,7 @@ controller.get_reportesdevice = async (req, res) => {
     try{
         var log = req.session.loggedin;
         if (log == true) {
+            console.log(req.body)
             var fechainicio=req.body.fechainicio;
             var fechafin=req.body.fechafin;
             var device=req.body.device;
