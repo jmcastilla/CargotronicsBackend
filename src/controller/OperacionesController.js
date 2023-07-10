@@ -140,6 +140,7 @@ controller.get_reportesdevice = async (req, res) => {
               "utcMinutos": req.session.diffUTC,
               "allreport": req.body.allreport
             }
+            console.log(datos);
             let resultado=await sqlconfig.query2Procedure('SelectJ701TrackMsg', datos);
             console.log(resultado.recordsets[0]);
             res.json({success : true, data : resultado.recordsets[0]});
