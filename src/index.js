@@ -95,7 +95,7 @@ app.post('/login', async (req, res) =>{
     try{
         let user=req.body.user;
         let pass=req.body.pass;
-        var consulta= "SELECT u.Pwd, u.Salt, u.FKProyecto, p.DiferenciaServidor FROM ICUsers as u "+
+        var consulta= "SELECT u.Pwd, u.Salt, u.FKProyecto, p.DiferenciaServidor, p.DiferenciaHorariaM FROM ICUsers as u "+
         "INNER JOIN LokProyectos as p on p.IDProyecto = u.FKProyecto "+
         "WHERE u.IdUser='"+user+"'";
         console.log(consulta);
