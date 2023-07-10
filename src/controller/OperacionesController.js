@@ -133,13 +133,14 @@ controller.get_reportesdevice = async (req, res) => {
     try{
         var log = req.session.loggedin;
         if (log == true) {
-            console.log(req.body)
-            var fechainicio=req.body.fechainicio;
-            var fechafin=req.body.fechafin;
-            var device=req.body.device;
-            var utcMinutos=req.session.diffhorario;
-            var allreport=req.body.allreport;
-            let resultado=await sqlconfig.query2Procedure('SelectJ701TrackMsg', req.body);
+            var datos={
+              "fechainicio": req.body.fechainicio,
+              "fechafin":req.body.fechafin,
+              "device": req.body.device,
+              "utcMinutos": req.session.diffUTC,
+              "allreport": req.body.allreport
+            }
+            let resultado=await sqlconfig.query2Procedure('SelectJ701TrackMsg', datos);
             console.log(resultado.recordsets[0]);
             res.json({success : true, data : resultado.recordsets[0]});
         }else{

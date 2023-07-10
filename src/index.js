@@ -111,6 +111,7 @@ app.post('/login', async (req, res) =>{
                 req.session.username = user;
                 req.session.proyecto = resultado.recordset[0].FKProyecto;
                 req.session.diffhorario = resultado.recordset[0].DiferenciaServidor;
+                req.session.diffUTC = resultado.recordset[0].DiferenciaHorariaM;
                 res.json({success : true});
             }else{
                 if (req.session) {

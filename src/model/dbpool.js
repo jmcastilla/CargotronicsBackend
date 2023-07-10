@@ -4,7 +4,7 @@ var sql = require("mssql");
 /*var config1 = {
     user: 'juan',
     password: 'Logiset.1',
-    server: '10.19.1.189',
+    server: '172.24.16.32',
     database: 'infocarga',
     synchronize: true,
     trustServerCertificate: true,
@@ -16,8 +16,8 @@ var sql = require("mssql");
 var config2 = {
     user: 'juan',
     password: 'Logiset.1',
-    server: '10.19.1.189',
-    database: 'reportes',
+    server: '172.24.16.32',
+    database: 'reportes2',
     synchronize: true,
     trustServerCertificate: true,
     connectionTimeout: 60000,
