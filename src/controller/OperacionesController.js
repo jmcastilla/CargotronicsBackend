@@ -137,7 +137,7 @@ controller.get_reportesdevice = async (req, res) => {
             var fechainicio=req.body.fechainicio;
             var fechafin=req.body.fechafin;
             var device=req.body.device;
-            var utcMinutos=req.body.utcMinutos;
+            var utcMinutos=req.session.diffhorario;
             var allreport=req.body.allreport;
             let resultado=await sqlconfig.query2Procedure('SelectJ701TrackMsg', req.body);
             console.log(resultado.recordsets[0]);
