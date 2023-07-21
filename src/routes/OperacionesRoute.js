@@ -15,7 +15,7 @@ router.post('/getreportestrafico', OperacionesController.get_reportestrafico);
 router.post('/setreporteautomatico', OperacionesController.set_reporteautomatico);
 router.post('/setultimopunto', OperacionesController.set_ultimopunto);
 router.post('/setlastcontractdevice', OperacionesController.set_lastcontractdevice);
-
+router.post('/getpolylinetrayecto', OperacionesController.get_polylinetrayecto);
 
 router.post('/getreportesdevice', OperacionesController.get_reportesdevice);
 

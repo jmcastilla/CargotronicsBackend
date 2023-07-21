@@ -4,6 +4,8 @@ var sqlconfig = require("../model/dbpool");
 var GoogleMapsAPI = require('../lib/index');
 const API_KEY = 'AIzaSyAF-lo1H_DaXWarJqU1sF1l0cil68y0ANQ';
 const decodePolyline = require('decode-google-map-polyline');
+const moment = require('moment');
+
 
 var publicConfig = {
   key: API_KEY,
@@ -135,16 +137,17 @@ controller.get_reportesdevice = async (req, res) => {
     try{
         var log = req.session.loggedin;
         if (log == true) {
+            let m = moment();
+            console.log(m.format('YYYY-MM-DD HH:mm:ss'));
             var datos={
               "fechainicio": req.body.fechainicio,
-              "fechafin":req.body.fechafin,
+              "fechafin":m.format('YYYY-MM-DD HH:mm:ss'),
               "device": req.body.device,
               "utcMinutos": req.session.diffUTC,
               "allreport": req.body.allreport
             }
             console.log(datos);
             let resultado=await sqlconfig.query2Procedure('SelectJ701TrackMsg', datos);
-            console.log(resultado.recordsets[0]);
             res.json({success : true, data : resultado.recordsets[0]});
         }else{
             res.json({success : false});
@@ -223,6 +226,25 @@ controller.save_trayecto = async (req, res) => {
                     res.json({success : false});
                 }
             }
+        }else{
+            res.json({success : false});
+        }
+    }catch(err){
+        res.json({success : false});
+    }
+
+}
+
+controller.get_polylinetrayecto = async (req, res) => {
+    try{
+        var log = req.session.loggedin;
+
+        if (log == true) {
+            var id=req.body.id;
+            var consulta= "SELECT Polyline FROM Trayectos WHERE IDTrayecto="+id;
+            let resultado=await sqlconfig.query(consulta);
+            console.log(resultado.recordsets[0]);
+            res.json({success : true, data : resultado.recordsets[0]});
         }else{
             res.json({success : false});
         }
