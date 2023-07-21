@@ -138,7 +138,7 @@ controller.get_reportesdevice = async (req, res) => {
         var log = req.session.loggedin;
         if (log == true) {
             let m = moment();
-            console.log(m.format('YYYY-MM-DD HH:mm:ss'));
+            m.add(req.session.diffhorario, 'minutes');
             var datos={
               "fechainicio": req.body.fechainicio,
               "fechafin":m.format('YYYY-MM-DD HH:mm:ss'),
