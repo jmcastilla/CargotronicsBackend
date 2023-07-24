@@ -75,7 +75,7 @@ controller.get_trayectos = async (req, res) => {
     try{
         var log = req.session.loggedin;
         if (log == true) {
-            var consulta= "SELECT * FROM Trayectos";
+            var consulta= "SELECT * FROM Trayectos ORDER BY DescripcionTrayecto;";
             let resultado=await sqlconfig.query(consulta);
             res.json({success : true, data : resultado.recordset});
         }else{
