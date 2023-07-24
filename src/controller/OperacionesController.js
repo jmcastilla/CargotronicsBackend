@@ -28,7 +28,7 @@ controller.list_historicos = async (req, res) => {
             "CONVERT(varchar,DATEADD(MINUTE,1,c.FechaHoraInicio),20) as fecha, CONCAT(c.LastMsgLat,',',c.LastMsgLong) as pos, "+
             "ISNULL(c.FKTrayecto, 0) as trayecto, r.DescripcionRuta, t.DescripcionTrayecto, c.ContainerNum, c.NombreConductor, "+
             "c.Ref, tp.NombreTranspo, c.MovilConductor, c.PlacaTrailer, CONVERT(varchar,DATEADD(minute,"+req.session.diffhorario+",c.FechaHoraInicio),20) as fechainicio, "+
-            "ISNULL(CONVERT(varchar,DATEADD(minute,"+req.session.diffhorario+",c.FechaHoraFin),20), CONVERT(varchar,DATEADD(minute,"+req.session.diffhorario+",GETDATE()),20)) as fechafin, c.LastMsgLat, c.LastMsgLong "+
+            "ISNULL(CONVERT(varchar,DATEADD(minute,"+req.session.diffhorario+",c.FechaHoraFin),20), CONVERT(varchar,DATEADD(minute,"+req.session.diffhorario+",GETDATE()),20)) as fechafin, c.LastMsgLat, c.LastMsgLong, c.Active "+
             "FROM LokcontractID as c "+
             "LEFT JOIN ICEmpresa as e ON e.IdEmpresa = c.FKICEmpresa "+
             "LEFT JOIN ICRutas as r ON r.IdRuta = c.FKICRutas "+
@@ -113,7 +113,7 @@ controller.get_contratostrafico = async (req, res) => {
             "ISNULL(c.FKTrayecto, 0) as trayecto, r.DescripcionRuta, t.DescripcionTrayecto, c.ContainerNum, c.NombreConductor, "+
             "c.Ref, tp.NombreTranspo, c.MovilConductor, c.PlacaTrailer, CONVERT(varchar,DATEADD(minute,"+req.session.diffhorario+",c.FechaHoraInicio),20) as fechainicio, "+
             "ISNULL(CONVERT(varchar,DATEADD(minute,"+req.session.diffhorario+",c.FechaHoraFin),20), CONVERT(varchar,DATEADD(minute,"+req.session.diffhorario+",GETDATE()),20)) as fechafin, c.LastMsgLat, c.LastMsgLong, "+
-            "d.Locked "+
+            "d.Locked, c.Active "+
             "FROM LokcontractID as c "+
             "INNER JOIN LokDeviceID as d ON d.DeviceID = c.FKLokDeviceID "+
             "LEFT JOIN ICEmpresa as e ON e.IdEmpresa = c.FKICEmpresa "+
@@ -137,6 +137,7 @@ controller.get_reportesdevice = async (req, res) => {
     try{
         var log = req.session.loggedin;
         if (log == true) {
+
             let m = moment();
             m.add(req.session.diffhorario, 'minutes');
             var datos={
@@ -145,6 +146,15 @@ controller.get_reportesdevice = async (req, res) => {
               "device": req.body.device,
               "utcMinutos": req.session.diffUTC,
               "allreport": req.body.allreport
+            }
+            if(req.body.tipo == 0){
+                datos={
+                  "fechainicio": req.body.fechainicio,
+                  "fechafin":req.body.fechafin,
+                  "device": req.body.device,
+                  "utcMinutos": req.session.diffUTC,
+                  "allreport": req.body.allreport
+                }
             }
             console.log(datos);
             let resultado=await sqlconfig.query2Procedure('SelectJ701TrackMsg', datos);
