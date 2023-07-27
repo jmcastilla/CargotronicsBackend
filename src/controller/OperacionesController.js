@@ -113,7 +113,7 @@ controller.get_contratostrafico = async (req, res) => {
             "ISNULL(c.FKTrayecto, 0) as trayecto, r.DescripcionRuta, t.DescripcionTrayecto, c.ContainerNum, c.NombreConductor, "+
             "c.Ref, tp.NombreTranspo, c.MovilConductor, c.PlacaTrailer, CONVERT(varchar,DATEADD(minute,"+req.session.diffhorario+",c.FechaHoraInicio),20) as fechainicio, "+
             "ISNULL(CONVERT(varchar,DATEADD(minute,"+req.session.diffhorario+",c.FechaHoraFin),20), CONVERT(varchar,DATEADD(minute,"+req.session.diffhorario+",GETDATE()),20)) as fechafin, c.LastMsgLat, c.LastMsgLong, "+
-            "d.Locked, c.Active "+
+            "d.Locked, c.Active, ISNULL(t.DistanciaReal,0) as DistanciaCompleta, t.Origen "+
             "FROM LokcontractID as c "+
             "INNER JOIN LokDeviceID as d ON d.DeviceID = c.FKLokDeviceID "+
             "LEFT JOIN ICEmpresa as e ON e.IdEmpresa = c.FKICEmpresa "+
@@ -221,14 +221,14 @@ controller.save_trayecto = async (req, res) => {
         var log = req.session.loggedin;
         if (log == true) {
             if(req.body.ID == -1){
-                var consulta = "INSERT INTO Trayectos (DescripcionTrayecto, Origen, NombreOrigen, Destino, NombreDestino, WayPoints, Tolerancia, DistanciaOrigen, Polyline) VALUES ("+
+                var consulta = "INSERT INTO Trayectos (DescripcionTrayecto, Origen, NombreOrigen, Destino, NombreDestino, WayPoints, Tolerancia, DistanciaOrigen, Polyline, DistanciaReal) VALUES ("+
                 "'"+req.body.descripciontrayecto+"','"+req.body.origen+"','"+req.body.nombreorigen+"','"+req.body.destino+"','"+req.body.nombredestino+"','"+
-                req.body.waypoints+"',"+req.body.tolerancia+","+req.body.distanciaorigen+",'"+req.body.poly +"')";
+                req.body.waypoints+"',"+req.body.tolerancia+","+req.body.distanciaorigen+",'"+req.body.poly+"',"+req.body.distanciareal +")";
                 console.log(consulta);
                 res.json({success : true, data : await sqlconfig.query(consulta)});
             }else{
                 try{
-                    var consulta = "UPDATE Trayectos SET DescripcionTrayecto='"+req.body.descripciontrayecto+"', Origen='"+req.body.origen+"', NombreOrigen='"+req.body.nombreorigen+"', Destino='"+req.body.destino+"', NombreDestino='"+req.body.nombredestino+"', WayPoints='"+req.body.waypoints+"', Tolerancia="+req.body.tolerancia+", DistanciaOrigen="+req.body.distanciaorigen+", Polyline='"+req.body.poly+"' WHERE IDTrayecto="+req.body.ID;
+                    var consulta = "UPDATE Trayectos SET DescripcionTrayecto='"+req.body.descripciontrayecto+"', Origen='"+req.body.origen+"', NombreOrigen='"+req.body.nombreorigen+"', Destino='"+req.body.destino+"', NombreDestino='"+req.body.nombredestino+"', WayPoints='"+req.body.waypoints+"', Tolerancia="+req.body.tolerancia+", DistanciaOrigen="+req.body.distanciaorigen+", Polyline='"+req.body.poly+"', DistanciaReal="+req.body.distanciareal+" WHERE IDTrayecto="+req.body.ID;
                     console.log(consulta);
                     res.json({success : await sqlconfig.query(consulta)});
 
