@@ -92,7 +92,7 @@ controller.get_keyApp = async (req, res) => {
     try{
         var log = req.session.loggedin;
         if (log == true) {
-            var consulta= "SELECT KEYWS FROM LokConfiguracion WHERE ID=1;";
+            var consulta= "SELECT '"+req.session.username+"' as user ,KEYWS FROM LokConfiguracion WHERE ID=1;";
             let resultado=await sqlconfig.query(consulta);
             console.log(resultado);
             res.json({success : true, data : resultado.recordset});
