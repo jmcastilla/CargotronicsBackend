@@ -94,6 +94,7 @@ controller.get_keyApp = async (req, res) => {
         if (log == true) {
             var consulta= "SELECT KEYWS FROM LokConfiguracion WHERE ID=1;";
             let resultado=await sqlconfig.query(consulta);
+            console.log(resultado);
             res.json({success : true, data : resultado.recordset});
         }else{
             res.json({success : false});
