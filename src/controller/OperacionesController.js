@@ -87,6 +87,22 @@ controller.get_trayectos = async (req, res) => {
 
 }
 
+// FUNCION QUE RETORNA EL SECRET KEY DE LA APLICACION
+controller.get_keyApp = async (req, res) => {
+    try{
+        var log = req.session.loggedin;
+        if (log == true) {
+            var consulta= "SELECT KEYWS FROM LokConfiguracion WHERE ID=1;";
+            let resultado=await sqlconfig.query(consulta);
+            res.json({success : true, data : resultado.recordset});
+        }else{
+            res.json({success : false});
+        }
+    }catch(err){
+        res.json({success : false});
+    }
+}
+
 // FUNCION QUE ACTUALIZAR EL TRAYECTO EN EL CONTRATO
 controller.update_contratotrayectos = async (req, res) => {
     try{

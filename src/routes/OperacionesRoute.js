@@ -16,7 +16,7 @@ router.post('/setreporteautomatico', OperacionesController.set_reporteautomatico
 router.post('/setultimopunto', OperacionesController.set_ultimopunto);
 router.post('/setlastcontractdevice', OperacionesController.set_lastcontractdevice);
 router.post('/getpolylinetrayecto', OperacionesController.get_polylinetrayecto);
-
+router.get('/getkeyapp', OperacionesController.get_keyApp);
 router.post('/getreportesdevice', OperacionesController.get_reportesdevice);
 
 
