@@ -27,7 +27,7 @@ var config2 = {
 
 var config1 = {
     user: 'juan',
-    password: 'Logiset.12',
+    password: 'Logiset.1',
     server: '10.0.5.2',
     database: 'infocarga',
     synchronize: true,
@@ -39,7 +39,7 @@ var config1 = {
 
 var config2 = {
     user: 'juan',
-    password: 'Logiset.12',
+    password: 'Logiset.1',
     server: '10.0.5.2',
     database: 'reportes',
     synchronize: true,
