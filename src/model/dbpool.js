@@ -27,8 +27,8 @@ var config2 = {
 
 var config1 = {
     user: 'juan',
-    password: 'Logiset.12',
-    server: '10.0.5.2',
+    password: 'Logiset.1',
+    server: '72.32.44.32',
     database: 'infocarga',
     synchronize: true,
     trustServerCertificate: true,
