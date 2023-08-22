@@ -28,7 +28,7 @@ controller.list_historicos = async (req, res) => {
             "CONVERT(varchar,DATEADD(MINUTE,1,c.FechaHoraInicio),20) as fecha, CONCAT(c.LastMsgLat,',',c.LastMsgLong) as pos, "+
             "ISNULL(c.FKTrayecto, 0) as trayecto, r.DescripcionRuta, t.DescripcionTrayecto, c.ContainerNum, c.NombreConductor, "+
             "c.Ref, tp.NombreTranspo, c.MovilConductor, c.PlacaTrailer, CONVERT(varchar,DATEADD(minute,"+req.session.diffhorario+",c.FechaHoraInicio),20) as fechainicio, "+
-            "ISNULL(CONVERT(varchar,DATEADD(minute,"+req.session.diffhorario+",c.FechaHoraFin),20), CONVERT(varchar,DATEADD(minute,"+req.session.diffhorario+",GETDATE()),20)) as fechafin, c.LastMsgLat, c.LastMsgLong, c.Active, true as Locked, ISNULL(t.DistanciaReal,0) as DistanciaCompleta, t.Origen "+
+            "ISNULL(CONVERT(varchar,DATEADD(minute,"+req.session.diffhorario+",c.FechaHoraFin),20), CONVERT(varchar,DATEADD(minute,"+req.session.diffhorario+",GETDATE()),20)) as fechafin, c.LastMsgLat, c.LastMsgLong, c.Active, (true) as Locked, ISNULL(t.DistanciaReal,0) as DistanciaCompleta, t.Origen "+
             "FROM LokcontractID as c "+
             "LEFT JOIN ICEmpresa as e ON e.IdEmpresa = c.FKICEmpresa "+
             "LEFT JOIN ICRutas as r ON r.IdRuta = c.FKICRutas "+
