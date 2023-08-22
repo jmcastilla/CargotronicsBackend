@@ -39,9 +39,9 @@ var config1 = {
 
 var config2 = {
     user: 'juan',
-    password: 'Logiset.12',
-    server: '10.0.5.2',
-    database: 'reportes',
+    password: 'Logiset.1',
+    server: '72.32.44.32',
+    database: 'reportes2',
     synchronize: true,
     trustServerCertificate: true,
     connectionTimeout: 60000,
