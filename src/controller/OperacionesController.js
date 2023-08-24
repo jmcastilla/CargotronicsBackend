@@ -191,7 +191,7 @@ controller.get_reportesdevice = async (req, res) => {
 
             let resultado=await sqlconfig.query2Procedure(procedure, datos);
             let filteredData = resultado.recordsets[0].filter(item => item.latitude !== 0 && item.longitude !== 0);
-            res.json({success : true, data : filteredData});
+            res.json({success : true, data : resultado.recordsets[0]});
         }else{
             res.json({success : false});
         }
