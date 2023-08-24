@@ -76,7 +76,7 @@ controller.get_trayectos = async (req, res) => {
     try{
         var log = req.session.loggedin;
         if (log == true) {
-            var consulta= "SELECT * FROM Trayectos ORDER BY DescripcionTrayecto;";
+            var consulta= "SELECT * FROM Trayectos WHERE FKLokProyecto="+req.session.proyecto+" ORDER BY DescripcionTrayecto;";
             let resultado=await sqlconfig.query(consulta);
             res.json({success : true, data : resultado.recordset});
         }else{
@@ -253,9 +253,9 @@ controller.save_trayecto = async (req, res) => {
         var log = req.session.loggedin;
         if (log == true) {
             if(req.body.ID == -1){
-                var consulta = "INSERT INTO Trayectos (DescripcionTrayecto, Origen, NombreOrigen, Destino, NombreDestino, WayPoints, Tolerancia, DistanciaOrigen, Polyline, DistanciaReal) VALUES ("+
+                var consulta = "INSERT INTO Trayectos (DescripcionTrayecto, Origen, NombreOrigen, Destino, NombreDestino, WayPoints, Tolerancia, DistanciaOrigen, Polyline, DistanciaReal, FKLokProyecto) VALUES ("+
                 "'"+req.body.descripciontrayecto+"','"+req.body.origen+"','"+req.body.nombreorigen+"','"+req.body.destino+"','"+req.body.nombredestino+"','"+
-                req.body.waypoints+"',"+req.body.tolerancia+","+req.body.distanciaorigen+",'"+req.body.poly+"',"+req.body.distanciareal +")";
+                req.body.waypoints+"',"+req.body.tolerancia+","+req.body.distanciaorigen+",'"+req.body.poly+"',"+req.body.distanciareal +","+req.session.proyecto+")";
                 console.log(consulta);
                 res.json({success : true, data : await sqlconfig.query(consulta)});
             }else{
