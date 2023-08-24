@@ -28,7 +28,7 @@ controller.list_historicos = async (req, res) => {
             "CONVERT(varchar,DATEADD(MINUTE,1,c.FechaHoraInicio),20) as fecha, CONCAT(c.LastMsgLat,',',c.LastMsgLong) as pos, "+
             "ISNULL(c.FKTrayecto, 0) as trayecto, r.DescripcionRuta, t.DescripcionTrayecto, c.ContainerNum, c.NombreConductor, "+
             "c.Ref, tp.NombreTranspo, c.MovilConductor, c.PlacaTrailer, CONVERT(varchar,DATEADD(minute,"+req.session.diffhorario+",c.FechaHoraInicio),20) as fechainicio, "+
-            "ISNULL(CONVERT(varchar,DATEADD(minute,"+req.session.diffhorario+",c.FechaHoraFin),20), CONVERT(varchar,DATEADD(minute,"+req.session.diffhorario+",GETDATE()),20)) as fechafin, c.LastMsgLat, c.LastMsgLong, c.Active, d.Locked, ISNULL(t.DistanciaReal,0) as DistanciaCompleta, t.Origen "+
+            "ISNULL(CONVERT(varchar,DATEADD(minute,"+req.session.diffhorario+",c.FechaHoraFin),20), CONVERT(varchar,DATEADD(minute,"+req.session.diffhorario+",GETDATE()),20)) as fechafin, c.LastMsgLat, c.LastMsgLong, c.Active, d.Locked, ISNULL(t.DistanciaReal,0) as DistanciaCompleta, t.Origen, d.FKLokTipoEquipo "+
             "FROM LokcontractID as c "+
             "INNER JOIN LokDeviceID as d ON d.DeviceID = c.FKLokDeviceID "+
             "LEFT JOIN ICEmpresa as e ON e.IdEmpresa = c.FKICEmpresa "+
@@ -131,7 +131,7 @@ controller.get_contratostrafico = async (req, res) => {
             "ISNULL(c.FKTrayecto, 0) as trayecto, r.DescripcionRuta, t.DescripcionTrayecto, c.ContainerNum, c.NombreConductor, "+
             "c.Ref, tp.NombreTranspo, c.MovilConductor, c.PlacaTrailer, CONVERT(varchar,DATEADD(minute,"+req.session.diffhorario+",c.FechaHoraInicio),20) as fechainicio, "+
             "ISNULL(CONVERT(varchar,DATEADD(minute,"+req.session.diffhorario+",c.FechaHoraFin),20), CONVERT(varchar,DATEADD(minute,"+req.session.diffhorario+",GETDATE()),20)) as fechafin, c.LastMsgLat, c.LastMsgLong, "+
-            "d.Locked, c.Active, ISNULL(t.DistanciaReal,0) as DistanciaCompleta, t.Origen "+
+            "d.Locked, c.Active, ISNULL(t.DistanciaReal,0) as DistanciaCompleta, t.Origen, d.FKLokTipoEquipo "+
             "FROM LokcontractID as c "+
             "INNER JOIN LokDeviceID as d ON d.DeviceID = c.FKLokDeviceID "+
             "LEFT JOIN ICEmpresa as e ON e.IdEmpresa = c.FKICEmpresa "+
@@ -174,8 +174,22 @@ controller.get_reportesdevice = async (req, res) => {
                   "allreport": req.body.allreport
                 }
             }
-            console.log(datos);
-            let resultado=await sqlconfig.query2Procedure('SelectJ701TrackMsg', datos);
+            var procedure="SelectJ701TrackMsg"
+            if(req.body.tipoequipo == 1){
+                procedure="SelectWSLoksysMsg";
+            }else if(req.body.tipoequipo == 2){
+                procedure="SelectWLMsg";
+            }else if(req.body.tipoequipo == 3){
+                procedure="SelectEnvotechMsg";
+            }else if(req.body.tipoequipo == 6){
+                procedure="SelectCellTrackMsg";
+            }else if(req.body.tipoequipo == 7){
+                procedure="SelectNuevoMsg";
+            }else if(req.body.tipoequipo == 10){
+                procedure="SelectJT707TrackMsg";
+            }
+
+            let resultado=await sqlconfig.query2Procedure(procedure, datos);
             res.json({success : true, data : resultado.recordsets[0]});
         }else{
             res.json({success : false});
