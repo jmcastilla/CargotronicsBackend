@@ -51,7 +51,6 @@ controller.list_historicos = async (req, res) => {
             if(empresa != 0){
               consulta+=" AND e.IdEmpresa="+empresa;
             }
-            console.log(consulta);
             let resultado=await sqlconfig.query(consulta);
             res.json({success : true, data : resultado.recordsets[0]});
         }else{
@@ -220,12 +219,8 @@ controller.get_fotoscontrato = async (req, res) => {
 
         if (log == true) {
             var contrato=req.body.contrato;
-            console.log(contrato);
-            console.log("ENTRO A LOGIN1");
             var consulta= "SELECT * from dbo.Photos('"+contrato+"')";
-            console.log(consulta);
             let resultado=await sqlconfig.query(consulta);
-            console.log(resultado.recordsets[0]);
             res.json({success : true, data : resultado.recordsets[0]});
         }else{
             res.json({success : false});
@@ -249,7 +244,6 @@ controller.get_reportestrafico = async (req, res) => {
             "INNER JOIN ICTipoReporte as tr ON tr.idTipoReporte = r.FKICTipoReporte "+
             "WHERE r.FKLokContractID='"+contrato+"'";
             let resultado=await sqlconfig.query(consulta);
-            console.log(resultado.recordsets[0]);
             res.json({success : true, data : resultado.recordsets[0]});
         }else{
             res.json({success : false});
@@ -269,12 +263,12 @@ controller.save_trayecto = async (req, res) => {
                 var consulta = "INSERT INTO Trayectos (DescripcionTrayecto, Origen, NombreOrigen, Destino, NombreDestino, WayPoints, Tolerancia, DistanciaOrigen, Polyline, DistanciaReal, FKLokProyecto) VALUES ("+
                 "'"+req.body.descripciontrayecto+"','"+req.body.origen+"','"+req.body.nombreorigen+"','"+req.body.destino+"','"+req.body.nombredestino+"','"+
                 req.body.waypoints+"',"+req.body.tolerancia+","+req.body.distanciaorigen+",'"+req.body.poly+"',"+req.body.distanciareal +","+req.session.proyecto+")";
-                console.log(consulta);
+
                 res.json({success : true, data : await sqlconfig.query(consulta)});
             }else{
                 try{
                     var consulta = "UPDATE Trayectos SET DescripcionTrayecto='"+req.body.descripciontrayecto+"', Origen='"+req.body.origen+"', NombreOrigen='"+req.body.nombreorigen+"', Destino='"+req.body.destino+"', NombreDestino='"+req.body.nombredestino+"', WayPoints='"+req.body.waypoints+"', Tolerancia="+req.body.tolerancia+", DistanciaOrigen="+req.body.distanciaorigen+", Polyline='"+req.body.poly+"', DistanciaReal="+req.body.distanciareal+" WHERE IDTrayecto="+req.body.ID;
-                    console.log(consulta);
+
                     res.json({success : await sqlconfig.query(consulta)});
 
                 }catch(error){
@@ -298,7 +292,6 @@ controller.get_polylinetrayecto = async (req, res) => {
             var id=req.body.id;
             var consulta= "SELECT Polyline FROM Trayectos WHERE IDTrayecto="+id;
             let resultado=await sqlconfig.query(consulta);
-            console.log(resultado.recordsets[0]);
             res.json({success : true, data : resultado.recordsets[0]});
         }else{
             res.json({success : false});
@@ -344,18 +337,14 @@ controller.get_find2 = async (req, res) => {
         var latnow=req.body.latitud;
         var lngnow=req.body.longitud;
         var consulta= "SELECT * FROM Trayectos WHERE IDTrayecto="+id;
-        console.log(consulta);
         let resultado=await sqlconfig.query(consulta);
         let trayecto = resultado.recordset[0];
-        console.log(trayecto)
         var posOrigen = trayecto.Origen.split(",");
         var posDestino = trayecto.Destino.split(",");
         var kmrecorrido=calcularDistancia(posOrigen[0], posOrigen[1], latnow, lngnow);
-        console.log(kmrecorrido);
         var listado=[];
         var obj;
         var polylineaArray = trayecto.Polyline.split("||||");
-        console.log(polylineaArray.length);
         var polyseleccionada=polylineaArray.length-1;
         if(trayecto.WayPoints != ""){
 
@@ -398,8 +387,6 @@ controller.get_find2 = async (req, res) => {
           trayecto.Tolerancia,
           true
         );
-
-        console.log(response);
         res.json({success:true, data : response});
     }catch(err){
         res.json({success:false});
@@ -414,7 +401,7 @@ controller.set_ultimopunto = async (req, res) => {
         if (log == true) {
             try{
                 var consulta = "UPDATE LokcontractID SET LastMsgID='"+req.body.id+"', LastMsgLat="+req.body.lat+", LastMsgLong="+req.body.lng+" WHERE ContractID='"+req.body.contrato+"'";
-                console.log(consulta);
+
                 res.json({success : await sqlconfig.query(consulta)});
 
             }catch(error){
@@ -436,7 +423,7 @@ controller.set_lastcontractdevice = async (req, res) => {
         if (log == true) {
             try{
                 var consulta = "UPDATE LokDeviceID SET LastContractID='"+req.body.Contrato+"' WHERE DeviceID='"+req.body.Device+"'";
-                console.log(consulta);
+
                 res.json({success:true, res : await sqlconfig.query(consulta)});
 
             }catch(error){
@@ -456,7 +443,6 @@ controller.set_reporteautomatico = async (req, res) => {
         var log = req.session.loggedin;
         if (log == true) {
             try{
-              console.log(req.body);
               let data = {
                   "FKICTipoReporte": -1,
                   "FKLokTipoAccion": -1,
@@ -467,9 +453,7 @@ controller.set_reporteautomatico = async (req, res) => {
                   "FKLokContractID": req.body.contrato,
                   "Individual": true
               };
-              console.log(data);
               let resultado=await sqlconfig.queryProcedure('LokInsertReport', data);
-              console.log(resultado);
               res.json({success : true, data : resultado.recordsets[0]});
 
             }catch(error){
