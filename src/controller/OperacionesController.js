@@ -24,11 +24,23 @@ controller.list_historicos = async (req, res) => {
             var hasta=req.body.hasta;
             var placa=req.body.placa;
             var empresa=req.body.empresa;
-            var consulta= "SELECT ContractID, FKLokDeviceID, e.NombreEmpresa, c.PlacaTruck, '"+req.session.username+"' as username, "+
+            /*var consulta= "SELECT ContractID, FKLokDeviceID, e.NombreEmpresa, c.PlacaTruck, '"+req.session.username+"' as username, "+
             "CONVERT(varchar,DATEADD(MINUTE,1,c.FechaHoraInicio),20) as fecha, CONCAT(c.LastMsgLat,',',c.LastMsgLong) as pos, "+
             "ISNULL(c.FKTrayecto, 0) as trayecto, r.DescripcionRuta, t.DescripcionTrayecto, c.ContainerNum, c.NombreConductor, "+
             "c.Ref, tp.NombreTranspo, c.MovilConductor, c.PlacaTrailer, CONVERT(varchar,DATEADD(minute,"+req.session.diffhorario+",c.FechaHoraInicio),20) as fechainicio, "+
             "ISNULL(CONVERT(varchar,DATEADD(minute,"+req.session.diffhorario+",c.FechaHoraFin),20), CONVERT(varchar,DATEADD(minute,"+req.session.diffhorario+",GETDATE()),20)) as fechafin, c.LastMsgLat, c.LastMsgLong, c.Active, d.Locked, ISNULL(t.DistanciaReal,0) as DistanciaCompleta, t.Origen, d.FKLokTipoEquipo "+
+            "FROM LokcontractID as c "+
+            "INNER JOIN LokDeviceID as d ON d.DeviceID = c.FKLokDeviceID "+
+            "LEFT JOIN ICEmpresa as e ON e.IdEmpresa = c.FKICEmpresa "+
+            "LEFT JOIN ICRutas as r ON r.IdRuta = c.FKICRutas "+
+            "LEFT JOIN Trayectos as t ON c.FKTrayecto =  t.IDTrayecto "+
+            "LEFT JOIN ICTransportadora as tp ON tp.IdTransportadora = c.FKICTransportadora "+
+            "WHERE c.FKLokProyecto="+req.session.proyecto +" AND c.FechaHoraFin BETWEEN '"+desde+"' AND '"+hasta+"' AND c.PlacaTruck LIKE'%"+placa+"%'";*/
+            var consulta= "SELECT ContractID, FKLokDeviceID, e.NombreEmpresa, c.PlacaTruck, '"+req.session.username+"' as username, "+
+            "CONVERT(varchar,DATEADD(MINUTE,0,c.FechaHoraInicio),20) as fecha, CONCAT(c.LastMsgLat,',',c.LastMsgLong) as pos, "+
+            "ISNULL(c.FKTrayecto, 0) as trayecto, r.DescripcionRuta, t.DescripcionTrayecto, c.ContainerNum, c.NombreConductor, "+
+            "c.Ref, tp.NombreTranspo, c.MovilConductor, c.PlacaTrailer, CONVERT(varchar,DATEADD(minute,0,c.FechaHoraInicio),20) as fechainicio, "+
+            "ISNULL(CONVERT(varchar,DATEADD(minute,0,c.FechaHoraFin),20), CONVERT(varchar,DATEADD(minute,"+req.session.diffhorario+",GETDATE()),20)) as fechafin, c.LastMsgLat, c.LastMsgLong, c.Active, d.Locked, ISNULL(t.DistanciaReal,0) as DistanciaCompleta, t.Origen, d.FKLokTipoEquipo "+
             "FROM LokcontractID as c "+
             "INNER JOIN LokDeviceID as d ON d.DeviceID = c.FKLokDeviceID "+
             "LEFT JOIN ICEmpresa as e ON e.IdEmpresa = c.FKICEmpresa "+
@@ -127,10 +139,10 @@ controller.get_contratostrafico = async (req, res) => {
         var log = req.session.loggedin;
         if (log == true) {
             var consulta= "SELECT c.ContractID, c.FKLokDeviceID, e.NombreEmpresa, c.PlacaTruck, '"+req.session.username+"' as username, "+
-            "CONVERT(varchar,DATEADD(MINUTE,1,c.FechaHoraInicio),20) as fecha, CONCAT(c.LastMsgLat,',',c.LastMsgLong) as pos, "+
+            "CONVERT(varchar,DATEADD(MINUTE,0,c.FechaHoraInicio),20) as fecha, CONCAT(c.LastMsgLat,',',c.LastMsgLong) as pos, "+
             "ISNULL(c.FKTrayecto, 0) as trayecto, r.DescripcionRuta, t.DescripcionTrayecto, c.ContainerNum, c.NombreConductor, "+
-            "c.Ref, tp.NombreTranspo, c.MovilConductor, c.PlacaTrailer, CONVERT(varchar,DATEADD(minute,"+req.session.diffhorario+",c.FechaHoraInicio),20) as fechainicio, "+
-            "ISNULL(CONVERT(varchar,DATEADD(minute,"+req.session.diffhorario+",c.FechaHoraFin),20), CONVERT(varchar,DATEADD(minute,"+req.session.diffhorario+",GETDATE()),20)) as fechafin, c.LastMsgLat, c.LastMsgLong, "+
+            "c.Ref, tp.NombreTranspo, c.MovilConductor, c.PlacaTrailer, CONVERT(varchar,DATEADD(minute,0,c.FechaHoraInicio),20) as fechainicio, "+
+            "ISNULL(CONVERT(varchar,DATEADD(minute,0,c.FechaHoraFin),20), CONVERT(varchar,DATEADD(minute,"+req.session.diffhorario+",GETDATE()),20)) as fechafin, c.LastMsgLat, c.LastMsgLong, "+
             "d.Locked, c.Active, ISNULL(t.DistanciaReal,0) as DistanciaCompleta, t.Origen, d.FKLokTipoEquipo "+
             "FROM LokcontractID as c "+
             "INNER JOIN LokDeviceID as d ON d.DeviceID = c.FKLokDeviceID "+
