@@ -200,7 +200,7 @@ controller.get_reportesdevice = async (req, res) => {
             }else if(req.body.tipoequipo == 10){
                 procedure="SelectJT707TrackMsg";
             }
-
+            console.log(datos);
             let resultado=await sqlconfig.query2Procedure(procedure, datos);
             let filteredData = resultado.recordsets[0].filter(item => item.latitude !== 0 && item.longitude !== 0);
             res.json({success : true, data : resultado.recordsets[0]});
