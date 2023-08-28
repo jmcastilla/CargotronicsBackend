@@ -182,7 +182,7 @@ controller.get_reportesdevice = async (req, res) => {
                   "fechafin":req.body.fechafin,
                   "device": req.body.device,
                   "utcMinutos": req.session.diffUTC,
-                  "allreport": 0
+                  "allreport": req.body.allreport
                 }
             }
             var procedure="SelectJ701TrackMsg"
