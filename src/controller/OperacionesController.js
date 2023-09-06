@@ -151,7 +151,7 @@ controller.get_contratostrafico = async (req, res) => {
             "LEFT JOIN ICEmpresa as e ON e.IdEmpresa = c.FKICEmpresa "+
             "LEFT JOIN ICRutas as r ON r.IdRuta = c.FKICRutas "+
             "LEFT JOIN Trayectos as t ON c.FKTrayecto =  t.IDTrayecto "+
-            "LEFT JOIN ICTipoReporte as tr ON c.LastICTipoReporte =  tr.IDTipoReporte "+
+            "LEFT JOIN ICTipoReporte as tr ON c.LastICTipoReporte =  tr.IdTipoReporte "+
             "LEFT JOIN ICTransportadora as tp ON tp.IdTransportadora = c.FKICTransportadora "+
             "WHERE c.Active=1 AND c.FKLokProyecto="+req.session.proyecto;
             console.log(consulta);
