@@ -145,7 +145,8 @@ controller.get_contratostrafico = async (req, res) => {
             "d.Locked, c.Active, ISNULL(t.DistanciaReal,0) as DistanciaCompleta, t.Origen, d.FKLokTipoEquipo, "+
             "dbo.Tiempo(DATEDIFF(SECOND, LoksysServerTime, GETUTCDATE())) as Tiempo, DATEDIFF(SECOND, '1970-01-01 00:00:00', LoksysServerTime) as tiempoUnix, "+
             "dbo.iconbateria(ISNULL(ROUND(BatteryVoltage, 2),3)) as icon_bat, ROUND(BatteryVoltage, 2) as bateria, "+
-            "c.LastReportNota, tr.TipoReporte "+
+            "c.LastReportNota, tr.TipoReporte, (CASE d.Moving WHEN 1 THEN '/images/moving.png' ELSE '/images/stop.png' END) as IconMoving, "+
+            "(CASE d.Locked WHEN 1 THEN '/images/closedpadlock.png' ELSE '/images/openedpadlock.png' END) as IconLocked "+
             "FROM LokcontractID as c "+
             "INNER JOIN LokDeviceID as d ON d.DeviceID = c.FKLokDeviceID "+
             "LEFT JOIN ICEmpresa as e ON e.IdEmpresa = c.FKICEmpresa "+
