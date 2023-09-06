@@ -144,12 +144,14 @@ controller.get_contratostrafico = async (req, res) => {
             "ISNULL(CONVERT(varchar,DATEADD(minute,0,c.FechaHoraFin),20), CONVERT(varchar,DATEADD(minute,"+req.session.diffhorario+",GETDATE()),20)) as fechafin, c.LastMsgLat, c.LastMsgLong, "+
             "d.Locked, c.Active, ISNULL(t.DistanciaReal,0) as DistanciaCompleta, t.Origen, d.FKLokTipoEquipo, "+
             "dbo.Tiempo(DATEDIFF(SECOND, LoksysServerTime, GETUTCDATE())) as Tiempo, DATEDIFF(SECOND, '1970-01-01 00:00:00', LoksysServerTime) as tiempoUnix, "+
-            "dbo.iconbateria(ISNULL(ROUND(BatteryVoltage, 2),3)) as icon_bat, ROUND(BatteryVoltage, 2) as bateria "+
+            "dbo.iconbateria(ISNULL(ROUND(BatteryVoltage, 2),3)) as icon_bat, ROUND(BatteryVoltage, 2) as bateria, "+
+            "c.LastReportNota, tr.TipoReporte "
             "FROM LokcontractID as c "+
             "INNER JOIN LokDeviceID as d ON d.DeviceID = c.FKLokDeviceID "+
             "LEFT JOIN ICEmpresa as e ON e.IdEmpresa = c.FKICEmpresa "+
             "LEFT JOIN ICRutas as r ON r.IdRuta = c.FKICRutas "+
             "LEFT JOIN Trayectos as t ON c.FKTrayecto =  t.IDTrayecto "+
+            "LEFT JOIN ICTipoReporte as tr ON c.LastICTipoReporte =  tr.IDTipoReporte "+
             "LEFT JOIN ICTransportadora as tp ON tp.IdTransportadora = c.FKICTransportadora "+
             "WHERE c.Active=1 AND c.FKLokProyecto="+req.session.proyecto;
             console.log(consulta);
