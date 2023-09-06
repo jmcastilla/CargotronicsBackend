@@ -143,7 +143,8 @@ controller.get_contratostrafico = async (req, res) => {
             "c.Ref, tp.NombreTranspo, c.MovilConductor, c.PlacaTrailer, CONVERT(varchar,DATEADD(minute,0,c.FechaHoraInicio),20) as fechainicio, "+
             "ISNULL(CONVERT(varchar,DATEADD(minute,0,c.FechaHoraFin),20), CONVERT(varchar,DATEADD(minute,"+req.session.diffhorario+",GETDATE()),20)) as fechafin, c.LastMsgLat, c.LastMsgLong, "+
             "d.Locked, c.Active, ISNULL(t.DistanciaReal,0) as DistanciaCompleta, t.Origen, d.FKLokTipoEquipo, "+
-            "dbo.Tiempo(DATEDIFF(SECOND, LoksysServerTime, GETUTCDATE())) as Tiempo, DATEDIFF(SECOND, '1970-01-01 00:00:00', LoksysServerTime) as tiempoUnix "+
+            "dbo.Tiempo(DATEDIFF(SECOND, LoksysServerTime, GETUTCDATE())) as Tiempo, DATEDIFF(SECOND, '1970-01-01 00:00:00', LoksysServerTime) as tiempoUnix, "+
+            "dbo.iconbateria(ISNULL(ROUND(BatteryVoltage, 2),3)) as icon_bat"+
             "FROM LokcontractID as c "+
             "INNER JOIN LokDeviceID as d ON d.DeviceID = c.FKLokDeviceID "+
             "LEFT JOIN ICEmpresa as e ON e.IdEmpresa = c.FKICEmpresa "+
