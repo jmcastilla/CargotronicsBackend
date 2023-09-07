@@ -151,6 +151,7 @@ controller.get_contratostrafico = async (req, res) => {
             "SUBSTRING(iconos.IconMoving, 2, CHARINDEX('|', iconos.IconMoving) - 2) AS IconMoving, "+
             "SUBSTRING(iconos.IconLocked, 2, CHARINDEX('|', iconos.IconLocked) - 2) AS IconLocked, "+
             "SUBSTRING(iconos.IconDesvio, 2, CHARINDEX('|', iconos.IconDesvio) - 2) AS IconDesvio, "+
+            "iconos.IconSeparado, "+
             "SUBSTRING(iconos.IconBack, 2, CHARINDEX('|', iconos.IconBack) - 2) AS IconBack "+
             "FROM LokcontractID as c "+
             "INNER JOIN LokDeviceID as d ON d.DeviceID = c.FKLokDeviceID "+
@@ -163,6 +164,7 @@ controller.get_contratostrafico = async (req, res) => {
             "WHERE c.Active=1 AND c.FKLokProyecto="+req.session.proyecto;
             console.log(consulta);
             let resultado=await sqlconfig.query(consulta);
+            console.log(resultado);
             res.json({success : true, data : resultado.recordsets[0]});
         }else{
             res.json({success : false});
