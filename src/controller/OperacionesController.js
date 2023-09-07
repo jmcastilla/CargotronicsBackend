@@ -147,7 +147,7 @@ controller.get_contratostrafico = async (req, res) => {
             "dbo.iconbateria(ISNULL(ROUND(BatteryVoltage, 2),3)) as icon_bat, ROUND(BatteryVoltage, 2) as bateria, "+
             "c.LastReportNota, tr.TipoReporte, (CASE d.Moving WHEN 1 THEN '/images/moving.png' ELSE '/images/stop.png' END) as IconMoving, "+
             "(CASE d.Locked WHEN 1 THEN '/images/closedpadlock.png' ELSE '/images/openedpadlock.png' END) as IconLocked, "+
-            "dbo.IconBack(c.ContractID, 1) as IconBack, iconos.* "+
+            "dbo.IconBack_(c.ContractID, 1) as IconBack, iconos.* "+
             "FROM LokcontractID as c "+
             "INNER JOIN LokDeviceID as d ON d.DeviceID = c.FKLokDeviceID "+
             "LEFT JOIN ICEmpresa as e ON e.IdEmpresa = c.FKICEmpresa "+
