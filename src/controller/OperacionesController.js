@@ -152,7 +152,7 @@ controller.get_contratostrafico = async (req, res) => {
             "SUBSTRING(iconos.IconLocked, 2, CHARINDEX('|', iconos.IconLocked) - 2) AS IconLocked, "+
             "SUBSTRING(iconos.IconDesvio, 2, CHARINDEX('|', iconos.IconDesvio) - 2) AS IconDesvio, "+
             //"SUBSTRING(iconos.IconSeparado, 2, CHARINDEX('|', iconos.IconSeparado) - 2) AS IconSeparado, "+
-            "1.png AS IconSeparado2, iconos.IconSeparado"+
+            "1.png AS IconSeparado, "+
             "SUBSTRING(iconos.IconBack, 2, CHARINDEX('|', iconos.IconBack) - 2) AS IconBack "+
             "FROM LokcontractID as c "+
             "INNER JOIN LokDeviceID as d ON d.DeviceID = c.FKLokDeviceID "+
