@@ -139,7 +139,8 @@ controller.get_contratostrafico = async (req, res) => {
         if (log == true) {
             var consulta= "SELECT c.ContractID, c.FKLokDeviceID, e.NombreEmpresa, c.PlacaTruck, '"+req.session.username+"' as username, "+
             "CONVERT(varchar,DATEADD(MINUTE,0,c.FechaHoraInicio),20) as fecha, CONCAT(c.LastMsgLat,',',c.LastMsgLong) as pos, "+
-            "ISNULL(c.FKTrayecto, 0) as trayecto, r.DescripcionRuta, t.DescripcionTrayecto, c.ContainerNum, c.NombreConductor, "+
+            "ISNULL(c.FKTrayecto, 0) as trayecto, r.DescripcionRuta, t.DescripcionTrayecto, c.NombreConductor, "+
+            "CASE WHEN c.ContainerNum IS NULL OR c.ContainerNum = 'ND' THEN (LEFT(c.Documento, 35) + CASE WHEN LEN(c.Documento) > 35 THEN '...' ELSE '' END) ELSE c.ContainerNum END as ContainerNum, "+
             "c.Ref, tp.NombreTranspo, c.MovilConductor, c.PlacaTrailer, CONVERT(varchar,DATEADD(minute,0,c.FechaHoraInicio),20) as fechainicio, "+
             "ISNULL(CONVERT(varchar,DATEADD(minute,0,c.FechaHoraFin),20), CONVERT(varchar,DATEADD(minute,"+req.session.diffhorario+",GETDATE()),20)) as fechafin, c.LastMsgLat, c.LastMsgLong, "+
             "d.Locked, c.Active, ISNULL(t.DistanciaReal,0) as DistanciaCompleta, t.Origen, d.FKLokTipoEquipo, "+
