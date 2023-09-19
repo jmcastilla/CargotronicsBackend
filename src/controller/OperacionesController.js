@@ -179,7 +179,7 @@ controller.get_contratostrafico = async (req, res) => {
                 " OR c.FKICEmpresaConsulta3 = "+req.session.idcliente+
                 " OR e.Owner = "+req.session.idcliente+") ";
             }
-            consulta+="ORDER BY d.Locked ASC, bitAperturaResp ASC, bitBackRespo ASC, bitAlejadoRespo ASC, bitDesvioRespo ASC, bitDetencionRespo ASC, bitGpsRespo ASC, bitTiempoRespo ASC, d.LoksysServerTime";
+            consulta+="ORDER BY d.Locked ASC, bitAperturaRespo ASC, bitBackRespo ASC, bitAlejadoRespo ASC, bitDesvioRespo ASC, bitDetencionRespo ASC, bitGpsRespo ASC, bitTiempoRespo ASC, d.LoksysServerTime";
             console.log(consulta);
             let resultado=await sqlconfig.query(consulta);
             console.log(resultado);
