@@ -95,9 +95,12 @@ app.post('/login', async (req, res) =>{
     try{
         let user=req.body.user;
         let pass=req.body.pass;
-        var consulta= "SELECT u.Pwd, u.Salt, u.FKProyecto, p.DiferenciaServidor, p.DiferenciaHorariaM FROM ICUsers as u "+
+        var consulta= "SELECT u.Pwd, u.Salt, u.FKProyecto, p.DiferenciaServidor, p.DiferenciaHorariaM, "+
+        "u.RolTrafico, u.Trafico, ISNULL(p.ProyectoPrincipal, 1) as ownr, ISNULL(p.varidcliente, 2) as varidcliente, "+
+        "e.IdEmpresa, ISNULL(clientede, 0) as clientede FROM ICUsers as u "+
+        "INNER JOIN ICEmpresa as e on e.IdEmpresa = u.FKICEmpresa "+
         "INNER JOIN LokProyectos as p on p.IDProyecto = u.FKProyecto "+
-        "WHERE u.IdUser='"+user+"'";
+        "WHERE u.IdUser='"+user+"' and u.Activo=1";
         console.log(consulta);
         let resultado=await sqlconfig.query(consulta);
         console.log(resultado);
@@ -112,6 +115,12 @@ app.post('/login', async (req, res) =>{
                 req.session.proyecto = resultado.recordset[0].FKProyecto;
                 req.session.diffhorario = resultado.recordset[0].DiferenciaServidor;
                 req.session.diffUTC = resultado.recordset[0].DiferenciaHorariaM;
+                req.session.roltrafico = resultado.recordset[0].RolTrafico;
+                req.session.trafico = resultado.recordset[0].Trafico;
+                req.session.owner = resultado.recordset[0].ownr;
+                req.session.empresaprincipal = resultado.recordset[0].varidcliente;
+                req.session.idempresa = resultado.recordset[0].IdEmpresa;
+                req.session.idcliente = resultado.recordset[0].clientede;
                 res.json({success : true});
             }else{
                 if (req.session) {

@@ -164,8 +164,22 @@ controller.get_contratostrafico = async (req, res) => {
             "LEFT JOIN Trayectos as t ON c.FKTrayecto =  t.IDTrayecto "+
             "LEFT JOIN ICTipoReporte as tr ON c.LastICTipoReporte =  tr.IdTipoReporte "+
             "LEFT JOIN ICTransportadora as tp ON tp.IdTransportadora = c.FKICTransportadora "+
-            "OUTER APPLY dbo.IconosContract(c.ContractID, c.FKLokDeviceID) AS iconos "+
-            "WHERE c.Active=1 AND c.FKLokProyecto="+req.session.proyecto;
+            "OUTER APPLY dbo.IconosContract(c.ContractID, c.FKLokDeviceID) AS iconos ";
+            if(req.session.roltrafico != 0){
+                consulta+="INNER JOIN (SELECT * FROM LokEmpresaRol WHERE id_roltrafico_ = "+req.session.roltrafico+") as Rol ON Rol.id_empresa = c.FKICEmpresa ";
+            }
+            consulta+="WHERE c.Active=1 AND c.FKLokProyecto="+req.session.proyecto;
+            if(req.session.proyecto == 1){
+                consulta+=" AND c.FKICEmpresa IS NOT NULL ";
+            }
+            if(req.session.idcliente != req.session.empresaprincipal && req.session.proyecto == req.session.owner){
+                consulta+=" AND (c.FKICEmpresa = "+req.session.idcliente+
+                " OR c.FKICEmpresaConsulta = "+req.session.idcliente+
+                " OR c.FKICEmpresaConsulta2 = "+req.session.idcliente+
+                " OR c.FKICEmpresaConsulta3 = "+req.session.idcliente+
+                " OR e.Owner = "+req.session.idcliente+") ";
+            }
+            consulta+="ORDER BY d.Locked ASC, bitAperturaResp ASC, bitBackRespo ASC, bitAlejadoRespo ASC, bitDesvioRespo ASC, bitDetencionRespo ASC, bitGpsRespo ASC, bitTiempoRespo ASC, d.LoksysServerTime";
             console.log(consulta);
             let resultado=await sqlconfig.query(consulta);
             console.log(resultado);
