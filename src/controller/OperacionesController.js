@@ -172,7 +172,7 @@ controller.get_contratostrafico = async (req, res) => {
             if(req.session.proyecto == 1){
                 consulta+=" AND c.FKICEmpresa IS NOT NULL ";
             }
-            if(req.session.idcliente != req.session.empresaprincipal && req.session.proyecto == req.session.owner){
+            /*if(req.session.idcliente != req.session.empresaprincipal && req.session.proyecto == req.session.owner){
                 consulta+=" AND (c.FKICEmpresa = "+req.session.idcliente+
                 " OR c.FKICEmpresaConsulta = "+req.session.idcliente+
                 " OR c.FKICEmpresaConsulta2 = "+req.session.idcliente+
@@ -180,7 +180,7 @@ controller.get_contratostrafico = async (req, res) => {
                 " OR e.Owner = "+req.session.idcliente+") ";
             }
             consulta+="ORDER BY d.Locked ASC, bitAperturaRespo ASC, bitBackRespo ASC, bitAlejadoRespo ASC, bitDesvioRespo ASC, bitDetencionRespo ASC, bitGpsRespo ASC, bitTiempoRespo ASC, d.LoksysServerTime";
-            console.log(consulta);
+            console.log(consulta);*/
             let resultado=await sqlconfig.query(consulta);
             console.log(resultado);
             res.json({success : true, data : resultado.recordsets[0]});
