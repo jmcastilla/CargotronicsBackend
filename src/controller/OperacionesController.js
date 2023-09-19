@@ -178,9 +178,9 @@ controller.get_contratostrafico = async (req, res) => {
                 " OR c.FKICEmpresaConsulta2 = "+req.session.idcliente+
                 " OR c.FKICEmpresaConsulta3 = "+req.session.idcliente+
                 " OR e.Owner = "+req.session.idcliente+") ";
-            }
+            }*/
             consulta+="ORDER BY d.Locked ASC, bitAperturaRespo ASC, bitBackRespo ASC, bitAlejadoRespo ASC, bitDesvioRespo ASC, bitDetencionRespo ASC, bitGpsRespo ASC, bitTiempoRespo ASC, d.LoksysServerTime";
-            console.log(consulta);*/
+            console.log(consulta);
             let resultado=await sqlconfig.query(consulta);
             console.log(resultado);
             res.json({success : true, data : resultado.recordsets[0]});
