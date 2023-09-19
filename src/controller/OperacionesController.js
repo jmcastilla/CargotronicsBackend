@@ -172,12 +172,12 @@ controller.get_contratostrafico = async (req, res) => {
             if(req.session.proyecto == 1){
                 consulta+=" AND c.FKICEmpresa IS NOT NULL ";
             }
-            if(req.session.idcliente != req.session.empresaprincipal && req.session.proyecto == req.session.owner){
-                consulta+=" AND (c.FKICEmpresa = "+req.session.idcliente+
-                " OR c.FKICEmpresaConsulta = "+req.session.idcliente+
-                " OR c.FKICEmpresaConsulta2 = "+req.session.idcliente+
-                " OR c.FKICEmpresaConsulta3 = "+req.session.idcliente+
-                " OR e.Owner = "+req.session.idcliente+") ";
+            if(req.session.idempresa != req.session.empresaprincipal && req.session.proyecto == req.session.owner){
+                consulta+=" AND (c.FKICEmpresa = "+req.session.idempresa+
+                " OR c.FKICEmpresaConsulta = "+req.session.idempresa+
+                " OR c.FKICEmpresaConsulta2 = "+req.session.idempresa+
+                " OR c.FKICEmpresaConsulta3 = "+req.session.idempresa+
+                " OR e.Owner = "+req.session.idempresa+") ";
             }
             consulta+="ORDER BY d.Locked ASC, bitAperturaRespo ASC, bitBackRespo ASC, bitAlejadoRespo ASC, bitDesvioRespo ASC, bitDetencionRespo ASC, bitGpsRespo ASC, bitTiempoRespo ASC, d.LoksysServerTime";
             console.log(consulta);
