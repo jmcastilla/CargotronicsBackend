@@ -152,7 +152,7 @@ app.get('/logout', async (req, res) =>{
 
 
 // FUNCION PARA SUBIR FOTOS AL SERVIDOR DE TRAKAPHOTO
-app.post('/upload',upload.array('files'), async (req, res) =>{
+/*app.post('/upload',upload.array('files'), async (req, res) =>{
     try{
         const files = req.files;
         console.log(files);
@@ -205,6 +205,65 @@ app.post('/upload',upload.array('files'), async (req, res) =>{
         res.json({success : false});
     }
 
+});*/
+
+app.post('/upload', upload.array('files'), async (req, res) => {
+  try {
+    const files = req.files;
+    console.log(files);
+    var enviados = 0;
+
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+
+      try {
+        const metadata = await sharp(file.buffer).metadata();
+        console.log(metadata);
+
+        const dataFoto = await sharp(file.buffer)
+          .resize({ width: 800, height: 600, fit: sharp.fit.inside, withoutEnlargement: true })
+          .jpeg({ quality: 80 })
+          .toBuffer();
+
+        const client = net.createConnection({ port: 232, host: '157.230.222.224' }, () => {
+          const message = file.originalname;
+          const messageBuffer = Buffer.from(message, 'utf8');
+          const messageLength = messageBuffer.length;
+          const buffer = Buffer.alloc(2 + messageLength);
+          buffer.writeUInt16BE(messageLength, 0);
+          messageBuffer.copy(buffer, 2);
+          client.write(buffer);
+          const readStream = Readable.from(dataFoto);
+          readStream.pipe(client);
+        });
+
+        client.on('data', (data) => {
+          console.log(`Received data from server: ${data.toString('utf8')}`);
+          enviados++;
+          if (enviados == files.length) {
+            res.json({ success: true });
+          }
+          client.end();
+        });
+
+        client.on('end', () => {
+          console.log('Disconnected from server');
+        });
+
+        // Add an error handler for the client
+        client.on('error', (err) => {
+          console.error('Error in client:', err);
+          res.json({ success: false });
+        });
+      } catch (err) {
+        console.error('Error processing file:', err);
+        res.json({ success: false });
+      }
+    }
+  } catch (err) {
+    console.error('Error in try-catch block:', err);
+    res.json({ success: false });
+  }
 });
 
 

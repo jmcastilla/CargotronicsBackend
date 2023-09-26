@@ -82,6 +82,25 @@ controller.get_eventos = async (req, res) => {
 }
 
 // FUNCION QUE RETORNA EL LISTADO DE TRAYECTOS
+controller.get_roles = async (req, res) => {
+    try{
+        var log = req.session.loggedin;
+        if (log == true) {
+            var consulta= "SELECT IDRol, NombreRol FROM LokRoles";
+
+            let resultado=await sqlconfig.query(consulta);
+
+            res.json({success : true, data : resultado.recordset});
+        }else{
+            res.json({success : false});
+        }
+    }catch(err){
+        res.json({success : false});
+    }
+
+}
+
+// FUNCION QUE RETORNA EL LISTADO DE TRAYECTOS
 controller.get_trayectos = async (req, res) => {
     console.log(req.session);
     try{
