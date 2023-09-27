@@ -18,6 +18,7 @@ router.post('/setlastcontractdevice', OperacionesController.set_lastcontractdevi
 router.post('/getpolylinetrayecto', OperacionesController.get_polylinetrayecto);
 router.get('/getkeyapp', OperacionesController.get_keyApp);
 router.get('/getroles', OperacionesController.get_roles);
+router.get('/getusuarios', OperacionesController.get_usuarios);
 router.post('/getreportesdevice', OperacionesController.get_reportesdevice);
 
 

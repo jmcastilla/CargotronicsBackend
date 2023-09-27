@@ -101,6 +101,29 @@ controller.get_roles = async (req, res) => {
 }
 
 // FUNCION QUE RETORNA EL LISTADO DE TRAYECTOS
+controller.get_usuarios = async (req, res) => {
+    try{
+        var log = req.session.loggedin;
+        if (log == true) {
+            var consulta= "SELECT idUser, FKICEmpresa, FKProyecto, tipoUser, RolTrafico, e.NombreEmpresa, "+
+            "r.NombreRol FROM ICUsers as u "+
+            "LEFT JOIN LokRoles as r on r.IDRol=u.tipoUser "+
+            "LEFT JOIN ICEmpresa as e on e.IdEmpresa=u.FKICEmpresa "+
+            "WHERE Activo=1";
+
+            let resultado=await sqlconfig.query(consulta);
+
+            res.json({success : true, data : resultado.recordset});
+        }else{
+            res.json({success : false});
+        }
+    }catch(err){
+        res.json({success : false});
+    }
+
+}
+
+// FUNCION QUE RETORNA EL LISTADO DE TRAYECTOS
 controller.get_trayectos = async (req, res) => {
     console.log(req.session);
     try{
