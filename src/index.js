@@ -144,10 +144,12 @@ app.post('/falabella', async (req, res) =>{
     try{
         let contenedor=req.body.contenedor;
         let token=req.body.token;
+        console.log(contenedor+" - "+token);
         if(token == "7WK5T79u5mIzjIXXi2oI9Fglmgivv7RAJ7izyj9tUyQ"){
             var consulta= "SELECT c.LastReportUbica as Ubicacion, r.TipoReporte as Estado, c.ContainerNum as Contenedor FROM LokContractID as c " +
   					"INNER JOIN ICTipoReporte AS r on r.IdTipoReporte = c.LastICTipoReporte WHERE " +
   					"c.Active=1 AND c.FKICEmpresa=243 AND c.ContainerNum='"+contenedor+"'";
+            console.log(consulta);
             let resultado=await sqlconfig.query(consulta);
             res.json({success : true, data : resultado.recordsets[0]});
         }else{
