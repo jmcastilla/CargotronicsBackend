@@ -230,6 +230,7 @@ app.get('/logout', async (req, res) =>{
 });*/
 
 app.post('/upload', upload.array('files'), async (req, res) => {
+  let responseSent = false;
   try {
     const files = req.files;
     console.log(files);
@@ -264,6 +265,7 @@ app.post('/upload', upload.array('files'), async (req, res) => {
           enviados++;
           if (enviados == files.length) {
             res.json({ success: true });
+            responseSent = true;
           }
           client.end();
         });
@@ -274,17 +276,26 @@ app.post('/upload', upload.array('files'), async (req, res) => {
 
         // Add an error handler for the client
         client.on('error', (err) => {
-          console.error('Error in client:', err);
-          res.json({ success: false });
+            console.error('Error in client:', err);
+            if (!responseSent) {
+                res.status(500).json({ success: false, error: 'An error occurred during file processing' });
+                responseSent = true;  // Set the flag to true to indicate response has been sent
+            }
         });
       } catch (err) {
-        console.error('Error processing file:', err);
-        res.json({ success: false });
+          console.error('Error processing file:', err);
+          if (!responseSent) {
+            res.status(500).json({ success: false, error: 'An error occurred during file processing' });
+            responseSent = true;  // Set the flag to true to indicate response has been sent
+          }
       }
     }
   } catch (err) {
-    console.error('Error in try-catch block:', err);
-    res.json({ success: false });
+      console.error('Error in try-catch block:', err);
+      if (!responseSent) {
+        res.status(500).json({ success: false, error: 'An error occurred' });
+        responseSent = true;  // Set the flag to true to indicate response has been sent
+      }
   }
 });
 

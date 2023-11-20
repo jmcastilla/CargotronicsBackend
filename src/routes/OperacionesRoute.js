@@ -20,7 +20,7 @@ router.get('/getkeyapp', OperacionesController.get_keyApp);
 router.get('/getroles', OperacionesController.get_roles);
 router.get('/getusuarios', OperacionesController.get_usuarios);
 router.post('/getreportesdevice', OperacionesController.get_reportesdevice);
-
-
+router.post('/getreportescontroldevice', OperacionesController.get_reportescontroldevice);
+router.post('/getreportescontroldevicexequipo', OperacionesController.get_reportescontroldevicexequipo);
 
 module.exports = router;

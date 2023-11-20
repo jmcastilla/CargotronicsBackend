@@ -327,6 +327,109 @@ controller.get_reportestrafico = async (req, res) => {
 
 }
 
+// FUNCION QUE RETORNA EL LISTADO DE REPORTES DE TRAFICO DE UN CONTRATO
+controller.get_reportescontroldevice = async (req, res) => {
+    console.log(req.session);
+    try{
+        var log = req.session.loggedin;
+
+        if (log == true) {
+            var proyecto=req.session.proyecto;
+            var idcliente=req.session.empresaprincipal;
+            var utcServidor=req.session.diffhorario;
+            var filtro=req.body.filtro;
+            var consulta = "SELECT DeviceID, dbo.UltimoContrato(DeviceID) As UltContrato, ICRutas.DescripcionRuta AS Ruta, NombreEmpresa AS Cliente, LokDeviceIDEstado.Descripcion AS Estado, ISNULL(ROUND(BatteryVoltage, 2),3) AS voltage, dbo.iconbateria(ISNULL(ROUND(BatteryVoltage, 2),3)) AS icon_bat, Apn1, Apn2, ";
+            consulta += "dbo.Tiempo(DATEDIFF(SECOND, LoksysServerTime, GETUTCDATE())) AS Tiempo, dbo.Tiempo(DATEDIFF(SECOND, DATEADD(MINUTE, -" + utcServidor + ", PositionTime), UltActualizacionDevice)) as Diff,  DATEADD(MINUTE, -" + utcServidor + ", PositionTime) AS ";
+            consulta += " eventDateTime,  UltActualizacionDevice AS LastSaved, Ciudad + ', ' + Departamento AS Position, ISNULL(UltServer, '-') AS UltServer, ";
+            consulta += " ISNULL(operador+'('+CAST(mcc AS NVARCHAR(4))+')','Desconocido('+CAST(UltMccc AS NVARCHAR(4))+')')AS Compania, CASE WHEN FKLokTipoEquipo in (select t.idtipoequipo from loktipoequipo t where mostrar = 1) ";
+            consulta += " THEN 'controldevice.aspx?device='+DeviceID ELSE '#' END AS url, ISNULL(Linea1, '-') AS LApn1, ISNULL(Linea2, '-') AS LApn2, ";
+            consulta += "FW, ConfigDevice, CASE WHEN Active = 0 THEN 0 ELSE ROUND(ISNULL(VoltageInit, 0), 2, 0) END AS VoltageInit, CASE WHEN Active = 0 THEN '-' ELSE dbo.Tiempo6(DATEDIFF(MI, InicioServicio, DATEADD(HH, 2, GETDATE()))) END AS HorasViaje, ";
+            consulta += "CASE WHEN Active = 0 THEN 0 ELSE ISNULL(CantReportes,0) END AS CantReportes, CASE WHEN Active = 0 THEN 0 ELSE CASE WHEN ISNULL(CantReportes,0) <> 0 THEN CantReportes / (CASE WHEN DATEDIFF(HH, InicioServicio, DATEADD(HH, 2, GETDATE())) = 0 THEN 1 ELSE DATEDIFF(HH, InicioServicio, DATEADD(HH, 2, GETDATE())) END) ELSE 0 END END AS RepxHora,";
+            consulta += "CASE WHEN Active = 0 THEN 0 ELSE CASE WHEN(ROUND(ISNULL(VoltageInit, 0) - BatteryVoltage, 2, 1)) < 0 THEN 0 ELSE ROUND(ISNULL(VoltageInit, 0) - BatteryVoltage, 2, 1) END END AS DeltaBateria, ";
+            consulta += "CASE WHEN Active = 0 THEN 0 ELSE CASE WHEN (ROUND(ISNULL(VoltageInit, 0) - BatteryVoltage, 2, 1)) <= 0 THEN 0 ELSE ROUND(ROUND((CASE WHEN  DATEDIFF(HH, InicioServicio, DATEADD(HH, 2, GETDATE())) = 0 THEN 1 ELSE DATEDIFF(HH, InicioServicio, DATEADD(HH, 2, GETDATE())) END) ,2,1)/ROUND(ISNULL(VoltageInit, 0) - BatteryVoltage, 2, 1),0,1) END END AS HoraxVolt, ";
+            consulta += "CASE WHEN Active = 0 THEN 0 ELSE CASE WHEN(ISNULL(CantReportes, 0) = 0) OR((ROUND(ISNULL(VoltageInit, 0) - BatteryVoltage, 2, 1)) <= 0) THEN 0 ELSE ROUND(ISNULL(CantReportes, 0) / ROUND(ISNULL(VoltageInit, 0) - BatteryVoltage, 2, 1), 0, 1) END END AS ReporxVolt, ";
+            consulta += " ROUND(CASE WHEN Active = 0 THEN 0 ELSE CASE WHEN (ROUND(ISNULL(VoltageInit, 0) - BatteryVoltage, 2, 1)) <= 0 THEN 0 ELSE ROUND(ROUND((CASE WHEN  DATEDIFF(HH, InicioServicio, DATEADD(HH, 2, GETDATE())) = 0 THEN 1 ELSE DATEDIFF(HH, InicioServicio, DATEADD(HH, 2, GETDATE())) END) ,2,1)/ROUND(ISNULL(VoltageInit, 0) - BatteryVoltage, 2, 1),0,1) END END * (((CASE WHEN Active = 0 THEN 0 ELSE ROUND(ISNULL(VoltageInit, 0), 2, 0) END) - 3.5)/24), 1) AS ProyBat ";
+            consulta += " FROM LokDeviceID INNER JOIN LokProyectos ON IdProyecto = LokDeviceId.FKLokProyecto LEFT JOIN LokMcccPais ON cod_pais = FKPais and UltMccc = mcc LEFT JOIN LokContractID ON LokDeviceID.LastContractID = ContractID LEFT JOIN ICEmpresa ON FKICEmpresa = IdEmpresa LEFT JOIN ICRutas ON IdRuta = FKICRutas  INNER JOIN LokDeviceIDEstado ON Estado = IDEstado WHERE FKLokTipoEquipo <> 1 AND FKLokTipoEquipo <> 4 ";
+            if (idcliente != 2 && proyecto == 1){
+                consulta += " AND EmpresaActiva = " + idcliente;
+            }
+            if (filtro!="" && filtro!="*"){
+                consulta += " AND DeviceID LIKE '%" + filtro + "%' ";
+            }
+            let resultado=await sqlconfig.query(consulta);
+            res.json({success : true, data : resultado.recordsets[0]});
+        }else{
+            res.json({success : false});
+        }
+    }catch(err){
+        res.json({success : false});
+    }
+
+}
+
+// FUNCION QUE RETORNA EL LISTADO DE REPORTES DE LOS DISPOSITIVOS
+controller.get_reportescontroldevicexequipo = async (req, res) => {
+    console.log(req.session);
+    try{
+        var log = req.session.loggedin;
+
+        if (log == true) {
+            var tipo=req.body.tipo;
+            var device=req.body.device;
+            var inicio=req.body.inicio;
+            var fin=req.body.fin;
+            var utcServidor=req.session.diffhorario;
+            var consulta= "";
+            if(tipo == 2){
+                consulta = "SELECT WLMsg.ID, latitude, longitude, '' AS DiffTime, DATEADD(MINUTE, -" + utcServidor + ",datetime_utc) AS eventDateTime, 0 AS csq, CASE WHEN lock = 1 THEN 'Cerrado' ELSE 'Abierto' END AS event, unit AS device, DATEADD(MINUTE, -300,datetime_utc) AS UltActualizacion, 'GPRS' as source, ";
+                consulta += " satellites AS gpsStatus, lock, ISNULL(ROUND(main_voltage, 2),3) AS voltages, velocity AS speed, WLMsg.Ciudad + ', ' + Departamento AS position, Nombre, 'NO INFO' AS Compania, 'NO INFO' AS servername ";
+                consulta += " FROM WLMsg LEFT JOIN GeoCercas ON WLMsg.GeoCerca = GeoCercas.ID WHERE unit = '" + device + "' AND DATEADD(hh,-5,datetime_utc) ";
+                consulta += " BETWEEN '" + inicio + "' AND '" + fin + "' ORDER BY eventDateTime DESC";
+            }else if(tipo == 3){
+                consulta = " SELECT WSEnvotechMsg.ID, latitude, longitude, DATEADD(MINUTE, -" + utcServidor + ",eventDateTime) AS eventDateTime, event, device, UltActualizacion, source, ";
+                consulta += " DATEDIFF(MINUTE, DATEADD(MINUTE, -" + utcServidor + ",eventDateTime), UltActualizacion) AS DiffTime, ";
+                consulta += " gpsStatus, ISNULL(ROUND(voltage, 2),3) AS voltages, speed, WSEnvotechMsg.Ciudad + ', ' + Departamento AS position, csq, ";
+                consulta += " 'NO INFO' AS Compania, ISNULL(servername, 'NO INFO') AS servername, nombreUltGeo as Nombre, lock  ";
+                consulta += " FROM WSEnvotechMsg  ";
+                consulta += " WHERE masterID = '" + device + "' AND DATEADD(hh,-5,eventDateTime) BETWEEN '" + inicio + "' AND '" + fin + "' ";
+                consulta += " ORDER BY eventDateTime DESC ";
+            }else if(tipo == 6){
+                consulta = "SELECT WSCelltrackMsg.ID, latitud as latitude , longitud as longitude, '' AS DiffTime,  DATEADD(MINUTE, -" + utcServidor + ",datetimenormal) AS eventDateTime, 0 AS csq, ISNULL(evento,'') as event, fklokdeviceid AS device, ";
+                consulta += " DateTimeActualizacion AS UltActualizacion, 'GPRS' as source, '2' AS gpsStatus, ISNULL(ROUND(voltage, 2),3) AS voltages, velocidad AS speed, WSCelltrackMsg.Ciudad + ', ' + Departamento AS position, nombreUltGeo as Nombre, ";
+                consulta += " 'Pendiente' AS Compania, lock, ISNULL(servername,'') AS servername FROM WSCelltrackMsg ";
+                consulta += " WHERE FKLokDeviceID = '" + device + "' AND DATEADD(MINUTE, -" + utcServidor + ",datetimenormal) BETWEEN '" + inicio + "' AND '" + fin + "' ORDER BY eventDateTime DESC";
+            }else if(tipo == 7){
+                consulta = "SELECT WSNuevo.ID, latitud as latitude , longitud as longitude, '' AS DiffTime,  DATEADD(MINUTE, -" + utcServidor + ",fecha) AS eventDateTime, 0 AS csq, '' as event, device AS device, ";
+                consulta += " guardado AS UltActualizacion, lock, 'GPRS' as source, satelites AS gpsStatus, 4 AS voltages, velocidad AS speed, WSNuevo.Ciudad + ', ' + Departamento AS position, nombreUltGeo as Nombre, ";
+                consulta += " '' AS Compania, '' AS servername FROM WSNuevo";
+                consulta += " WHERE device = '" + device + "' AND DATEADD(MINUTE, -" + utcServidor + ",fecha) BETWEEN '" + inicio + "' AND '" + fin + "' ORDER BY fecha DESC";
+            }else if(tipo == 9){
+                consulta = "SELECT WSJ701trackMsg.ID, latitud as latitude , longitud as longitude, '' AS DiffTime,  DATEADD(MINUTE, -" + utcServidor + ",datetimenormal) AS eventDateTime, 0 AS csq, ISNULL(evento,'') as event, fklokdeviceid AS device, ";
+                consulta += " DateTimeActualizacion AS UltActualizacion, 'GPRS' as source, '2' AS gpsStatus, ISNULL(ROUND(voltage, 2),3) AS voltages, velocidad AS speed, WSJ701trackMsg.Ciudad + ', ' + Departamento AS position, nombreUltGeo as Nombre, ";
+                consulta += " 'Pendiente' AS Compania, lock, ISNULL(servername,'') AS servername FROM WSJ701trackMsg ";
+                consulta += " WHERE FKLokDeviceID = '" + device + "' AND DATEADD(MINUTE, -" + utcServidor + ",datetimenormal) BETWEEN '" + inicio + "' AND '" + fin + "' ORDER BY eventDateTime DESC";
+            }else if(tipo == 10){
+                consulta = "SELECT WSJT707trackMsg.ID, latitud as latitude , longitud as longitude, '' AS DiffTime,  DATEADD(MINUTE, -" + utcServidor + ",datetimenormal) AS eventDateTime, 0 AS csq, ISNULL(evento,'') as event, fklokdeviceid AS device, ";
+                consulta += " DateTimeActualizacion AS UltActualizacion, 'GPRS' as source, '2' AS gpsStatus, ISNULL(ROUND(voltage, 2),3) AS voltages, velocidad AS speed, WSJT707trackMsg.Ciudad + ', ' + Departamento AS position, nombreUltGeo as Nombre, ";
+                consulta += " 'Pendiente' AS Compania, lock, ISNULL(servername,'') AS servername FROM WSJT707trackMsg ";
+                consulta += " WHERE FKLokDeviceID = '" + device + "' AND DATEADD(MINUTE, -" + utcServidor + ",datetimenormal) BETWEEN '" + inicio + "' AND '" + fin + "' ORDER BY eventDateTime DESC";
+            }else if(tipo == 11){
+                consulta = "SELECT WSJT301trackMsg.ID, latitud as latitude , longitud as longitude, '' AS DiffTime,  DATEADD(MINUTE, -" + utcServidor + ",datetimenormal) AS eventDateTime, 0 AS csq, ISNULL(evento,'') as event, fklokdeviceid AS device, ";
+                consulta += " DateTimeActualizacion AS UltActualizacion, 'GPRS' as source, '2' AS gpsStatus, ISNULL(ROUND(voltage, 2),3) AS voltages, velocidad AS speed, WSJT707trackMsg.Ciudad + ', ' + Departamento AS position, nombreUltGeo as Nombre, ";
+                consulta += " 'Pendiente' AS Compania, lock, ISNULL(servername,'') AS servername FROM WSJT301trackMsg ";
+                consulta += " WHERE FKLokDeviceID = '" + device + "' AND DATEADD(MINUTE, -" + utcServidor + ",datetimenormal) BETWEEN '" + inicio + "' AND '" + fin + "' ORDER BY eventDateTime DESC";
+            }
+            let resultado=await sqlconfig.query(consulta);
+            res.json({success : true, data : resultado.recordsets[0]});
+        }else{
+            res.json({success : false});
+        }
+    }catch(err){
+        res.json({success : false});
+    }
+
+}
+
 //FUNCION QUE GUARDA O ACTUALIZA EL TRAYECTO
 controller.save_trayecto = async (req, res) => {
     try{
