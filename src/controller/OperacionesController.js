@@ -338,6 +338,7 @@ controller.get_reportescontroldevice = async (req, res) => {
             var idcliente=req.session.empresaprincipal;
             var utcServidor=req.session.diffhorario;
             var filtro=req.body.filtro;
+            var orden1=req.body.orden1;
             var consulta = "SELECT DeviceID, dbo.UltimoContrato(DeviceID) As UltContrato, ICRutas.DescripcionRuta AS Ruta, NombreEmpresa AS Cliente, LokDeviceIDEstado.Descripcion AS Estado, ISNULL(ROUND(BatteryVoltage, 2),3) AS voltage, dbo.iconbateria(ISNULL(ROUND(BatteryVoltage, 2),3)) AS icon_bat, Apn1, Apn2, ";
             consulta += "dbo.Tiempo(DATEDIFF(SECOND, LoksysServerTime, GETUTCDATE())) AS Tiempo, dbo.Tiempo(DATEDIFF(SECOND, DATEADD(MINUTE, -" + utcServidor + ", PositionTime), UltActualizacionDevice)) as Diff,  DATEADD(MINUTE, -" + utcServidor + ", PositionTime) AS ";
             consulta += " eventDateTime,  UltActualizacionDevice AS LastSaved, Ciudad + ', ' + Departamento AS Position, ISNULL(UltServer, '-') AS UltServer, ";
@@ -355,6 +356,14 @@ controller.get_reportescontroldevice = async (req, res) => {
             }
             if (filtro!="" && filtro!="*"){
                 consulta += " AND DeviceID LIKE '%" + filtro + "%' ";
+            }
+            if(orden1 != "Todos"){
+                if(orden1 == "Activos"){
+                    consulta += "AND Active=1 ";
+                }
+                else{
+                    consulta += "AND (Active=0 OR LastContractID='none') ";
+                }
             }
             let resultado=await sqlconfig.query(consulta);
             res.json({success : true, data : resultado.recordsets[0]});
