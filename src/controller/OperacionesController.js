@@ -379,11 +379,12 @@ controller.get_reportescontroldevice = async (req, res) => {
                 consulta += " ORDER BY UltActualizacionDevice ASC ";
             }else if(orden2 == 5){
                 consulta += " ORDER BY UltActualizacionDevice DESC ";
-            }else if(orden2 == 6){
+            }
+            /*else if(orden2 == 6){
                 consulta += " ORDER BY DATEDIFF(SECOND, DATEADD(MINUTE,-"+utcServidor+", PositionTime), UltActualizacionDevice) ASC ";
             }else if(orden2 == 7){
                 consulta += " ORDER BY DATEDIFF(SECOND, DATEADD(MINUTE,-"+utcServidor+", PositionTime), UltActualizacionDevice) DESC ";
-            }
+            }*/
 
 
             let resultado=await sqlconfig.query(consulta);
