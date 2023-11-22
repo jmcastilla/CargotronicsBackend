@@ -397,6 +397,44 @@ controller.get_reportescontroldevice = async (req, res) => {
 
 }
 
+controller.get_reportescontroldeviceunico = async (req, res) => {
+    console.log(req.session);
+    try{
+        var log = req.session.loggedin;
+
+        if (log == true) {
+            var proyecto=req.session.proyecto;
+            var idcliente=req.session.empresaprincipal;
+            var utcServidor=req.session.diffhorario;
+            var filtro=req.body.filtro;
+            var consulta = "SELECT DeviceID, dbo.UltimoContrato(DeviceID) As UltContrato, ICRutas.DescripcionRuta AS Ruta, NombreEmpresa AS Cliente, LokDeviceIDEstado.Descripcion AS Estado, ISNULL(ROUND(BatteryVoltage, 2),3) AS voltage, dbo.iconbateria(ISNULL(ROUND(BatteryVoltage, 2),3)) AS icon_bat, Apn1, Apn2, ";
+            consulta += "dbo.Tiempo(DATEDIFF(SECOND, LoksysServerTime, GETUTCDATE())) AS Tiempo, dbo.Tiempo(DATEDIFF(SECOND, DATEADD(MINUTE, -" + utcServidor + ", PositionTime), UltActualizacionDevice)) as Diff,  DATEADD(MINUTE, -" + utcServidor + ", PositionTime) AS ";
+            consulta += " eventDateTime,  UltActualizacionDevice AS LastSaved, Ciudad + ', ' + Departamento AS Position, ISNULL(UltServer, '-') AS UltServer, ";
+            consulta += " ISNULL(operador+'('+CAST(mcc AS NVARCHAR(4))+')','Desconocido('+CAST(UltMccc AS NVARCHAR(4))+')')AS Compania, CASE WHEN FKLokTipoEquipo in (select t.idtipoequipo from loktipoequipo t where mostrar = 1) ";
+            consulta += " THEN 'controldevice.aspx?device='+DeviceID ELSE '#' END AS url, ISNULL(Linea1, '-') AS LApn1, ISNULL(Linea2, '-') AS LApn2, ";
+            consulta += "FW, ConfigDevice, CASE WHEN Active = 0 THEN 0 ELSE ROUND(ISNULL(VoltageInit, 0), 2, 0) END AS VoltageInit, CASE WHEN Active = 0 THEN '-' ELSE dbo.Tiempo6(DATEDIFF(MI, InicioServicio, DATEADD(HH, 2, GETDATE()))) END AS HorasViaje, ";
+            consulta += "CASE WHEN Active = 0 THEN 0 ELSE ISNULL(CantReportes,0) END AS CantReportes, CASE WHEN Active = 0 THEN 0 ELSE CASE WHEN ISNULL(CantReportes,0) <> 0 THEN CantReportes / (CASE WHEN DATEDIFF(HH, InicioServicio, DATEADD(HH, 2, GETDATE())) = 0 THEN 1 ELSE DATEDIFF(HH, InicioServicio, DATEADD(HH, 2, GETDATE())) END) ELSE 0 END END AS RepxHora,";
+            consulta += "CASE WHEN Active = 0 THEN 0 ELSE CASE WHEN(ROUND(ISNULL(VoltageInit, 0) - BatteryVoltage, 2, 1)) < 0 THEN 0 ELSE ROUND(ISNULL(VoltageInit, 0) - BatteryVoltage, 2, 1) END END AS DeltaBateria, ";
+            consulta += "CASE WHEN Active = 0 THEN 0 ELSE CASE WHEN (ROUND(ISNULL(VoltageInit, 0) - BatteryVoltage, 2, 1)) <= 0 THEN 0 ELSE ROUND(ROUND((CASE WHEN  DATEDIFF(HH, InicioServicio, DATEADD(HH, 2, GETDATE())) = 0 THEN 1 ELSE DATEDIFF(HH, InicioServicio, DATEADD(HH, 2, GETDATE())) END) ,2,1)/ROUND(ISNULL(VoltageInit, 0) - BatteryVoltage, 2, 1),0,1) END END AS HoraxVolt, ";
+            consulta += "CASE WHEN Active = 0 THEN 0 ELSE CASE WHEN(ISNULL(CantReportes, 0) = 0) OR((ROUND(ISNULL(VoltageInit, 0) - BatteryVoltage, 2, 1)) <= 0) THEN 0 ELSE ROUND(ISNULL(CantReportes, 0) / ROUND(ISNULL(VoltageInit, 0) - BatteryVoltage, 2, 1), 0, 1) END END AS ReporxVolt, ";
+            consulta += " ROUND(CASE WHEN Active = 0 THEN 0 ELSE CASE WHEN (ROUND(ISNULL(VoltageInit, 0) - BatteryVoltage, 2, 1)) <= 0 THEN 0 ELSE ROUND(ROUND((CASE WHEN  DATEDIFF(HH, InicioServicio, DATEADD(HH, 2, GETDATE())) = 0 THEN 1 ELSE DATEDIFF(HH, InicioServicio, DATEADD(HH, 2, GETDATE())) END) ,2,1)/ROUND(ISNULL(VoltageInit, 0) - BatteryVoltage, 2, 1),0,1) END END * (((CASE WHEN Active = 0 THEN 0 ELSE ROUND(ISNULL(VoltageInit, 0), 2, 0) END) - 3.5)/24), 1) AS ProyBat ";
+            consulta += " FROM LokDeviceID INNER JOIN LokProyectos ON IdProyecto = LokDeviceId.FKLokProyecto LEFT JOIN LokMcccPais ON cod_pais = FKPais and UltMccc = mcc LEFT JOIN LokContractID ON LokDeviceID.LastContractID = ContractID LEFT JOIN ICEmpresa ON FKICEmpresa = IdEmpresa LEFT JOIN ICRutas ON IdRuta = FKICRutas  INNER JOIN LokDeviceIDEstado ON Estado = IDEstado WHERE FKLokTipoEquipo <> 1 AND FKLokTipoEquipo <> 4 ";
+            if (idcliente != 2 && proyecto == 1){
+                consulta += " AND EmpresaActiva = " + idcliente;
+            }
+            if (filtro!="" && filtro!="*"){
+                consulta += " AND DeviceID LIKE '%" + filtro + "%' ";
+            }
+            let resultado=await sqlconfig.query(consulta);
+            res.json({success : true, data : resultado.recordsets[0]});
+        }else{
+            res.json({success : false});
+        }
+    }catch(err){
+        res.json({success : false});
+    }
+
+}
 // FUNCION QUE RETORNA EL LISTADO DE REPORTES DE LOS DISPOSITIVOS
 controller.get_reportescontroldevicexequipo = async (req, res) => {
     console.log(req.session);
