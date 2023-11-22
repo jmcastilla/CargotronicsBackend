@@ -456,6 +456,7 @@ controller.get_reportescontroldevicexequipo = async (req, res) => {
             res.json({success : false});
         }
     }catch(err){
+        console.log(err);
         res.json({success : false});
     }
 
