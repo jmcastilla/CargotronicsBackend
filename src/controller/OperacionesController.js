@@ -449,6 +449,7 @@ controller.get_reportescontroldevicexequipo = async (req, res) => {
                 consulta += " 'Pendiente' AS Compania, lock, ISNULL(servername,'') AS servername FROM WSJT301trackMsg ";
                 consulta += " WHERE FKLokDeviceID = '" + device + "' AND DATEADD(MINUTE, -" + utcServidor + ",datetimenormal) BETWEEN '" + inicio + "' AND '" + fin + "' ORDER BY eventDateTime DESC";
             }
+            console.log(consulta);
             let resultado=await sqlconfig.query(consulta);
             res.json({success : true, data : resultado.recordsets[0]});
         }else{
