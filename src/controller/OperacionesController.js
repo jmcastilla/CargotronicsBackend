@@ -451,7 +451,8 @@ controller.get_reportescontroldevicexequipo = async (req, res) => {
             }
             console.log(consulta);
             let resultado=await sqlconfig.query(consulta);
-            res.json({success : true, data : resultado.recordsets[0]});
+            console.log(resultado);
+            res.json({success : true, consulta:consulta});
         }else{
             res.json({success : false});
         }
