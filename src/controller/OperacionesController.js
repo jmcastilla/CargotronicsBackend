@@ -105,10 +105,11 @@ controller.get_usuarios = async (req, res) => {
     try{
         var log = req.session.loggedin;
         if (log == true) {
-            var consulta= "SELECT idUser, FKICEmpresa, FKProyecto, tipoUser, r.IDRol, r.NombreRol, e.NombreEmpresa, "+
-            "r.NombreRol, p.Descripcion FROM ICUsers as u "+
+            var consulta= "SELECT idUser, FKICEmpresa, FKProyecto, tipoUser, r.IDRol, e.NombreEmpresa, "+
+            "r.NombreRol, p.Descripcion, rt.descr_roltrafico, rt.id_roltrafico FROM ICUsers as u "+
             "INNER JOIN LokProyectos as p on p.IDProyecto=u.FKProyecto "+
             "LEFT JOIN LokRoles as r on r.IDRol=u.tipoUser "+
+            "LEFT JOIN LokRolTrafico as rt on rt.id_roltrafico=u.RolTrafico "+
             "LEFT JOIN ICEmpresa as e on e.IdEmpresa=u.FKICEmpresa "+
             "WHERE Activo=1";
 
