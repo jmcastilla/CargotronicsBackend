@@ -136,12 +136,16 @@ let query2Procedure = function( procedureName, params ) {
     });
 }
 
-
+var server= "Dev";
+if(config1.server == '72.32.44.32'){
+    server= "Prod";
+}
 
 
 module.exports = {
   "query":query,
   "query2":query2,
   "query2Procedure":query2Procedure,
-  "queryProcedure":queryProcedure
+  "queryProcedure":queryProcedure,
+  "server":server
 }

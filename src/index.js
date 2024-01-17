@@ -121,6 +121,7 @@ app.post('/login', async (req, res) =>{
                 req.session.empresaprincipal = resultado.recordset[0].varidcliente;
                 req.session.idempresa = resultado.recordset[0].IdEmpresa;
                 req.session.idcliente = resultado.recordset[0].clientede;
+                req.session.server = sqlconfig.server;
                 res.json({success : true});
             }else{
                 if (req.session) {
