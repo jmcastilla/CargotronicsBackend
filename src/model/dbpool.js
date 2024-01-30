@@ -48,7 +48,6 @@ var config2 = {
     requestTimeout:60000,
     port: 1433
 }
-
 var conn1 = new sql.ConnectionPool(config1);
 var conn2 = new sql.ConnectionPool(config2);
 

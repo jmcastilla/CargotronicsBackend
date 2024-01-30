@@ -14,7 +14,8 @@ const bodyParser = require('body-parser');
 const net = require('net');
 const fs = require('fs');
 const { Readable } = require('stream');
-
+const {swaggerDocs} = require('./swagger');
+const PORT = 5000;
 const upload = multer();
 
 app.use(express.json({ limit: '50mb' }));
@@ -122,7 +123,7 @@ app.post('/login', async (req, res) =>{
                 req.session.idempresa = resultado.recordset[0].IdEmpresa;
                 req.session.idcliente = resultado.recordset[0].clientede;
                 req.session.server = sqlconfig.server;
-                res.json({success : true});
+                res.json({success : true, entorno: sqlconfig.server});
             }else{
                 if (req.session) {
                     req.session.destroy();
@@ -301,4 +302,7 @@ app.post('/upload', upload.array('files'), async (req, res) => {
 });
 
 
-app.listen(5000);
+app.listen(PORT, () =>{
+    console.log("Inicio Server");
+    swaggerDocs(app,PORT);
+});

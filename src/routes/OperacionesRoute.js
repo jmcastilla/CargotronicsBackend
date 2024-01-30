@@ -1,7 +1,44 @@
 const express = require('express');
 const router = express.Router();
 const OperacionesController = require('../controller/OperacionesController');
-
+/**
+ * @swagger
+ * /getfotoscontrato:
+ *   post:
+ *     summary: Obtener fotos de contrato
+ *     description: Endpoint para obtener fotos de contrato.
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               contrato:
+ *                 type: string
+ *             required:
+ *               - contrato
+ *     responses:
+ *       200:
+ *         description: Fotos de contrato obtenidas con éxito.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: true
+ *               data:
+ *                 - // Aquí debes especificar la estructura del objeto de fotos obtenido
+ *       400:
+ *         description: Error en la solicitud.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *       500:
+ *         description: Error en el servidor.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ */
 router.post('/getfotoscontrato', OperacionesController.get_fotoscontrato);
 router.post('/gethistoricos', OperacionesController.list_historicos);
 router.post('/savetrayecto', OperacionesController.save_trayecto);
