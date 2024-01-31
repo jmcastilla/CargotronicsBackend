@@ -3,7 +3,7 @@ const router = express.Router();
 const OperacionesController = require('../controller/OperacionesController');
 /**
  * @swagger
- * /getfotoscontrato:
+ * /operaciones/getfotoscontrato:
  *   post:
  *     summary: Obtener fotos de contrato
  *     description: Endpoint para obtener fotos de contrato.
@@ -40,6 +40,54 @@ const OperacionesController = require('../controller/OperacionesController');
  *               success: false
  */
 router.post('/getfotoscontrato', OperacionesController.get_fotoscontrato);
+/**
+ * @swagger
+ * /operaciones/gethistoricos:
+ *   post:
+ *     summary: Obtener históricos de contratos
+ *     description: Endpoint para obtener históricos de contratos en un rango de fechas.
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               desde:
+ *                 type: string
+ *                 format: date
+ *               hasta:
+ *                 type: string
+ *                 format: date
+ *               placa:
+ *                 type: string
+ *               empresa:
+ *                 type: integer
+ *             required:
+ *               - desde
+ *               - hasta
+ *               - placa
+ *     responses:
+ *       200:
+ *         description: Históricos de contratos obtenidos con éxito.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: true
+ *               data:
+ *                 - // Aquí debes especificar la estructura del objeto de históricos obtenido
+ *       400:
+ *         description: Error en la solicitud.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *       500:
+ *         description: Error en el servidor.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ */
 router.post('/gethistoricos', OperacionesController.list_historicos);
 router.post('/savetrayecto', OperacionesController.save_trayecto);
 router.post('/getpoly', OperacionesController.get_poly);
