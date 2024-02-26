@@ -9,6 +9,7 @@ var crypto = require('crypto');
 var hash = crypto.createHash('sha1');
 var sqlconfig = require("./model/dbpool");
 const sharp = require('sharp');
+const axios = require('axios');
 const XlsxPopulate = require('xlsx-populate');
 const bodyParser = require('body-parser');
 const net = require('net');
@@ -21,7 +22,7 @@ const upload = multer();
 app.use(express.json({ limit: '50mb' }));
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
-app.use(cors({
+/*app.use(cors({
   origin : 'https://cargotronics.com',
   credentials: true
 }));
@@ -29,6 +30,17 @@ app.use(cors({
 
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', req.headers.origin);
+  res.header('Access-Control-Allow-Credentials', true);
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  next();
+});*/
+app.use(cors({
+  origin: '*', // Permitir cualquier origen
+  credentials: true
+}));
+
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*'); // Permitir cualquier origen
   res.header('Access-Control-Allow-Credentials', true);
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
   next();
@@ -172,6 +184,35 @@ app.get('/logout', async (req, res) =>{
         console.log(req.session);
     }
     res.json({success : true});
+});
+
+app.get('/token', async (req, res) =>{
+    if (req.session) {
+      const tokenEndpoint = 'https://login.microsoftonline.com/common/oauth2/token';
+      const clientId = 'df2f25be-943f-45b7-8185-b01f6cb30fd0';
+      const clientSecret = 'wcl8Q~D43yeLGSicfia3RpXQVfOslFn3gvWsaaV_';
+      const resource = 'https://analysis.windows.net/powerbi/api';
+
+      const requestData = {
+          grant_type: 'client_credentials',
+          resource,
+          client_id: clientId,
+          client_secret: clientSecret,
+          scope: `api://${clientId}`,
+      };
+
+      axios.post(tokenEndpoint, null, {
+          params: requestData,
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+      }).then(response => {
+          res.json({success : true, token : response.data.access_token});
+      }).catch(error => {
+          res.json({success : false});
+      });
+    }
+    res.json({success : false});
 });
 
 
