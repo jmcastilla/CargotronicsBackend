@@ -9,6 +9,7 @@ var crypto = require('crypto');
 var hash = crypto.createHash('sha1');
 var sqlconfig = require("./model/dbpool");
 const sharp = require('sharp');
+const ffmpeg = require('fluent-ffmpeg');
 const axios = require('axios');
 const XlsxPopulate = require('xlsx-populate');
 const bodyParser = require('body-parser');
@@ -186,33 +187,39 @@ app.get('/logout', async (req, res) =>{
     res.json({success : true});
 });
 
-app.get('/token', async (req, res) =>{
-    if (req.session) {
-      const tokenEndpoint = 'https://login.microsoftonline.com/common/oauth2/token';
-      const clientId = 'df2f25be-943f-45b7-8185-b01f6cb30fd0';
-      const clientSecret = 'wcl8Q~D43yeLGSicfia3RpXQVfOslFn3gvWsaaV_';
-      const resource = 'https://analysis.windows.net/powerbi/api';
+app.get('/token', async (req, res) => {
+    try {
+        if (req.session) {
+            const tokenEndpoint = 'https://login.microsoftonline.com/common/oauth2/token';
+            const clientId = 'df2f25be-943f-45b7-8185-b01f6cb30fd0';
+            const clientSecret = 'eb58Q~JrMrxe4hWikVit6QJDEbxNNEvtrDRCvbAF';
+            const resource = 'https://analysis.windows.net/powerbi/api';
 
-      const requestData = {
-          grant_type: 'client_credentials',
-          resource,
-          client_id: clientId,
-          client_secret: clientSecret,
-          scope: `api://${clientId}`,
-      };
+            const requestData = {
+                grant_type: 'Password',
+                username: 'alondono@logiseguridad.com',
+                password:'Pruebas2024',
+                resource,
+                client_id: clientId,
+                client_secret: clientSecret,
+                scope: 'Dataset.Read.All',
+            };
 
-      axios.post(tokenEndpoint, null, {
-          params: requestData,
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-      }).then(response => {
-          res.json({success : true, token : response.data.access_token});
-      }).catch(error => {
-          res.json({success : false});
-      });
+            const response = await axios.post(tokenEndpoint, null, {
+                params: requestData,
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+            });
+
+            res.json({ success: true, token: response.data.access_token });
+        } else {
+            res.json({ success: false });
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        res.json({ success: false });
     }
-    res.json({success : false});
 });
 
 
@@ -283,48 +290,99 @@ app.post('/upload', upload.array('files'), async (req, res) => {
       const file = files[i];
 
       try {
-        const metadata = await sharp(file.buffer).metadata();
-        console.log(metadata);
-
-        const dataFoto = await sharp(file.buffer)
-          .resize({ width: 800, height: 600, fit: sharp.fit.inside, withoutEnlargement: true })
-          .jpeg({ quality: 80 })
-          .toBuffer();
-
-        const client = net.createConnection({ port: 232, host: '157.230.222.224' }, () => {
-          const message = file.originalname;
-          const messageBuffer = Buffer.from(message, 'utf8');
-          const messageLength = messageBuffer.length;
-          const buffer = Buffer.alloc(2 + messageLength);
-          buffer.writeUInt16BE(messageLength, 0);
-          messageBuffer.copy(buffer, 2);
-          client.write(buffer);
-          const readStream = Readable.from(dataFoto);
-          readStream.pipe(client);
-        });
-
-        client.on('data', (data) => {
-          console.log(`Received data from server: ${data.toString('utf8')}`);
-          enviados++;
-          if (enviados == files.length) {
-            res.json({ success: true });
-            responseSent = true;
-          }
-          client.end();
-        });
-
-        client.on('end', () => {
-          console.log('Disconnected from server');
-        });
-
-        // Add an error handler for the client
-        client.on('error', (err) => {
-            console.error('Error in client:', err);
-            if (!responseSent) {
-                res.status(500).json({ success: false, error: 'An error occurred during file processing' });
-                responseSent = true;  // Set the flag to true to indicate response has been sent
+        if (file.mimetype.startsWith('video/')) {
+          // Process video file
+          const outputBuffer = await new Promise((resolve, reject) => {
+            ffmpeg()
+              .input(file.buffer)
+              .videoCodec('libx264')
+              .audioCodec('aac')
+              .outputFormat('mp4')
+              .on('end', () => resolve(outputBuffer))
+              .on('error', (err) => reject(err))
+              .toBuffer();
+          });
+          const client = net.createConnection({ port: 232, host: '157.230.222.224' }, () => {
+            const message = file.originalname;
+            const messageBuffer = Buffer.from(message, 'utf8');
+            const messageLength = messageBuffer.length;
+            const buffer = Buffer.alloc(2 + messageLength);
+            buffer.writeUInt16BE(messageLength, 0);
+            messageBuffer.copy(buffer, 2);
+            client.write(buffer);
+            const readStream = Readable.from(outputBuffer);
+            readStream.pipe(client);
+          });
+          client.on('data', (data) => {
+            console.log(`Received data from server: ${data.toString('utf8')}`);
+            enviados++;
+            if (enviados == files.length) {
+              res.json({ success: true });
+              responseSent = true;
             }
-        });
+            client.end();
+          });
+
+          client.on('end', () => {
+            console.log('Disconnected from server');
+          });
+
+          // Add an error handler for the client
+          client.on('error', (err) => {
+              console.error('Error in client:', err);
+              if (!responseSent) {
+                  res.status(500).json({ success: false, error: 'An error occurred during file processing' });
+                  responseSent = true;  // Set the flag to true to indicate response has been sent
+              }
+          });
+
+          // Use outputBuffer for further processing or sending to the server
+        } else if (file.mimetype.startsWith('image/')) {
+          // Process image file using sharp
+          const metadata = await sharp(file.buffer).metadata();
+          console.log(metadata);
+
+          const dataFoto = await sharp(file.buffer)
+            .resize({ width: 800, height: 600, fit: sharp.fit.inside, withoutEnlargement: true })
+            .jpeg({ quality: 80 })
+            .toBuffer();
+
+          const client = net.createConnection({ port: 232, host: '157.230.222.224' }, () => {
+            const message = file.originalname;
+            const messageBuffer = Buffer.from(message, 'utf8');
+            const messageLength = messageBuffer.length;
+            const buffer = Buffer.alloc(2 + messageLength);
+            buffer.writeUInt16BE(messageLength, 0);
+            messageBuffer.copy(buffer, 2);
+            client.write(buffer);
+            const readStream = Readable.from(dataFoto);
+            readStream.pipe(client);
+          });
+
+          client.on('data', (data) => {
+            console.log(`Received data from server: ${data.toString('utf8')}`);
+            enviados++;
+            if (enviados == files.length) {
+              res.json({ success: true });
+              responseSent = true;
+            }
+            client.end();
+          });
+
+          client.on('end', () => {
+            console.log('Disconnected from server');
+          });
+
+          // Add an error handler for the client
+          client.on('error', (err) => {
+              console.error('Error in client:', err);
+              if (!responseSent) {
+                  res.status(500).json({ success: false, error: 'An error occurred during file processing' });
+                  responseSent = true;  // Set the flag to true to indicate response has been sent
+              }
+          });
+        }
+
       } catch (err) {
           console.error('Error processing file:', err);
           if (!responseSent) {
