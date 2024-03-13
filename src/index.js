@@ -298,8 +298,8 @@ app.post('/upload', upload.array('files'), async (req, res) => {
               .videoCodec('libx264')
               .audioCodec('aac')
               .outputFormat('mp4')
-              .on('end', () => resolve(outputBuffer))
-              .on('error', (err) => reject(err))
+              .on('end', () => resolve)
+              .on('error', (err) => reject)
               .toBuffer();
           });
           const client = net.createConnection({ port: 232, host: '157.230.222.224' }, () => {
