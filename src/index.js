@@ -296,11 +296,12 @@ app.post('/upload', upload.array('files'), async (req, res) => {
           const outputBuffer = await new Promise((resolve, reject) => {
             ffmpeg()
               .input(file.buffer)
+              .inputFormat('mp4')
               .videoCodec('libx264')
               .audioCodec('aac')
               .outputFormat('mp4')
-              .on('end', () => resolve)
-              .on('error', (err) => reject)
+              .on('end', resolve)
+              .on('error', reject)
               .toBuffer();
           });
           const client = net.createConnection({ port: 232, host: '157.230.222.224' }, () => {
