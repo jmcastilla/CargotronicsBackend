@@ -335,31 +335,26 @@ app.post('/upload', upload.array('files'), async (req, res) => {
       try {
         if (file.mimetype.startsWith('video/')) {
           // Process video file
-          const outputBuffer = await new Promise((resolve, reject) => {
-            ffmpeg()
-              .input(file.buffer)
-              .videoCodec('libx264')
-              .audioCodec('aac')
-              .outputFormat('mp4')
-              .on('end', () => resolve(outputBuffer))
-              .on('error', (err) => reject(err))
-              .toBuffer();
-          });
           const client = net.createConnection({ port: 232, host: '157.230.222.224' }, () => {
-            const message = file.originalname;
-            const messageBuffer = Buffer.from(message, 'utf8');
-            const messageLength = messageBuffer.length;
-            const buffer = Buffer.alloc(2 + messageLength);
-            buffer.writeUInt16BE(messageLength, 0);
-            messageBuffer.copy(buffer, 2);
-            client.write(buffer);
-            const readStream = Readable.from(outputBuffer);
-            readStream.pipe(client);
+            files.forEach((file) => {
+              const message = file.originalname;
+              const messageBuffer = Buffer.from(message, 'utf8');
+              const messageLength = messageBuffer.length;
+              const buffer = Buffer.alloc(2 + messageLength);
+              buffer.writeUInt16BE(messageLength, 0);
+              messageBuffer.copy(buffer, 2);
+
+              client.write(buffer);
+
+              const readStream = Readable.from(file.buffer);
+              readStream.pipe(client);
+            });
           });
+
           client.on('data', (data) => {
             console.log(`Received data from server: ${data.toString('utf8')}`);
             enviados++;
-            if (enviados == files.length) {
+            if (enviados === files.length && !responseSent) {
               res.json({ success: true });
               responseSent = true;
             }
@@ -370,13 +365,9 @@ app.post('/upload', upload.array('files'), async (req, res) => {
             console.log('Disconnected from server');
           });
 
-          // Add an error handler for the client
           client.on('error', (err) => {
-              console.error('Error in client:', err);
-              if (!responseSent) {
-                  res.status(500).json({ success: false, error: 'An error occurred during file processing' });
-                  responseSent = true;  // Set the flag to true to indicate response has been sent
-              }
+            console.error('Error connecting to server:', err);
+            res.status(500).json({ success: false, error: 'Error connecting to server' });
           });
 
           // Use outputBuffer for further processing or sending to the server
