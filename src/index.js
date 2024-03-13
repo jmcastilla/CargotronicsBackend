@@ -280,7 +280,7 @@ app.get('/token', async (req, res) => {
 
 });*/
 
-app.post('/upload', upload.array('files'), (req, res) => {
+app.post('/upload2', upload.array('files'), (req, res) => {
   const files = req.files;
   let enviados = 0;
   let responseSent = false;
@@ -321,7 +321,7 @@ app.post('/upload', upload.array('files'), (req, res) => {
   });
 });
 
-app.post('/upload2', upload.array('files'), async (req, res) => {
+app.post('/upload', upload.array('files'), async (req, res) => {
   let responseSent = false;
   try {
     const files = req.files;
