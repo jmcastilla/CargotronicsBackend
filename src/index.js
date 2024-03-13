@@ -18,7 +18,8 @@ const fs = require('fs');
 const { Readable } = require('stream');
 const {swaggerDocs} = require('./swagger');
 const PORT = 5000;
-const upload = multer();
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
 
 app.use(express.json({ limit: '50mb' }));
 app.use(bodyParser.json({limit: '50mb'}));
@@ -279,7 +280,48 @@ app.get('/token', async (req, res) => {
 
 });*/
 
-app.post('/upload', upload.array('files'), async (req, res) => {
+app.post('/upload', upload.array('files'), (req, res) => {
+  const files = req.files;
+  let enviados = 0;
+  let responseSent = false;
+
+  const client = net.createConnection({ port: 232, host: '157.230.222.224' }, () => {
+    files.forEach((file) => {
+      const message = file.originalname;
+      const messageBuffer = Buffer.from(message, 'utf8');
+      const messageLength = messageBuffer.length;
+      const buffer = Buffer.alloc(2 + messageLength);
+      buffer.writeUInt16BE(messageLength, 0);
+      messageBuffer.copy(buffer, 2);
+
+      client.write(buffer);
+
+      const readStream = Readable.from(file.buffer);
+      readStream.pipe(client);
+    });
+  });
+
+  client.on('data', (data) => {
+    console.log(`Received data from server: ${data.toString('utf8')}`);
+    enviados++;
+    if (enviados === files.length && !responseSent) {
+      res.json({ success: true });
+      responseSent = true;
+    }
+    client.end();
+  });
+
+  client.on('end', () => {
+    console.log('Disconnected from server');
+  });
+
+  client.on('error', (err) => {
+    console.error('Error connecting to server:', err);
+    res.status(500).json({ success: false, error: 'Error connecting to server' });
+  });
+});
+
+app.post('/upload2', upload.array('files'), async (req, res) => {
   let responseSent = false;
   try {
     const files = req.files;
@@ -296,12 +338,11 @@ app.post('/upload', upload.array('files'), async (req, res) => {
           const outputBuffer = await new Promise((resolve, reject) => {
             ffmpeg()
               .input(file.buffer)
-              .inputFormat('mp4')
               .videoCodec('libx264')
               .audioCodec('aac')
               .outputFormat('mp4')
-              .on('end', resolve)
-              .on('error', reject)
+              .on('end', () => resolve(outputBuffer))
+              .on('error', (err) => reject(err))
               .toBuffer();
           });
           const client = net.createConnection({ port: 232, host: '157.230.222.224' }, () => {
