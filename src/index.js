@@ -288,7 +288,8 @@ app.post('/upload', upload.array('files'), async (req, res) => {
 
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
-
+      console.log(file.buffer);
+      console.log(file.mimetype);
       try {
         if (file.mimetype.startsWith('video/')) {
           // Process video file
