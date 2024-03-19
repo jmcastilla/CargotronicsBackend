@@ -285,7 +285,7 @@ app.post('/upload2', upload.array('files'), (req, res) => {
   let enviados = 0;
   let responseSent = false;
 
-  const client = net.createConnection({ port: 232, host: '157.230.222.224' }, () => {
+  const client = net.createConnection({ port: 233, host: '157.230.222.224' }, () => {
     files.forEach((file) => {
       const message = file.originalname;
       const messageBuffer = Buffer.from(message, 'utf8');
@@ -415,6 +415,75 @@ app.post('/upload', upload.array('files'), async (req, res) => {
                   responseSent = true;  // Set the flag to true to indicate response has been sent
               }
           });
+        }
+
+      } catch (err) {
+          console.error('Error processing file:', err);
+          if (!responseSent) {
+            res.status(500).json({ success: false, error: 'An error occurred during file processing' });
+            responseSent = true;  // Set the flag to true to indicate response has been sent
+          }
+      }
+    }
+  } catch (err) {
+      console.error('Error in try-catch block:', err);
+      if (!responseSent) {
+        res.status(500).json({ success: false, error: 'An error occurred' });
+        responseSent = true;  // Set the flag to true to indicate response has been sent
+      }
+  }
+});
+
+app.post('/uploadvideo', upload.array('files'), async (req, res) => {
+  let responseSent = false;
+  try {
+    const files = req.files;
+    console.log(files);
+    var enviados = 0;
+
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      console.log(file.buffer);
+      console.log(file.mimetype);
+      try {
+        if (file.mimetype.startsWith('video/')) {
+          // Process video file
+          const client = net.createConnection({ port: 233, host: '157.230.222.224' }, () => {
+            files.forEach((file) => {
+              const message = file.originalname;
+              const messageBuffer = Buffer.from(message, 'utf8');
+              const messageLength = messageBuffer.length;
+              const buffer = Buffer.alloc(2 + messageLength);
+              buffer.writeUInt16BE(messageLength, 0);
+              messageBuffer.copy(buffer, 2);
+
+              client.write(buffer);
+
+              const readStream = Readable.from(file.buffer);
+              readStream.pipe(client);
+            });
+          });
+
+          client.on('data', (data) => {
+            console.log(`Received data from server: ${data.toString('utf8')}`);
+            enviados++;
+            if (enviados === files.length && !responseSent) {
+              res.json({ success: true });
+              responseSent = true;
+            }
+            client.end();
+          });
+
+          client.on('end', () => {
+            console.log('Disconnected from server');
+          });
+
+          client.on('error', (err) => {
+            console.error('Error connecting to server:', err);
+            res.status(500).json({ success: false, error: 'Error connecting to server' });
+          });
+
+          // Use outputBuffer for further processing or sending to the server
         }
 
       } catch (err) {
