@@ -24,7 +24,6 @@ controller.list_historicos = async (req, res) => {
           	return res.json({ success: false, message: 'Token is missing' });
       	}else{
             token = req.headers.authorization.split(' ')[1];
-            console.log(token);
             jwt.verify(token, 'secret_key', async (err, decoded) => {
                 if (err) {
                     res.json({ success: false, message: 'Failed to authenticate token' });
@@ -336,25 +335,17 @@ controller.get_fotoscontrato = async (req, res) => {
             token = req.headers.authorization.split(' ')[1];
             jwt.verify(token, 'secret_key', async (err, decoded) => {
                 if (err) {
-                    res.json({ success: false, message: 'Failed to authenticate token' });
+                    return res.json({ success: false, message: 'Failed to authenticate token' });
                 } else {
-                    var consulta = "UPDATE LokcontractID SET FKTrayecto='"+req.body.Trayecto+"', actualizarbk=2 WHERE ContractID='"+req.body.Contrato+"'";
-                    res.json({success : await sqlconfig.query(consulta)});
+                    var contrato=req.body.contrato;
+                    var consulta= "SELECT * from dbo.Photos('"+contrato+"')";
+                    let resultado=await sqlconfig.query(consulta);
+                    return res.json({success : true, data : resultado.recordsets[0]});
                 }
             });
         }
-        var log = req.session.loggedin;
-
-        if (log == true) {
-            var contrato=req.body.contrato;
-            var consulta= "SELECT * from dbo.Photos('"+contrato+"')";
-            let resultado=await sqlconfig.query(consulta);
-            res.json({success : true, data : resultado.recordsets[0]});
-        }else{
-            res.json({success : false});
-        }
     }catch(err){
-        res.json({success : false});
+        return res.json({success : false});
     }
 
 }
@@ -391,7 +382,6 @@ controller.get_reportestrafico = async (req, res) => {
 controller.get_reportescontroldevice = async (req, res) => {
     try{
         var token = req.headers.authorization;
-        console.log(token);
         if (!token) {
             res.json({ success: false, message: 'Token is missing' });
         }else{
@@ -401,7 +391,6 @@ controller.get_reportescontroldevice = async (req, res) => {
                     res.json({ success: false, message: 'Failed to authenticate token' });
                 } else {
                     var proyecto=decoded.proyecto;
-                    console.log("poryecto: "+proyecto);
                     var idcliente=decoded.empresaprincipal;
                     var utcServidor=decoded.diffhorario;
                     var filtro=req.body.filtro;
@@ -510,7 +499,6 @@ controller.get_reportescontroldeviceunico = async (req, res) => {
 controller.get_reportescontroldevicexequipo = async (req, res) => {
     try{
         var token = req.headers.authorization;
-        console.log(token);
         if (!token) {
             return res.json({ success: false, message: 'Token is missing' });
         }else{
@@ -524,7 +512,6 @@ controller.get_reportescontroldevicexequipo = async (req, res) => {
                     var inicio=req.body.inicio;
                     var fin=req.body.fin;
                     var utcServidor=decoded.diffhorario;
-                    console.log(utcServidor);
                     var consulta= "";
                     if(tipo == 2){
                         consulta = "SELECT WLMsg.ID, latitude, longitude, '' AS DiffTime, DATEADD(MINUTE, -" + utcServidor + ",datetime_utc) AS eventDateTime, 0 AS csq, CASE WHEN lock = 1 THEN 'Cerrado' ELSE 'Abierto' END AS event, unit AS device, DATEADD(MINUTE, -300,datetime_utc) AS UltActualizacion, 'GPRS' as source, ";
@@ -571,7 +558,6 @@ controller.get_reportescontroldevicexequipo = async (req, res) => {
             });
         }
     }catch(err){
-        console.log(err);
         return res.json({success : false, message: 'Internal server error'});
     }
 
