@@ -472,7 +472,7 @@ controller.get_reportescontroldeviceunico = async (req, res) => {
             token = req.headers.authorization.split(' ')[1];
             jwt.verify(token, 'secret_key', async (err, decoded) => {
                 if (err) {
-                    res.json({ success: false, message: 'Failed to authenticate token' });
+                    return res.json({ success: false, message: 'Failed to authenticate token' });
                 } else {
                     var proyecto=decoded.proyecto;
                     var idcliente=decoded.empresaprincipal;
@@ -497,19 +497,12 @@ controller.get_reportescontroldeviceunico = async (req, res) => {
                         consulta += " AND DeviceID LIKE '%" + filtro + "%' ";
                     }
                     let resultado=await sqlconfig.query(consulta);
-                    res.json({success : true, data : resultado.recordsets[0]});
+                    return res.json({success : true, data : resultado.recordsets[0]});
                 }
             });
         }
-        var log = req.session.loggedin;
-
-        if (log == true) {
-
-        }else{
-            res.json({success : false});
-        }
     }catch(err){
-        res.json({success : false});
+        return res.json({success : false, message: 'Internal server error'});
     }
 
 }
