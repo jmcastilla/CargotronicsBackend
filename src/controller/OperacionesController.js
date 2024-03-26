@@ -517,19 +517,21 @@ controller.get_reportescontroldeviceunico = async (req, res) => {
 controller.get_reportescontroldevicexequipo = async (req, res) => {
     try{
         var token = req.headers.authorization;
+        console.log(token);
         if (!token) {
             return res.json({ success: false, message: 'Token is missing' });
         }else{
             token = req.headers.authorization.split(' ')[1];
             jwt.verify(token, 'secret_key', async (err, decoded) => {
                 if (err) {
-                    res.json({ success: false, message: 'Failed to authenticate token' });
+                    return res.json({ success: false, message: 'Failed to authenticate token' });
                 } else {
                     var tipo=req.body.tipo;
                     var device=req.body.device;
                     var inicio=req.body.inicio;
                     var fin=req.body.fin;
                     var utcServidor=decoded.diffhorario;
+                    console.log(utcServidor);
                     var consulta= "";
                     if(tipo == 2){
                         consulta = "SELECT WLMsg.ID, latitude, longitude, '' AS DiffTime, DATEADD(MINUTE, -" + utcServidor + ",datetime_utc) AS eventDateTime, 0 AS csq, CASE WHEN lock = 1 THEN 'Cerrado' ELSE 'Abierto' END AS event, unit AS device, DATEADD(MINUTE, -300,datetime_utc) AS UltActualizacion, 'GPRS' as source, ";
@@ -571,13 +573,13 @@ controller.get_reportescontroldevicexequipo = async (req, res) => {
                         consulta += " WHERE FKLokDeviceID = '" + device + "' AND DATEADD(MINUTE, -" + utcServidor + ",datetimenormal) BETWEEN '" + inicio + "' AND '" + fin + "' ORDER BY eventDateTime DESC";
                     }
                     let resultado=await sqlconfig.query2(consulta);
-                    res.json({success : true, data : resultado.recordsets[0]});
+                    return res.json({success : true, data : resultado.recordsets[0]});
                 }
             });
         }
     }catch(err){
         console.log(err);
-        res.json({success : false});
+        return res.json({success : false, message: 'Internal server error'});
     }
 
 }
