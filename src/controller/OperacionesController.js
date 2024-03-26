@@ -284,7 +284,7 @@ controller.get_reportesdevice = async (req, res) => {
                     res.json({ success: false, message: 'Failed to authenticate token' });
                 } else {
                     let m = moment();
-                    m.add(req.session.diffhorario, 'minutes');
+                    m.add(decoded.diffhorario, 'minutes');
                     var datos={
                       "fechainicio": req.body.fechainicio,
                       "fechafin":m.format('YYYY-MM-DD HH:mm:ss'),
