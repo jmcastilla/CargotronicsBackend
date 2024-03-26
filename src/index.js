@@ -1,9 +1,9 @@
 ﻿var express = require('express');
-const session = require('express-session');
 const multer  = require('multer');
 const path = require('path');
 var mssql = require("mssql");
 var cors = require('cors');
+const jwt = require('jsonwebtoken');
 var app = express();
 var crypto = require('crypto');
 var hash = crypto.createHash('sha1');
@@ -24,8 +24,25 @@ const upload = multer({ storage: storage });
 app.use(express.json({ limit: '50mb' }));
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
+
+const verifyToken = (req, res, next) => {
+  const token = req.headers.authorization;
+  if (token) {
+    jwt.verify(token, 'secret_key', (err, decoded) => {
+      if (err) {
+        return res.status(403).json({ success: false, message: 'Failed to authenticate token' });
+      } else {
+        req.decoded = decoded;
+        next();
+      }
+    });
+  } else {
+    return res.status(403).json({ success: false, message: 'No token provided' });
+  }
+};
+
 app.use(cors({
-  origin : 'https://cargotronics.com',
+  origin : 'http://localhost:3000',
   credentials: true
 }));
 
@@ -47,12 +64,6 @@ app.use((req, res, next) => {
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
   next();
 });*/
-
-app.use(session({
-	secret: 'secret',
-	resave: true,
-	saveUninitialized: true
-}));
 
 const operacionesRouters = require('./routes/OperacionesRoute');
 const empresasRouters = require('./routes/EmpresasRoute');
@@ -125,29 +136,25 @@ app.post('/login', async (req, res) =>{
             .digest('hex');
 
             if(hashresult == resultado.recordset[0].Pwd){
-                req.session.loggedin = true;
-                req.session.username = user;
-                req.session.proyecto = resultado.recordset[0].FKProyecto;
-                req.session.diffhorario = resultado.recordset[0].DiferenciaServidor;
-                req.session.diffUTC = resultado.recordset[0].DiferenciaHorariaM;
-                req.session.roltrafico = resultado.recordset[0].RolTrafico;
-                req.session.trafico = resultado.recordset[0].Trafico;
-                req.session.owner = resultado.recordset[0].ownr;
-                req.session.empresaprincipal = resultado.recordset[0].varidcliente;
-                req.session.idempresa = resultado.recordset[0].IdEmpresa;
-                req.session.idcliente = resultado.recordset[0].clientede;
-                req.session.server = sqlconfig.server;
-                res.json({success : true, entorno: sqlconfig.server});
+                const tokenPayload = {
+                    username: user,
+                    proyecto: resultado.recordset[0].FKProyecto,
+                    diffhorario: resultado.recordset[0].DiferenciaServidor,
+                    diffUTC: resultado.recordset[0].DiferenciaHorariaM,
+                    roltrafico: resultado.recordset[0].RolTrafico,
+                    trafico: resultado.recordset[0].Trafico,
+                    owner: resultado.recordset[0].ownr,
+                    empresaprincipal: resultado.recordset[0].varidcliente,
+                    idempresa: resultado.recordset[0].IdEmpresa,
+                    idcliente: resultado.recordset[0].clientede,
+                    server: sqlconfig.server
+                };
+                const token = jwt.sign(tokenPayload, 'secret_key', { expiresIn: '1h' });
+                res.json({success : true, entorno: sqlconfig.server, token});
             }else{
-                if (req.session) {
-                    req.session.destroy();
-                }
                 res.json({success : false});
             }
         }else{
-            if (req.session) {
-                req.session.destroy();
-            }
             res.json({success : false});
         }
     }catch(err){
@@ -180,42 +187,49 @@ app.post('/falabella', async (req, res) =>{
 
 // FUNCION PARA DESLOGUEARSE DEL SISTEMA
 app.get('/logout', async (req, res) =>{
-    if (req.session) {
-        console.log("entro a destruir");
-        req.session.destroy();
-        console.log(req.session);
-    }
     res.json({success : true});
 });
 
+//METODO PARA OBTENER EL TOKEN DE AZURE PARA POWERBI
 app.get('/token', async (req, res) => {
     try {
-        if (req.session) {
-            const tokenEndpoint = 'https://login.microsoftonline.com/common/oauth2/token';
-            const clientId = 'df2f25be-943f-45b7-8185-b01f6cb30fd0';
-            const clientSecret = 'eb58Q~JrMrxe4hWikVit6QJDEbxNNEvtrDRCvbAF';
-            const resource = 'https://analysis.windows.net/powerbi/api';
+        var token = req.headers.authorization;
+        if (!token) {
+          	return res.json({ success: false, message: 'Token is missing' });
+      	}else{
+            token = req.headers.authorization.split(' ')[1];
+            jwt.verify(token, 'secret_key', async (err, decoded) => {
+                if (err) {
+                    // Si hay un error en la verificación del token, devolvemos un mensaje de error
+                    res.json({ success: false, message: 'Failed to authenticate token' });
+                } else {
+                    // Si el token es válido, podemos continuar con la lógica de la función
+                    const tokenEndpoint = 'https://login.microsoftonline.com/common/oauth2/token';
+                    const clientId = 'df2f25be-943f-45b7-8185-b01f6cb30fd0';
+                    const clientSecret = 'eb58Q~JrMrxe4hWikVit6QJDEbxNNEvtrDRCvbAF';
+                    const resource = 'https://analysis.windows.net/powerbi/api';
 
-            const requestData = {
-                grant_type: 'Password',
-                username: 'alondono@logiseguridad.com',
-                password:'Pruebas2024',
-                resource,
-                client_id: clientId,
-                client_secret: clientSecret,
-                scope: 'Dataset.Read.All',
-            };
+                    const requestData = {
+                        grant_type: 'Password',
+                        username: 'alondono@logiseguridad.com',
+                        password:'Pruebas2024',
+                        resource,
+                        client_id: clientId,
+                        client_secret: clientSecret,
+                        scope: 'Dataset.Read.All',
+                    };
 
-            const response = await axios.post(tokenEndpoint, null, {
-                params: requestData,
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
+                    const response = await axios.post(tokenEndpoint, null, {
+                        params: requestData,
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                    });
+
+                    res.json({ success: true, token: response.data.access_token });
+                }
             });
 
-            res.json({ success: true, token: response.data.access_token });
-        } else {
-            res.json({ success: false });
         }
     } catch (error) {
         console.error('Error:', error);
@@ -225,61 +239,6 @@ app.get('/token', async (req, res) => {
 
 
 // FUNCION PARA SUBIR FOTOS AL SERVIDOR DE TRAKAPHOTO
-/*app.post('/upload',upload.array('files'), async (req, res) =>{
-    try{
-        const files = req.files;
-        console.log(files);
-        var enviados=0;
-
-        for(let i = 0; i < files.length; i++) {
-            const file = files[i];
-            sharp(file.buffer)
-            .metadata() // Obtener los metadatos de la imagen
-            .then(metadata => {
-              console.log(metadata); // Imprimir los metadatos en la consola
-              return sharp(file.buffer)
-                .resize({ width: 800, height: 600, fit: sharp.fit.inside, withoutEnlargement: true })
-                .jpeg({ quality: 80 })
-                .toBuffer();
-            })
-            .then(dataFoto => {
-              const client = net.createConnection({ port: 232, host: '157.230.222.224' }, () => {
-
-                const message = file.originalname;
-                const messageBuffer = Buffer.from(message, 'utf8');
-                const messageLength = messageBuffer.length;
-                const buffer = Buffer.alloc(2 + messageLength);
-                buffer.writeUInt16BE(messageLength, 0);
-                messageBuffer.copy(buffer, 2);
-                client.write(buffer);
-                const readStream = Readable.from(dataFoto);
-                readStream.pipe(client);
-              });
-
-              client.on('data', (data) => {
-                  console.log(`Received data from server: ${data.toString('utf8')}`);
-                  enviados++;
-                  if(enviados== files.length){
-                      res.json({success : true});
-                  }
-                  client.end(); // Close the connection after receiving data from the server
-              });
-
-              client.on('end', () => {
-                  console.log('Disconnected from server');
-              });
-            })
-            .catch(err => {
-              console.error(err);
-            });
-        }
-    }catch(err){
-      console.log(err);
-        res.json({success : false});
-    }
-
-});*/
-
 app.post('/upload2', upload.array('files'), (req, res) => {
   const files = req.files;
   let enviados = 0;
@@ -333,45 +292,7 @@ app.post('/upload', upload.array('files'), async (req, res) => {
       console.log(file.buffer);
       console.log(file.mimetype);
       try {
-        if (file.mimetype.startsWith('video/')) {
-          // Process video file
-          const client = net.createConnection({ port: 232, host: '157.230.222.224' }, () => {
-            files.forEach((file) => {
-              const message = file.originalname;
-              const messageBuffer = Buffer.from(message, 'utf8');
-              const messageLength = messageBuffer.length;
-              const buffer = Buffer.alloc(2 + messageLength);
-              buffer.writeUInt16BE(messageLength, 0);
-              messageBuffer.copy(buffer, 2);
-
-              client.write(buffer);
-
-              const readStream = Readable.from(file.buffer);
-              readStream.pipe(client);
-            });
-          });
-
-          client.on('data', (data) => {
-            console.log(`Received data from server: ${data.toString('utf8')}`);
-            enviados++;
-            if (enviados === files.length && !responseSent) {
-              res.json({ success: true });
-              responseSent = true;
-            }
-            client.end();
-          });
-
-          client.on('end', () => {
-            console.log('Disconnected from server');
-          });
-
-          client.on('error', (err) => {
-            console.error('Error connecting to server:', err);
-            res.status(500).json({ success: false, error: 'Error connecting to server' });
-          });
-
-          // Use outputBuffer for further processing or sending to the server
-        } else if (file.mimetype.startsWith('image/')) {
+        if (file.mimetype.startsWith('image/')) {
           // Process image file using sharp
           const metadata = await sharp(file.buffer).metadata();
           console.log(metadata);
