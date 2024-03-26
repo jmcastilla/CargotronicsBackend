@@ -25,7 +25,7 @@ var config2 = {
     port: 1433
 }*/
 
-var config1 = {
+/*var config1 = {
     user: 'juan',
     password: 'Logiset.1',
     server: '72.32.44.32',
@@ -41,6 +41,29 @@ var config2 = {
     user: 'juan',
     password: 'Logiset.1',
     server: '72.32.44.32',
+    database: 'reportes2',
+    synchronize: true,
+    trustServerCertificate: true,
+    connectionTimeout: 60000,
+    requestTimeout:60000,
+    port: 1433
+}*/
+var config1 = {
+    user: 'juan',
+    password: 'Logiset.1',
+    server: '50.57.222.230',
+    database: 'infocargatest',
+    synchronize: true,
+    trustServerCertificate: true,
+    connectionTimeout: 60000,
+    requestTimeout:60000,
+    port: 1433
+}
+
+var config2 = {
+    user: 'juan',
+    password: 'Logiset.1',
+    server: '50.57.222.230',
     database: 'reportes2',
     synchronize: true,
     trustServerCertificate: true,
