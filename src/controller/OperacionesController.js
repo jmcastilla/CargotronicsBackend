@@ -393,7 +393,7 @@ controller.get_reportescontroldevice = async (req, res) => {
         var token = req.headers.authorization;
         console.log(token);
         if (!token) {
-            return res.json({ success: false, message: 'Token is missing' });
+            res.json({ success: false, message: 'Token is missing' });
         }else{
             token = req.headers.authorization.split(' ')[1];
             jwt.verify(token, 'secret_key', async (err, decoded) => {
@@ -401,6 +401,7 @@ controller.get_reportescontroldevice = async (req, res) => {
                     res.json({ success: false, message: 'Failed to authenticate token' });
                 } else {
                     var proyecto=decoded.proyecto;
+                    console.log("poryecto: "+proyecto);
                     var idcliente=decoded.empresaprincipal;
                     var utcServidor=decoded.diffhorario;
                     var filtro=req.body.filtro;
