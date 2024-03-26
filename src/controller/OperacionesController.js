@@ -391,6 +391,7 @@ controller.get_reportestrafico = async (req, res) => {
 controller.get_reportescontroldevice = async (req, res) => {
     try{
         var token = req.headers.authorization;
+        console.log(token);
         if (!token) {
             return res.json({ success: false, message: 'Token is missing' });
         }else{

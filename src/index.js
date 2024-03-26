@@ -17,7 +17,7 @@ const net = require('net');
 const fs = require('fs');
 const { Readable } = require('stream');
 const {swaggerDocs} = require('./swagger');
-const PORT = 5000;
+const PORT = 3002;
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
