@@ -149,7 +149,7 @@ app.post('/login', async (req, res) =>{
                     idcliente: resultado.recordset[0].clientede,
                     server: sqlconfig.server
                 };
-                const token = jwt.sign(tokenPayload, 'secret_key', { expiresIn: '1h' });
+                const token = jwt.sign(tokenPayload, 'secret_key', { expiresIn: '1m' });
                 res.json({success : true, entorno: sqlconfig.server, token});
             }else{
                 res.json({success : false});
