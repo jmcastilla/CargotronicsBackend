@@ -205,17 +205,17 @@ app.get('/actualizartoken', async (req, res) => {
                 } else {
                     // Si el token es válido, podemos continuar con la lógica de la función
                     const tokenPayload = {
-                        username: user,
+                        username: decoded.username,
                         proyecto: decoded.FKProyecto,
-                        diffhorario: decoded.DiferenciaServidor,
-                        diffUTC: decoded.DiferenciaHorariaM,
-                        roltrafico: decoded.RolTrafico,
-                        trafico: decoded.Trafico,
-                        owner: decoded.ownr,
-                        empresaprincipal: decoded.varidcliente,
-                        idempresa: decoded.IdEmpresa,
-                        idcliente: decoded.clientede,
-                        server: sqlconfig.server
+                        diffhorario: decoded.diffhorario,
+                        diffUTC: decoded.diffUTC,
+                        roltrafico: decoded.roltrafico,
+                        trafico: decoded.trafico,
+                        owner: decoded.owner,
+                        empresaprincipal: decoded.empresaprincipal,
+                        idempresa: decoded.idempresa,
+                        idcliente: decoded.idcliente,
+                        server: decoded.server
                     };
                     const nuevotoken = jwt.sign(tokenPayload, 'secret_key', { expiresIn: '1m' });
                     res.json({success : true, nuevotoken});
