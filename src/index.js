@@ -190,6 +190,32 @@ app.get('/logout', async (req, res) =>{
     res.json({success : true});
 });
 
+//METODO PARA ACTUALIZAR TOKEN JWT
+app.get('/actualizartoken', async (req, res) => {
+    try {
+        var token = req.headers.authorization;
+        if (!token) {
+          	return res.json({ success: false, message: 'Token is missing' });
+      	}else{
+            token = req.headers.authorization.split(' ')[1];
+            jwt.verify(token, 'secret_key', async (err, decoded) => {
+                if (err) {
+                    // Si hay un error en la verificación del token, devolvemos un mensaje de error
+                    res.json({ success: false, message: 'Failed to authenticate token' });
+                } else {
+                    // Si el token es válido, podemos continuar con la lógica de la función
+                    const token = jwt.sign(decoded, 'secret_key', { expiresIn: '1h' });
+                    res.json({success : true, token});
+                }
+            });
+
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        res.json({ success: false });
+    }
+});
+
 //METODO PARA OBTENER EL TOKEN DE AZURE PARA POWERBI
 app.get('/token', async (req, res) => {
     try {
