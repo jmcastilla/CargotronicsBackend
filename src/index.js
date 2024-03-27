@@ -204,8 +204,20 @@ app.get('/actualizartoken', async (req, res) => {
                     res.json({ success: false, message: 'Failed to authenticate token' });
                 } else {
                     // Si el token es válido, podemos continuar con la lógica de la función
-                    delete decoded.exp;
-                    const nuevotoken = jwt.sign(decoded, 'secret_key', { expiresIn: '1m' });
+                    const tokenPayload = {
+                        username: user,
+                        proyecto: decoded.FKProyecto,
+                        diffhorario: decoded.DiferenciaServidor,
+                        diffUTC: decoded.DiferenciaHorariaM,
+                        roltrafico: decoded.RolTrafico,
+                        trafico: decoded.Trafico,
+                        owner: decoded.ownr,
+                        empresaprincipal: decoded.varidcliente,
+                        idempresa: decoded.IdEmpresa,
+                        idcliente: decoded.clientede,
+                        server: sqlconfig.server
+                    };
+                    const nuevotoken = jwt.sign(tokenPayload, 'secret_key', { expiresIn: '1m' });
                     res.json({success : true, nuevotoken});
                 }
             });
