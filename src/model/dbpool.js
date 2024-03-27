@@ -51,7 +51,7 @@ var config2 = {
 var config1 = {
     user: 'juan',
     password: 'Logiset.1',
-    server: '50.57.222.230',
+    server: '50.57.222.231',
     database: 'infocargatest',
     synchronize: true,
     trustServerCertificate: true,
@@ -63,7 +63,7 @@ var config1 = {
 var config2 = {
     user: 'juan',
     password: 'Logiset.1',
-    server: '50.57.222.230',
+    server: '50.57.222.231',
     database: 'reportes2',
     synchronize: true,
     trustServerCertificate: true,
