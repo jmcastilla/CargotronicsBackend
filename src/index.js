@@ -149,7 +149,7 @@ app.post('/login', async (req, res) =>{
                     idcliente: resultado.recordset[0].clientede,
                     server: sqlconfig.server
                 };
-                const token = jwt.sign(tokenPayload, 'secret_key', { expiresIn: '1m' });
+                const token = jwt.sign(tokenPayload, 'secret_key', { expiresIn: '1h' });
                 res.json({success : true, entorno: sqlconfig.server, token});
             }else{
                 res.json({success : false});
@@ -217,7 +217,7 @@ app.get('/actualizartoken', async (req, res) => {
                         idcliente: decoded.idcliente,
                         server: decoded.server
                     };
-                    const nuevotoken = jwt.sign(tokenPayload, 'secret_key', { expiresIn: '1m' });
+                    const nuevotoken = jwt.sign(tokenPayload, 'secret_key', { expiresIn: '1h' });
                     res.json({success : true, nuevotoken});
                 }
             });
