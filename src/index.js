@@ -205,7 +205,7 @@ app.get('/actualizartoken', async (req, res) => {
                 } else {
                     // Si el token es válido, podemos continuar con la lógica de la función
                     delete decoded.exp;
-                    const token = jwt.sign(decoded, 'secret_key', { expiresIn: '1h' });
+                    const token = jwt.sign(decoded, 'secret_key', { expiresIn: '1m' });
                     res.json({success : true, token});
                 }
             });
