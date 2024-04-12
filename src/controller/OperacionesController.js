@@ -149,6 +149,7 @@ controller.get_trayectos = async (req, res) => {
                 if (err) {
                     res.json({ success: false, message: 'Failed to authenticate token' });
                 } else {
+                    console.log(decoded);
                     var consulta= "SELECT * FROM Trayectos WHERE FKLokProyecto="+decoded.proyecto+" ORDER BY DescripcionTrayecto;";
                     let resultado=await sqlconfig.query(consulta);
                     res.json({success : true, data : resultado.recordset});
