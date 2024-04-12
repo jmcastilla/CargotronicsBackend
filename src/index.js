@@ -19,7 +19,7 @@ const { Readable } = require('stream');
 const {swaggerDocs} = require('./swagger');
 const PORT = 3002;
 const storage = multer.memoryStorage();
-const upload = multer({ storage: storage });
+const upload = multer({ storage: storage, limits: {fileSize: 100 * 1024 * 1024} });
 
 app.use(express.json({ limit: '50mb' }));
 app.use(bodyParser.json({limit: '50mb'}));
