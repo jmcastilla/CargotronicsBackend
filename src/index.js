@@ -335,7 +335,7 @@ app.get('/actualizartoken', async (req, res) => {
                     // Si el token es válido, podemos continuar con la lógica de la función
                     const tokenPayload = {
                         username: decoded.username,
-                        proyecto: decoded.FKProyecto,
+                        proyecto: decoded.proyecto,
                         diffhorario: decoded.diffhorario,
                         diffUTC: decoded.diffUTC,
                         roltrafico: decoded.roltrafico,
