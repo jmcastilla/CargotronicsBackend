@@ -41,29 +41,30 @@ const verifyToken = (req, res, next) => {
   }
 };
 
-app.use(cors({
-  origin : 'http://localhost:3000',
+const allowedOrigins = [
+  'https://infocarga-frontend-jwt-nine.vercel.app',
+  'http://localhost:3000'
+];
+
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true
-}));
+};
+app.use(cors(corsOptions));
 
 
 app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', req.headers.origin);
+  res.header('Access-Control-Allow-Origin', req.headers.origin); // Permitir cualquier origen
   res.header('Access-Control-Allow-Credentials', true);
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
   next();
 });
-/*app.use(cors({
-  origin: '*', // Permitir cualquier origen
-  credentials: true
-}));
-
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*'); // Permitir cualquier origen
-  res.header('Access-Control-Allow-Credentials', true);
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-  next();
-});*/
 
 const operacionesRouters = require('./routes/OperacionesRoute');
 const empresasRouters = require('./routes/EmpresasRoute');
@@ -117,6 +118,56 @@ app.post('/editar-excel', async (req, res) => {
 });
 
 // FUNCION PARA LOGUEARSE EN EL SISTEMA
+/**
+ * @swagger
+ * /login:
+ *   post:
+ *     summary: Iniciar sesión
+ *     description: Este endpoint permite a un usuario iniciar sesión.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               user:
+ *                 type: string
+ *                 description: Nombre de usuario.
+ *               pass:
+ *                 type: string
+ *                 description: Contraseña del usuario.
+ *             example:
+ *               user: usuario123
+ *               pass: password123
+ *     responses:
+ *       200:
+ *         description: Inicio de sesión exitoso. Se devuelve un token de acceso.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si el inicio de sesión fue exitoso.
+ *                 entorno:
+ *                   type: string
+ *                   description: Entorno del servidor de base de datos.
+ *                 token:
+ *                   type: string
+ *                   description: Token de acceso JWT.
+ *       401:
+ *         description: Credenciales inválidas. El inicio de sesión ha fallado.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si el inicio de sesión ha fallado debido a credenciales inválidas.
+ */
 app.post('/login', async (req, res) =>{
     try{
         let user=req.body.user;
@@ -185,11 +236,89 @@ app.post('/falabella', async (req, res) =>{
     }
 });
 
+/**
+ * @swagger
+ * /logout:
+ *   get:
+ *     summary: Cerrar sesión
+ *     description: Este endpoint permite a un usuario cerrar sesión.
+ *     responses:
+ *       200:
+ *         description: Sesión cerrada exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si el cierre de sesión fue exitoso.
+ *                   example: true
+ *       401:
+ *         description: No autorizado
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si el usuario no está autorizado para cerrar sesión.
+ *                   example: false
+ */
+
 // FUNCION PARA DESLOGUEARSE DEL SISTEMA
 app.get('/logout', async (req, res) =>{
     res.json({success : true});
 });
 
+/**
+ * @swagger
+ * /actualizartoken:
+ *   get:
+ *     summary: Actualizar token de sesión
+ *     description: Este endpoint permite actualizar un token de sesión válido.
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: Authorization
+ *         in: header
+ *         description: Token de autorización JWT
+ *         required: true
+ *         type: string
+ *         format: token
+ *     responses:
+ *       200:
+ *         description: Token actualizado correctamente
+ *         schema:
+ *           type: object
+ *           properties:
+ *             success:
+ *               type: boolean
+ *               example: true
+ *             nuevotoken:
+ *               type: string
+ *               example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwicHJvamVjdCI6MSwiZGlmZmhvcmFyaW8iOjIwLCJkaWZmVVBDIjoxMjEsImRpZmZVVENCIjoxMjIsInJvbHRyYWZyaWNhIjowLCJ0cmFmaWNvIjowLCJ0cmFmaWNvSWQiOjIsInNlcnZlciI6Im5ldyJ9.uDc4N7Jf6gfsOd7kx6PXr5hV_7FhMvYK7eE6a0ru6Wo"
+ *       400:
+ *         description: Token is missing o Token inválido
+ *         schema:
+ *           type: object
+ *           properties:
+ *             success:
+ *               type: boolean
+ *               example: false
+ *             message:
+ *               type: string
+ *               example: Token is missing
+ *       500:
+ *         description: Error interno del servidor
+ *         schema:
+ *           type: object
+ *           properties:
+ *             success:
+ *               type: boolean
+ *               example: false
+ */
 //METODO PARA ACTUALIZAR TOKEN JWT
 app.get('/actualizartoken', async (req, res) => {
     try {
@@ -228,6 +357,59 @@ app.get('/actualizartoken', async (req, res) => {
         res.json({ success: false });
     }
 });
+
+/**
+ * @swagger
+ * /token:
+ *   get:
+ *     summary: Obtener token de acceso
+ *     description: Este endpoint permite obtener un token de acceso utilizando el flujo de contraseña (Password Grant) de OAuth 2.0.
+ *     responses:
+ *       200:
+ *         description: Token de acceso obtenido exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la obtención del token de acceso fue exitosa.
+ *                   example: true
+ *                 token:
+ *                   type: string
+ *                   description: Token de acceso obtenido.
+ *       400:
+ *         description: Token faltante o inválido
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si el token está faltante o es inválido.
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   description: Mensaje de error detallando la causa.
+ *                   example: Token is missing
+ *       401:
+ *         description: Falló la autenticación del token
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la autenticación del token ha fallado.
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   description: Mensaje de error detallando la causa.
+ *                   example: Failed to authenticate token
+ */
 
 //METODO PARA OBTENER EL TOKEN DE AZURE PARA POWERBI
 app.get('/token', async (req, res) => {
@@ -319,6 +501,52 @@ app.post('/upload2', upload.array('files'), (req, res) => {
   });
 });
 
+/**
+ * @swagger
+ * /upload:
+ *   post:
+ *     summary: Subir archivos
+ *     description: Este endpoint permite subir archivos al servidor.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               files:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                   format: binary
+ *     responses:
+ *       200:
+ *         description: Archivos subidos exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la subida de archivos fue exitosa.
+ *                   example: true
+ *       500:
+ *         description: Error en la subida de archivos
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si ocurrió un error en la subida de archivos.
+ *                   example: false
+ *                 error:
+ *                   type: string
+ *                   description: Descripción del error ocurrido.
+ */
+
 app.post('/upload', upload.array('files'), async (req, res) => {
   let responseSent = false;
   try {
@@ -394,6 +622,51 @@ app.post('/upload', upload.array('files'), async (req, res) => {
   }
 });
 
+/**
+ * @swagger
+ * /uploadvideo:
+ *   post:
+ *     summary: Subir videos
+ *     description: Este endpoint permite subir videos al servidor.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               files:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                   format: binary
+ *     responses:
+ *       200:
+ *         description: Videos subidos exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la subida de videos fue exitosa.
+ *                   example: true
+ *       500:
+ *         description: Error en la subida de videos
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si ocurrió un error en la subida de videos.
+ *                   example: false
+ *                 error:
+ *                   type: string
+ *                   description: Descripción del error ocurrido.
+ */
 app.post('/uploadvideo', upload.array('files'), async (req, res) => {
   let responseSent = false;
   try {
