@@ -21,9 +21,9 @@ const PORT = 3002;
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage, limits: {fileSize: 100 * 1024 * 1024} });
 
-app.use(express.json({ limit: '50mb' }));
-app.use(bodyParser.json({limit: '50mb'}));
-app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
+app.use(express.json({ limit: '100mb' }));
+app.use(bodyParser.json({ limit: '100mb' }));
+app.use(bodyParser.urlencoded({ limit: '100mb', extended: true }));
 
 const verifyToken = (req, res, next) => {
   const token = req.headers.authorization;
