@@ -339,16 +339,18 @@ controller.get_fotoscontrato = async (req, res) => {
                     return res.json({ success: false, message: 'Failed to authenticate token' });
                 } else {
                     var contrato=req.body.contrato;
+                    var tipo = req.body.tipo || ".jpg";
+                    tipo = (tipo === "vid") ? ".mp4" : ".jpg";
                     var consulta= "SELECT * from dbo.Photos('"+contrato+"')";
                     let resultado=await sqlconfig.query(consulta);
-                    return res.json({success : true, data : resultado.recordsets[0]});
+                    let archivos = resultado.recordsets[0].filter(item => item.Descripcion.includes(tipo));
+                    return res.json({success : true, data : archivos});
                 }
             });
         }
     }catch(err){
         return res.json({success : false});
     }
-
 }
 
 // FUNCION QUE RETORNA EL LISTADO DE REPORTES DE TRAFICO DE UN CONTRATO
