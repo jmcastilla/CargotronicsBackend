@@ -343,8 +343,8 @@ controller.get_fotoscontrato = async (req, res) => {
                     tipo = (tipo === "vid") ? ".mp4" : ".jpg";
                     var consulta= "SELECT * from dbo.Photos('"+contrato+"')";
                     let resultado=await sqlconfig.query(consulta);
-                    let archivos = resultado.recordsets[0].data.filter(item => item.Descripcion.includes(tipo));
-                    return res.json({success : true, data : archivos});
+                    //let archivos = resultado.recordsets[0].data.filter(item => item.Descripcion.includes(tipo));
+                    return res.json({success : true, data : resultado, otro: resultado.recordsets[0].data});
                 }
             });
         }
