@@ -345,7 +345,7 @@ controller.get_fotoscontrato = async (req, res) => {
                     let resultado=await sqlconfig.query(consulta);
                     console.log(resultado.recordsets[0]);
                     let archivos = resultado.recordsets[0].filter(item => item.photo.includes(tipo));
-                    return res.json({success : true, data : resultado.recordsets[0], otro: archivos});
+                    return res.json({success : true, data : archivos});
                 }
             });
         }
