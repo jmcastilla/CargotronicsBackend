@@ -70,6 +70,8 @@ router.post('/getfotoscontrato', OperacionesController.get_fotoscontrato);
  *   get:
  *     summary: Obtener reportes de Power BI
  *     description: Obtiene los reportes de Power BI asociados a un proyecto específico.
+ *     tags:
+ *       - Operaciones   
  *     security:
  *       - bearerAuth: []
  *     responses:
