@@ -626,6 +626,30 @@ controller.get_polylinetrayecto = async (req, res) => {
 
 }
 
+//FUNCION QUE RETORNA EL LISTADO DE REPORTES BI DE CADA PROYECTO
+controller.get_reportesBI = async (req, res) => {
+    try{
+        var token = req.headers.authorization;
+        if (!token) {
+            return res.json({ success: false, message: 'Token is missing' });
+        }else{
+            token = req.headers.authorization.split(' ')[1];
+            jwt.verify(token, 'secret_key', async (err, decoded) => {
+                if (err) {
+                    res.json({ success: false, message: 'Failed to authenticate token' });
+                } else {
+                    var consulta= "SELECT Id_Reporte, NombreReporte, Id_PowerBI FROM LokReportesPBI WHERE Fk_LokProyecto="+decoded.proyecto;
+                    let resultado=await sqlconfig.query(consulta);
+                    res.json({success : true, data : resultado.recordsets[0]});
+                }
+            });
+        }
+    }catch(err){
+        res.json({success : false});
+    }
+
+}
+
 // FUNCION QUE RETORNA LA POLILINEA DE ACUERDO DE UN ORIGEN Y UN DESTINO
 controller.get_poly = async (req, res) => {
 

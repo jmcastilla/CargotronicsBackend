@@ -66,6 +66,71 @@ const OperacionesController = require('../controller/OperacionesController');
 router.post('/getfotoscontrato', OperacionesController.get_fotoscontrato);
 /**
  * @swagger
+ * /operaciones/getreportesbi:
+ *   get:
+ *     summary: Obtener reportes de Power BI
+ *     description: Obtiene los reportes de Power BI asociados a un proyecto específico.
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Datos de los reportes de Power BI obtenidos exitosamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la solicitud fue exitosa.
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       Id_Reporte:
+ *                         type: integer
+ *                         description: ID del reporte.
+ *                         example: 1
+ *                       NombreReporte:
+ *                         type: string
+ *                         description: Nombre del reporte.
+ *                         example: Reporte 1
+ *                       Id_PowerBI:
+ *                         type: string
+ *                         description: ID del reporte en Power BI.
+ *                         example: abc123
+ *       401:
+ *         description: Error de autenticación. El token es inválido o ha expirado.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la autenticación ha fallado.
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   description: Mensaje de error detallando la causa.
+ *                   example: Failed to authenticate token
+ *       500:
+ *         description: Error interno del servidor.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si ocurrió un error interno del servidor.
+ *                   example: false
+ */
+router.get('/getreportesbi', OperacionesController.get_reportesBI);
+/**
+ * @swagger
  * /operaciones/gethistoricos:
  *   post:
  *     summary: Obtener historicos de contratos
