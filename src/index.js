@@ -432,8 +432,8 @@ app.get('/token', async (req, res) => {
 
                     const requestData = {
                         grant_type: 'Password',
-                        username: 'alondono@logiseguridad.com',
-                        password:'Pruebas2024',
+                        username: 'juan.berrio@logiseguridad.com',
+                        password:'Peluche.123',
                         resource,
                         client_id: clientId,
                         client_secret: clientSecret,
