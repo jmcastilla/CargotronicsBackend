@@ -440,8 +440,7 @@ app.get('/token', async (req, res) => {
                         scope: 'Dataset.Read.All',
                     };
 
-                    const response = await axios.post(tokenEndpoint, null, {
-                        params: requestData,
+                    const response = await axios.post(tokenEndpoint, requestData, {
                         headers: {
                             'Content-Type': 'application/x-www-form-urlencoded',
                         },
