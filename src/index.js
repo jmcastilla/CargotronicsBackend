@@ -426,8 +426,8 @@ app.get('/token', async (req, res) => {
                 } else {
                     // Si el token es válido, podemos continuar con la lógica de la función
                     const tokenEndpoint = 'https://login.microsoftonline.com/common/oauth2/token';
-                    const clientId = 'df2f25be-943f-45b7-8185-b01f6cb30fd0';
-                    const clientSecret = 'eb58Q~JrMrxe4hWikVit6QJDEbxNNEvtrDRCvbAF';
+                    const clientId = 'fe98af75-7d45-44bd-ae62-1215d42b63bf';
+                    const clientSecret = 'ngg8Q~NK.49AhELDdXmaj04e6cj_p2cUPQJqqcXr';
                     const resource = 'https://analysis.windows.net/powerbi/api';
 
                     const requestData = {
