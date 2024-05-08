@@ -42,7 +42,7 @@ const verifyToken = (req, res, next) => {
 };
 
 const allowedOrigins = [
-  'https://infocarga-frontend-jwt-nine.vercel.app',
+  'https://infocarga-frontend-jwt-theta.vercel.app',
   'http://localhost:3000'
 ];
 
