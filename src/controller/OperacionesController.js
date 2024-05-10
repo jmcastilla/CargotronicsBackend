@@ -671,7 +671,7 @@ controller.get_jsonvisuallogistic = async (req, res) => {
                         },
                     });
 
-                    res.json({ success: true, token: response.data });
+                    res.json({ success: true, info: response.data });
                 }
             });
         }
@@ -701,7 +701,7 @@ controller.get_contractvisuallogistic = async (req, res) => {
                         },
                     });
 
-                    res.json({ success: true, token: response.data });
+                    res.json({ success: true, info: response.data });
                 }
             });
         }
