@@ -128,11 +128,11 @@ router.post('/getfotoscontrato', OperacionesController.get_fotoscontrato);
  *             example:
  *               success: false
  */
-router.get('/getjsonvisuallogistic', OperacionesController.get_jsonvisuallogistic);
+router.post('/getjsonvisuallogistic', OperacionesController.get_jsonvisuallogistic);
 /**
  * @swagger
  * /operaciones/getcontractvisuallogistic:
- *   get:
+ *   post:
  *     summary: Obtener contrato de Visual Logistic
  *     description: Obtiene el contrato de Visual Logistic utilizando un token de autenticación.
  *     tags:
@@ -193,11 +193,11 @@ router.get('/getjsonvisuallogistic', OperacionesController.get_jsonvisuallogisti
  *             example:
  *               success: false
  */
-router.get('/getcontractvisuallogistic', OperacionesController.get_contractvisuallogistic);
+router.post('/getcontractvisuallogistic', OperacionesController.get_contractvisuallogistic);
 /**
  * @swagger
  * /operaciones/getreportesbi:
- *   get:
+ *   post:
  *     summary: Obtener reportes de Power BI
  *     description: Obtiene los reportes de Power BI asociados a un proyecto específico.
  *     tags:
