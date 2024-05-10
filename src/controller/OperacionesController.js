@@ -681,6 +681,36 @@ controller.get_jsonvisuallogistic = async (req, res) => {
 
 }
 
+//FUNCION QUE RETORNA EL JSON DE COMPARACION DE FOTOS DE UN CONTRATO EN VISUALLOGISTIC
+controller.get_contractvisuallogistic = async (req, res) => {
+    try{
+        var token = req.headers.authorization;
+        if (!token) {
+            return res.json({ success: false, message: 'Token is missing' });
+        }else{
+            token = req.headers.authorization.split(' ')[1];
+            jwt.verify(token, 'secret_key', async (err, decoded) => {
+                if (err) {
+                    res.json({ success: false, message: 'Failed to authenticate token' });
+                } else {
+                    var contrato=req.body.contrato;
+                    const varEndpoint= `https://visuallogisticsapp.azurewebsites.net/get-contract/${contrato}`;
+                    const response = await axios.get(varEndpoint, null, {
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                    });
+
+                    res.json({ success: true, token: response.data });
+                }
+            });
+        }
+    }catch(err){
+        res.json({success : false});
+    }
+
+}
+
 // FUNCION QUE RETORNA LA POLILINEA DE ACUERDO DE UN ORIGEN Y UN DESTINO
 controller.get_poly = async (req, res) => {
 
