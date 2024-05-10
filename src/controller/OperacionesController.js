@@ -1,5 +1,6 @@
 const controller = {}
 const jwt = require('jsonwebtoken');
+const axios = require('axios');
 var sqlconfig = require("../model/dbpool");
 ﻿var Poly = require("node-geometry-library");
 var GoogleMapsAPI = require('../lib/index');
@@ -641,6 +642,36 @@ controller.get_reportesBI = async (req, res) => {
                     var consulta= "SELECT Id_Reporte, NombreReporte, Id_PowerBI FROM LokReportesPBI WHERE Fk_LokProyecto="+decoded.proyecto;
                     let resultado=await sqlconfig.query(consulta);
                     res.json({success : true, data : resultado.recordsets[0]});
+                }
+            });
+        }
+    }catch(err){
+        res.json({success : false});
+    }
+
+}
+
+//FUNCION QUE RETORNA EL JSON DE VISUALLOGISTIC
+controller.get_jsonvisuallogistic = async (req, res) => {
+    try{
+        var token = req.headers.authorization;
+        if (!token) {
+            return res.json({ success: false, message: 'Token is missing' });
+        }else{
+            token = req.headers.authorization.split(' ')[1];
+            jwt.verify(token, 'secret_key', async (err, decoded) => {
+                if (err) {
+                    res.json({ success: false, message: 'Failed to authenticate token' });
+                } else {
+                    var nombreimagen=req.body.nombreimagen;
+                    const varEndpoint= `https://visuallogisticsapp.azurewebsites.net/getimages/${nombreimagen}`;
+                    const response = await axios.get(varEndpoint, null, {
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                    });
+
+                    res.json({ success: true, token: response.data });
                 }
             });
         }
