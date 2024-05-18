@@ -239,7 +239,7 @@ controller.get_contratostrafico = async (req, res) => {
                     "SUBSTRING(iconos.IconDesvio, 2, CHARINDEX('|', iconos.IconDesvio) - 2) AS IconDesvio, "+
                     "SUBSTRING(iconos.IconSeguro, 2, CHARINDEX('|', iconos.IconSeguro) - 2) AS IconSeguro, "+
                     "SUBSTRING(iconos.IconBack, 2, CHARINDEX('|', iconos.IconBack) - 2) AS IconBack, "+
-                    "CAST(CASE WHEN c.Active=1 THEN 0 ELSE 1 END AS BIT) AS expanded "+
+                    "CAST(CASE WHEN c.Active=1 THEN 0 ELSE 1 END AS BIT) AS expanded, "+
                     "CASE WHEN qr.Verificado_global=1 AND c.FKQrMaestro IS NOT NULL THEN '/images/valitronics.png' "+
                     "WHEN qr.Verificado_global=0 AND c.FKQrMaestro IS NOT NULL THEN '/images/valitronics_gris.png' "+
                     "ELSE '/images/transparent.png' END as IconValitronics "+
