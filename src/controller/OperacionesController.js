@@ -240,9 +240,9 @@ controller.get_contratostrafico = async (req, res) => {
                     "SUBSTRING(iconos.IconSeguro, 2, CHARINDEX('|', iconos.IconSeguro) - 2) AS IconSeguro, "+
                     "SUBSTRING(iconos.IconBack, 2, CHARINDEX('|', iconos.IconBack) - 2) AS IconBack, "+
                     "CAST(CASE WHEN c.Active=1 THEN 0 ELSE 1 END AS BIT) AS expanded "+
-                    //"CASE WHEN Verificado_global=1 AND FKQrMaestro IS NOT NULL THEN '/images/valitronics.png' "+
-                    //"WHEN Verificado_global=0 AND FKQrMaestro IS NOT NULL THEN '/images/valitronics_gris.png' "+
-                    //"ELSE '/images/transparent.png' END as IconValitronics "
+                    "CASE WHEN Verificado_global=1 AND FKQrMaestro IS NOT NULL THEN '/images/valitronics.png' "+
+                    "WHEN Verificado_global=0 AND FKQrMaestro IS NOT NULL THEN '/images/valitronics_gris.png' "+
+                    "ELSE '/images/transparent.png' END as IconValitronics "+
                     "FROM LokcontractID as c "+
                     "INNER JOIN LokDeviceID as d ON d.DeviceID = c.FKLokDeviceID "+
                     "LEFT JOIN ICEmpresa as e ON e.IdEmpresa = c.FKICEmpresa "+
