@@ -388,6 +388,35 @@ controller.get_reportestrafico = async (req, res) => {
 
 }
 
+// FUNCION QUE RETORNA LOS COMPRABANTES DE UN CONTRATO VALITRONICS
+controller.get_comprobantevalitronics = async (req, res) => {
+    try{
+        var token = req.headers.authorization;
+        if (!token) {
+            return res.json({ success: false, message: 'Token is missing' });
+        }else{
+            token = req.headers.authorization.split(' ')[1];
+            jwt.verify(token, 'secret_key', async (err, decoded) => {
+                if (err) {
+                    res.json({ success: false, message: 'Failed to authenticate token' });
+                } else {
+                    var contrato=req.body.contrato;
+                    var consulta= "SELECT Fecha_inicio as Fecha, S.usuario as Usuario, Comprobante, Latitud, Longitud "+
+                    "FROM Trazabilidad_QRMaestro as T "+
+                    "INNER JOIN Sesion_valitronics as S ON T.Tkn_usuario=S.Tkn_sesion "+
+                    "INNER JOIN LokContractID as L ON T.Codigo = L.FKQrMaestro "+
+                    "WHERE L.ContractID='"+contrato+"'";
+                    let resultado=await sqlconfig.query(consulta);
+                    res.json({success : true, data : resultado.recordsets[0]});
+                }
+            });
+        }
+    }catch(err){
+        res.json({success : false});
+    }
+
+}
+
 // FUNCION QUE RETORNA EL LISTADO DE REPORTES DE TRAFICO DE UN CONTRATO
 controller.get_reportescontroldevice = async (req, res) => {
     try{

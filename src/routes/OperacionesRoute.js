@@ -196,6 +196,100 @@ router.post('/getjsonvisuallogistic', OperacionesController.get_jsonvisuallogist
 router.post('/getcontractvisuallogistic', OperacionesController.get_contractvisuallogistic);
 /**
  * @swagger
+ * /operaciones/getcomprobantevalitronics:
+ *   post:
+ *     summary: Obtener comprobantes de contrato Valitronics
+ *     description: Retorna los comprobantes asociados a un contrato Valitronics.
+ *     tags:
+ *       - Operaciones
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               contrato:
+ *                 type: string
+ *                 description: ID del contrato para buscar los comprobantes.
+ *             required:
+ *               - contrato
+ *     responses:
+ *       200:
+ *         description: Comprobantes de contrato obtenidos exitosamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la solicitud fue exitosa.
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       Fecha:
+ *                         type: string
+ *                         description: Fecha de inicio del comprobante.
+ *                         example: "2023-05-18T00:00:00.000Z"
+ *                       Usuario:
+ *                         type: string
+ *                         description: Usuario asociado al comprobante.
+ *                         example: "usuario123"
+ *                       Comprobante:
+ *                         type: string
+ *                         description: Comprobante asociado al contrato.
+ *                         example: "comprobante123"
+ *                       Latitud:
+ *                         type: number
+ *                         format: float
+ *                         description: Latitud de la ubicación.
+ *                         example: 4.6097102
+ *                       Longitud:
+ *                         type: number
+ *                         format: float
+ *                         description: Longitud de la ubicación.
+ *                         example: -74.081749
+ *       400:
+ *         description: Error en la solicitud.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la solicitud fue exitosa.
+ *                   example: false
+ *       401:
+ *         description: Error de autenticación. El token es inválido o ha expirado.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la autenticación ha fallado.
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   description: Mensaje de error detallando la causa.
+ *                   example: Failed to authenticate token
+ *       500:
+ *         description: Error interno del servidor.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ */
+router.post('/getcomprobantevalitronics', OperacionesController.get_comprobantevalitronics);
+/**
+ * @swagger
  * /operaciones/getreportesbi:
  *   get:
  *     summary: Obtener reportes de Power BI
