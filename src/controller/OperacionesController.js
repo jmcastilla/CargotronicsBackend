@@ -239,10 +239,10 @@ controller.get_contratostrafico = async (req, res) => {
                     "SUBSTRING(iconos.IconDesvio, 2, CHARINDEX('|', iconos.IconDesvio) - 2) AS IconDesvio, "+
                     "SUBSTRING(iconos.IconSeguro, 2, CHARINDEX('|', iconos.IconSeguro) - 2) AS IconSeguro, "+
                     "SUBSTRING(iconos.IconBack, 2, CHARINDEX('|', iconos.IconBack) - 2) AS IconBack, "+
-                    "CAST(CASE WHEN c.Active=1 THEN 0 ELSE 1 END AS BIT) AS expanded, "+
-                    "CASE WHEN Verificado_global=1 AND FKQrMaestro IS NOT NULL THEN '/images/valitronics.png' "+
-                    "WHEN Verificado_global=0 AND FKQrMaestro IS NOT NULL THEN '/images/valitronics_gris.png' "+
-                    "ELSE '/images/transparent.png' END as IconValitronics "
+                    "CAST(CASE WHEN c.Active=1 THEN 0 ELSE 1 END AS BIT) AS expanded "+
+                    //"CASE WHEN Verificado_global=1 AND FKQrMaestro IS NOT NULL THEN '/images/valitronics.png' "+
+                    //"WHEN Verificado_global=0 AND FKQrMaestro IS NOT NULL THEN '/images/valitronics_gris.png' "+
+                    //"ELSE '/images/transparent.png' END as IconValitronics "
                     "FROM LokcontractID as c "+
                     "INNER JOIN LokDeviceID as d ON d.DeviceID = c.FKLokDeviceID "+
                     "LEFT JOIN ICEmpresa as e ON e.IdEmpresa = c.FKICEmpresa "+
@@ -250,7 +250,7 @@ controller.get_contratostrafico = async (req, res) => {
                     "LEFT JOIN Trayectos as t ON c.FKTrayecto =  t.IDTrayecto "+
                     "LEFT JOIN ICTipoReporte as tr ON c.LastICTipoReporte =  tr.IdTipoReporte "+
                     "LEFT JOIN ICTransportadora as tp ON tp.IdTransportadora = c.FKICTransportadora "+
-                    "LEFT JOIN QR_Maestro ON FKQrMaestro = ID_QRMaestro "
+                    //"LEFT JOIN QR_Maestro ON FKQrMaestro = ID_QRMaestro "
                     "OUTER APPLY dbo.IconosContract(c.ContractID, c.FKLokDeviceID) AS iconos ";
                     if(decoded.roltrafico != 0){
                         consulta+="INNER JOIN (SELECT * FROM LokEmpresaRol WHERE id_roltrafico_ = "+decoded.roltrafico+") as Rol ON Rol.id_empresa = c.FKICEmpresa ";
