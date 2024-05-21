@@ -52,7 +52,7 @@ var config1 = {
     user: 'juan',
     password: 'Logiset.1',
     server: '50.57.222.231',
-    database: 'infocarga',
+    database: 'infocargatest',
     synchronize: true,
     trustServerCertificate: true,
     connectionTimeout: 60000,

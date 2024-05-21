@@ -728,7 +728,37 @@ controller.get_contractvisuallogistic = async (req, res) => {
                     res.json({ success: false, message: 'Failed to authenticate token' });
                 } else {
                     var contrato=req.body.contrato;
-                    const varEndpoint= `https://visuallogisticsapp.azurewebsites.net/get-contract/${contrato}`;
+                    const varEndpoint= `https://visuallogisticsapp.azurewebsites.net/get-contract-comparisons/${contrato}`;
+                    const response = await axios.get(varEndpoint, null, {
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                    });
+
+                    res.json({ success: true, info: response.data });
+                }
+            });
+        }
+    }catch(err){
+        res.json({success : false});
+    }
+
+}
+
+//FUNCION QUE RETORNA EL JSON CON TODAS LAS FOTOS DE UN CONTRATO EN VISUALLOGISTIC
+controller.get_fotoscontractvisuallogistic = async (req, res) => {
+    try{
+        var token = req.headers.authorization;
+        if (!token) {
+            return res.json({ success: false, message: 'Token is missing' });
+        }else{
+            token = req.headers.authorization.split(' ')[1];
+            jwt.verify(token, 'secret_key', async (err, decoded) => {
+                if (err) {
+                    res.json({ success: false, message: 'Failed to authenticate token' });
+                } else {
+                    var contrato=req.body.contrato;
+                    const varEndpoint= `https://visuallogisticsapp.azurewebsites.net/get-contract-summary/${contrato}`;
                     const response = await axios.get(varEndpoint, null, {
                         headers: {
                             'Content-Type': 'application/x-www-form-urlencoded',

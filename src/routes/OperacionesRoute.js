@@ -196,6 +196,81 @@ router.post('/getjsonvisuallogistic', OperacionesController.get_jsonvisuallogist
 router.post('/getcontractvisuallogistic', OperacionesController.get_contractvisuallogistic);
 /**
  * @swagger
+ * /operaciones/getfotoscontractvisuallogistic:
+ *   post:
+ *     summary: Obtener fotos del contrato en Visual Logistic
+ *     description: Retorna un resumen del contrato, incluyendo fotos, en Visual Logistic.
+ *     tags:
+ *       - Operaciones
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               contrato:
+ *                 type: string
+ *                 description: ID del contrato para buscar las fotos y el resumen.
+ *             required:
+ *               - contrato
+ *     responses:
+ *       200:
+ *         description: Resumen del contrato obtenido exitosamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la solicitud fue exitosa.
+ *                   example: true
+ *                 info:
+ *                   type: object
+ *                   description: Información del contrato, incluyendo fotos.
+ *                   properties:
+ *                     ejemploPropiedad:
+ *                       type: string
+ *                       description: Ejemplo de una propiedad de la información retornada.
+ *                       example: valorEjemplo
+ *       400:
+ *         description: Error en la solicitud.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la solicitud fue exitosa.
+ *                   example: false
+ *       401:
+ *         description: Error de autenticación. El token es inválido o ha expirado.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la autenticación ha fallado.
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   description: Mensaje de error detallando la causa.
+ *                   example: Failed to authenticate token
+ *       500:
+ *         description: Error interno del servidor.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ */
+router.post('/getfotoscontractvisuallogistic', OperacionesController.get_fotoscontractvisuallogistic);
+/**
+ * @swagger
  * /operaciones/getcomprobantevalitronics:
  *   post:
  *     summary: Obtener comprobantes de contrato Valitronics
