@@ -196,6 +196,87 @@ router.post('/getjsonvisuallogistic', OperacionesController.get_jsonvisuallogist
 router.post('/getcontractvisuallogistic', OperacionesController.get_contractvisuallogistic);
 /**
  * @swagger
+ * /operaciones/getreportesdevicevalitronics:
+ *   post:
+ *     summary: Obtener reportes del dispositivo de Valitronics
+ *     description: Retorna la latitud y longitud de las fotos asociadas a un contrato específico de Valitronics.
+ *     tags:
+ *       - Operaciones
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               contrato:
+ *                 type: string
+ *                 description: ID del contrato para obtener los reportes del dispositivo.
+ *             required:
+ *               - contrato
+ *     responses:
+ *       200:
+ *         description: Datos de los reportes obtenidos exitosamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la solicitud fue exitosa.
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       Latitud:
+ *                         type: number
+ *                         description: Latitud de la foto.
+ *                         example: 4.060151
+ *                       Longitud:
+ *                         type: number
+ *                         description: Longitud de la foto.
+ *                         example: -76.265552
+ *       400:
+ *         description: Error en la solicitud.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la solicitud fue exitosa.
+ *                   example: false
+ *       401:
+ *         description: Error de autenticación. El token es inválido o ha expirado.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la autenticación ha fallado.
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   description: Mensaje de error detallando la causa.
+ *                   example: Failed to authenticate token
+ *       500:
+ *         description: Error interno del servidor.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ */
+
+router.post('/getreportesdevicevalitronics', OperacionesController.get_reportesdevicevalitronics);
+/**
+ * @swagger
  * /operaciones/getfotoscontractvisuallogistic:
  *   post:
  *     summary: Obtener fotos del contrato en Visual Logistic

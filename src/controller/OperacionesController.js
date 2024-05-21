@@ -360,6 +360,30 @@ controller.get_fotoscontrato = async (req, res) => {
     }
 }
 
+// FUNCION QUE RETORNA EL LISTADO POSICIONES DONDE SE TOMARON LAS FOTOS
+controller.get_reportesdevicevalitronics = async (req, res) => {
+    try{
+        var token = req.headers.authorization;
+        if (!token) {
+            return res.json({ success: false, message: 'Token is missing' });
+        }else{
+            token = req.headers.authorization.split(' ')[1];
+            jwt.verify(token, 'secret_key', async (err, decoded) => {
+                if (err) {
+                    return res.json({ success: false, message: 'Failed to authenticate token' });
+                } else {
+                    var contrato=req.body.contrato;
+                    var consulta= "SELECT Latitud, Longitud from dbo.Photos('"+contrato+"')";
+                    let resultado=await sqlconfig.query(consulta);
+                    res.json({success : true, data : resultado.recordsets[0]});
+                }
+            });
+        }
+    }catch(err){
+        return res.json({success : false});
+    }
+}
+
 // FUNCION QUE RETORNA EL LISTADO DE REPORTES DE TRAFICO DE UN CONTRATO
 controller.get_reportestrafico = async (req, res) => {
     try{
@@ -734,7 +758,6 @@ controller.get_contractvisuallogistic = async (req, res) => {
                             'Content-Type': 'application/x-www-form-urlencoded',
                         },
                     });
-
                     res.json({ success: true, info: response.data });
                 }
             });
@@ -742,7 +765,6 @@ controller.get_contractvisuallogistic = async (req, res) => {
     }catch(err){
         res.json({success : false});
     }
-
 }
 
 //FUNCION QUE RETORNA EL JSON CON TODAS LAS FOTOS DE UN CONTRATO EN VISUALLOGISTIC
