@@ -373,7 +373,7 @@ controller.get_reportesdevicevalitronics = async (req, res) => {
                     return res.json({ success: false, message: 'Failed to authenticate token' });
                 } else {
                     var contrato=req.body.contrato;
-                    var consulta= "SELECT Latitud, Longitud from dbo.Photos('"+contrato+"') WHERE Latitud<>0";
+                    var consulta= "SELECT Latitud as latitude, Longitud as longitude from dbo.Photos('"+contrato+"') WHERE Latitud<>0";
                     let resultado=await sqlconfig.query(consulta);
                     res.json({success : true, data : resultado.recordsets[0]});
                 }
