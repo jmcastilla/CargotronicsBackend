@@ -781,13 +781,20 @@ controller.get_fotoscontractvisuallogistic = async (req, res) => {
                 } else {
                     var contrato=req.body.contrato;
                     const varEndpoint= `https://visuallogisticsapp.azurewebsites.net/get-contract-summary/${contrato}`;
-                    const response = await axios.get(varEndpoint, null, {
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded',
-                        },
-                    });
-
-                    res.json({ success: true, info: response.data });
+                    try {
+                        const response = await axios.get(varEndpoint, {
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded',
+                            },
+                        });
+                        res.json({ success: true, info: response.data });
+                    } catch (axiosError) {
+                        if (axiosError.response && axiosError.response.status === 404) {
+                            res.json({ success: false, message: `El contrato ${contrato} no se encuentra en la base de datos` });
+                        } else {
+                            res.json({ success: false, message: 'Error en la solicitud al servidor de visual logistics' });
+                        }
+                    }
                 }
             });
         }
