@@ -69,9 +69,11 @@ app.use((req, res, next) => {
 const operacionesRouters = require('./routes/OperacionesRoute');
 const empresasRouters = require('./routes/EmpresasRoute');
 const dianRouters = require('./routes/DianRoute');
+const solicitudesRouters = require('./routes/SolicitudesRoute');
 app.use('/operaciones', operacionesRouters);
 app.use('/empresas', empresasRouters);
 app.use('/dian', dianRouters);
+app.use('/solicitudes', solicitudesRouters);
 
 app.post('/editar-excel', async (req, res) => {
   try {
