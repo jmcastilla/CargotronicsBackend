@@ -978,7 +978,6 @@ controller.set_reporteautomatico = async (req, res) => {
     }catch(err){
         res.json({success : false});
     }
-
 }
 
 // FUNCION PARA CONVERTIR GRADOS A RADIANES
