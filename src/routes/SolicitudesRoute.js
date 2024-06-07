@@ -184,7 +184,362 @@ router.get('/getsolicitudes', SolicitudesController.get_Solicitudes);
  *               success: false
  */
 router.post('/deletesolicitud', SolicitudesController.delete_solicitud);
-
+/**
+ * @swagger
+ * /solicitudes/getrutassolicitudesciudadorigen:
+ *   post:
+ *     summary: Obtener rutas de solicitudes por ciudad de origen
+ *     description: Obtiene una lista de ciudades de origen de las rutas de solicitudes con estado específico.
+ *     tags:
+ *       - Solicitudes
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Datos de las ciudades de origen obtenidos exitosamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la solicitud fue exitosa.
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       ID:
+ *                         type: integer
+ *                         description: ID de la ciudad de origen.
+ *                         example: 1
+ *                       NOMBRE:
+ *                         type: string
+ *                         description: Nombre de la ciudad de origen.
+ *                         example: Ciudad de Ejemplo
+ *       400:
+ *         description: Error en la solicitud.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Token is missing
+ *       401:
+ *         description: Error de autenticación. El token es inválido o ha expirado.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la autenticación ha fallado.
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   description: Mensaje de error detallando la causa.
+ *                   example: Failed to authenticate token
+ *       500:
+ *         description: Error interno del servidor.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ */
+router.get('/getrutassolicitudesciudadorigen', SolicitudesController.get_rutassolicitudesciudadorigen);
+/**
+ * @swagger
+ * /solicitudes/getlistaempresas:
+ *   get:
+ *     summary: Obtener lista de empresas
+ *     description: Obtiene una lista de empresas asociadas a un proyecto específico.
+ *     tags:
+ *       - Solicitudes
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Lista de empresas obtenida exitosamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la solicitud fue exitosa.
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       IdEmpresa:
+ *                         type: integer
+ *                         description: ID de la empresa.
+ *                         example: 1
+ *                       NombreEmpresa:
+ *                         type: string
+ *                         description: Nombre de la empresa.
+ *                         example: Empresa Ejemplo
+ *       400:
+ *         description: Error en la solicitud.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Token is missing
+ *       401:
+ *         description: Error de autenticación. El token es inválido o ha expirado.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la autenticación ha fallado.
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   description: Mensaje de error detallando la causa.
+ *                   example: Failed to authenticate token
+ *       500:
+ *         description: Error interno del servidor.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ */
+router.get('/getlistaempresas', SolicitudesController.get_listaempresas);
+/**
+ * @swagger
+ * /solicitudes/getlistatransportadoras:
+ *   get:
+ *     summary: Obtener lista de transportadoras
+ *     description: Obtiene una lista de transportadoras asociadas a un proyecto específico.
+ *     tags:
+ *       - Solicitudes
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Lista de transportadoras obtenida exitosamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la solicitud fue exitosa.
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       IdTransportadora:
+ *                         type: integer
+ *                         description: ID de la transportadora.
+ *                         example: 1
+ *                       NombreTranspo:
+ *                         type: string
+ *                         description: Nombre de la transportadora.
+ *                         example: Transportadora Ejemplo
+ *       400:
+ *         description: Error en la solicitud.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Token is missing
+ *       401:
+ *         description: Error de autenticación. El token es inválido o ha expirado.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la autenticación ha fallado.
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   description: Mensaje de error detallando la causa.
+ *                   example: Failed to authenticate token
+ *       500:
+ *         description: Error interno del servidor.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ */
+router.get('/getlistatransportadoras', SolicitudesController.get_listatransportadoras);
+/**
+ * @swagger
+ * /solicitudes/getlistaRutasNegociadas:
+ *   post:
+ *     summary: Obtener lista de rutas negociadas
+ *     description: Obtiene una lista de rutas negociadas asociadas a una empresa específica.
+ *     tags:
+ *       - Solicitudes
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               empresa:
+ *                 type: integer
+ *                 description: ID de la empresa.
+ *                 example: 1
+ *             required:
+ *               - empresa
+ *     responses:
+ *       200:
+ *         description: Lista de rutas negociadas obtenida exitosamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la solicitud fue exitosa.
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       FKICRuta:
+ *                         type: integer
+ *                         description: ID de la ruta.
+ *                         example: 123
+ *                       DescripcionRuta:
+ *                         type: string
+ *                         description: Descripción de la ruta.
+ *                         example: Ruta de ejemplo
+ *       400:
+ *         description: Error en la solicitud.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Token is missing
+ *       401:
+ *         description: Error de autenticación. El token es inválido o ha expirado.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la autenticación ha fallado.
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   description: Mensaje de error detallando la causa.
+ *                   example: Failed to authenticate token
+ *       500:
+ *         description: Error interno del servidor.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ */
+router.post('/getlistaRutasNegociadas', SolicitudesController.get_listaRutasNegociadas);
+/**
+ * @swagger
+ * /solicitudes/getlistaNegociaciones:
+ *   post:
+ *     summary: Obtener lista de negociaciones
+ *     description: Obtiene una lista de negociaciones asociadas a una empresa y una ruta específicas.
+ *     tags:
+ *       - Solicitudes
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               empresa:
+ *                 type: integer
+ *                 description: ID de la empresa.
+ *                 example: 1
+ *               ruta:
+ *                 type: integer
+ *                 description: ID de la ruta.
+ *                 example: 123
+ *             required:
+ *               - empresa
+ *               - ruta
+ *     responses:
+ *       200:
+ *         description: Lista de negociaciones obtenida exitosamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la solicitud fue exitosa.
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       IdClienteExterno:
+ *                         type: integer
+ *                         description: ID del cliente externo.
+ *                         example: 456
+ *                       Descripcion:
+ *                         type: string
+ *                         description: Descripción de la negociación.
+ *                         example: Negociación ejemplo
+ *       400:
+ *         description: Error en la solicitud.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Token is missing
+ *       401:
+ *         description: Error de autenticación. El token es inválido o ha expirado.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la autenticación ha fallado.
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   description: Mensaje de error detallando la causa.
+ *                   example: Failed to authenticate token
+ *       500:
+ *         description: Error interno del servidor.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ */
+router.post('/getlistaNegociaciones', SolicitudesController.get_listaNegociaciones);
 
 
 module.exports = router;
