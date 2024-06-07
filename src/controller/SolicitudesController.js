@@ -90,7 +90,7 @@ controller.get_rutassolicitudesciudadorigen = async (req, res) => {
         res.json({success : false});
     }
 }
-
+//clientes
 controller.get_listaempresas = async (req, res) => {
     try{
         var token = req.headers.authorization;
@@ -112,7 +112,7 @@ controller.get_listaempresas = async (req, res) => {
         res.json({success : false});
     }
 }
-
+//tranpostadora
 controller.get_listatransportadoras = async (req, res) => {
     try{
         var token = req.headers.authorization;
@@ -135,6 +135,7 @@ controller.get_listatransportadoras = async (req, res) => {
     }
 }
 
+//rutas
 controller.get_listaRutasNegociadas = async (req, res) => {
     try{
         var token = req.headers.authorization;
@@ -177,6 +178,135 @@ controller.get_listaNegociaciones = async (req, res) => {
                     var consulta= "SELECT DISTINCT IdClienteExterno, Descripcion "+
                     "FROM LokNegociacion INNER JOIN LokClienteExt ON LokNegociacion.FKLokClienteExt = LokClienteExt.IdClienteExterno "+
                     "WHERE FKICEmpresa = "+empresa+" and FKICRuta = "+ruta;
+                    let resultado=await sqlconfig.query(consulta);
+                    res.json({success : true, data : resultado.recordsets[0]});
+                }
+            });
+        }
+    }catch(err){
+        res.json({success : false});
+    }
+}
+//unidades de carga
+controller.get_listaUnidadCarga = async (req, res) => {
+    try{
+        var token = req.headers.authorization;
+        if (!token) {
+            return res.json({ success: false, message: 'Token is missing' });
+        }else{
+            token = req.headers.authorization.split(' ')[1];
+            jwt.verify(token, 'secret_key', async (err, decoded) => {
+                if (err) {
+                    res.json({ success: false, message: 'Failed to authenticate token' });
+                } else {
+                    var consulta= "SELECT TipoUnidadCargaID, DescripcionTipoCarga FROM LokTipoUnidadCarga ORDER BY DescripcionTipoCarga";
+                    //agregar antes el no asignado
+                    let resultado=await sqlconfig.query(consulta);
+                    res.json({success : true, data : resultado.recordsets[0]});
+                }
+            });
+        }
+    }catch(err){
+        res.json({success : false});
+    }
+}
+//destinos autorizados
+controller.get_listaGeocercasEmpresa = async (req, res) => {
+    try{
+        var token = req.headers.authorization;
+        if (!token) {
+            return res.json({ success: false, message: 'Token is missing' });
+        }else{
+            token = req.headers.authorization.split(' ')[1];
+            jwt.verify(token, 'secret_key', async (err, decoded) => {
+                if (err) {
+                    res.json({ success: false, message: 'Failed to authenticate token' });
+                } else {
+                    var empresa=req.body.empresa;
+                    var consulta="";
+                    if(empresa === 0){
+                        consulta= "SELECT Nombre, ID FROM GeoCercas WHERE FKProyecto = "+decoded.proyecto+" ORDER BY Nombre";
+                    }else{
+                        consulta= "SELECT Nombre, ID FROM LokCercaEmpresa INNER JOIN ICEmpresa  ON FKICEmpresa = IdEmpresa INNER JOIN GeoCercas ON"
+                        +" ID = FKLokCerca WHERE IdEmpresa = "+empresa
+                        +" ORDER BY GeoCercas.Nombre";
+                    }
+                    //agregar antes el no asignado
+                    let resultado=await sqlconfig.query(consulta);
+                    res.json({success : true, data : resultado.recordsets[0]});
+                }
+            });
+        }
+    }catch(err){
+        res.json({success : false});
+    }
+}
+//instalador
+controller.get_listaInstaladores = async (req, res) => {
+    try{
+        var token = req.headers.authorization;
+        if (!token) {
+            return res.json({ success: false, message: 'Token is missing' });
+        }else{
+            token = req.headers.authorization.split(' ')[1];
+            jwt.verify(token, 'secret_key', async (err, decoded) => {
+                if (err) {
+                    res.json({ success: false, message: 'Failed to authenticate token' });
+                } else {
+                    var consulta="SELECT CCInstalador, NombreInstalador FROM LokInstaladores ORDER BY NombreInstalador";
+                    //agregar antes el no asignado
+                    let resultado=await sqlconfig.query(consulta);
+                    res.json({success : true, data : resultado.recordsets[0]});
+                }
+            });
+        }
+    }catch(err){
+        res.json({success : false});
+    }
+}
+//tipo servicio
+controller.get_tiposervicio = async (req, res) => {
+    try{
+        var token = req.headers.authorization;
+        if (!token) {
+            return res.json({ success: false, message: 'Token is missing' });
+        }else{
+            token = req.headers.authorization.split(' ')[1];
+            jwt.verify(token, 'secret_key', async (err, decoded) => {
+                if (err) {
+                    res.json({ success: false, message: 'Failed to authenticate token' });
+                } else {
+                    var ruta=req.body.ruta;
+                    var empresa=req.body.empresa;
+                    var consulta="SELECT IDNegociacion, Descripcion + CASE WHEN Notas <> '' THEN ', ' + Notas ELSE '' END as Descripcion "
+                    +"FROM LokNegociacion INNER JOIN LokTipoServicios ON LokNegociacion.FKLokTipoServicio = LokTipoServicios.IDTipoServicios "
+                    +"WHERE FKICEmpresa = "+empresa+" and FKICRuta = "+ruta+" AND Activo = 1 ORDER BY Descripcion";
+                    //agregar antes el no asignado
+                    let resultado=await sqlconfig.query(consulta);
+                    res.json({success : true, data : resultado.recordsets[0]});
+                }
+            });
+        }
+    }catch(err){
+        res.json({success : false});
+    }
+}
+//para rellenar informacion vehiculo
+controller.get_obtenerVehiculo = async (req, res) => {
+    try{
+        var token = req.headers.authorization;
+        if (!token) {
+            return res.json({ success: false, message: 'Token is missing' });
+        }else{
+            token = req.headers.authorization.split(' ')[1];
+            jwt.verify(token, 'secret_key', async (err, decoded) => {
+                if (err) {
+                    res.json({ success: false, message: 'Failed to authenticate token' });
+                } else {
+                    var placa=req.body.placa;
+                    var consulta="SELECT IdLokVehiculo, Placa, Marca, Color, Linea, Modelo ";
+                    +"FROM LokVehiculos WHERE Placa = '" + placa + "'";
+                    //agregar antes el no asignado
                     let resultado=await sqlconfig.query(consulta);
                     res.json({success : true, data : resultado.recordsets[0]});
                 }

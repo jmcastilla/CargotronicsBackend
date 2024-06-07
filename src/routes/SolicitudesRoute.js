@@ -540,6 +540,384 @@ router.post('/getlistaRutasNegociadas', SolicitudesController.get_listaRutasNego
  *               success: false
  */
 router.post('/getlistaNegociaciones', SolicitudesController.get_listaNegociaciones);
+/**
+ * @swagger
+ * /solicitudes/getlistaUnidadCarga:
+ *   get:
+ *     summary: Obtener lista de unidades de carga
+ *     description: Obtiene una lista de tipos de unidades de carga.
+ *     tags:
+ *       - Solicitudes
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Lista de unidades de carga obtenida exitosamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la solicitud fue exitosa.
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       TipoUnidadCargaID:
+ *                         type: integer
+ *                         description: ID del tipo de unidad de carga.
+ *                         example: 1
+ *                       DescripcionTipoCarga:
+ *                         type: string
+ *                         description: Descripción del tipo de unidad de carga.
+ *                         example: Contenedor
+ *       400:
+ *         description: Error en la solicitud.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Token is missing
+ *       401:
+ *         description: Error de autenticación. El token es inválido o ha expirado.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la autenticación ha fallado.
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   description: Mensaje de error detallando la causa.
+ *                   example: Failed to authenticate token
+ *       500:
+ *         description: Error interno del servidor.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ */
+router.get('/getlistaUnidadCarga', SolicitudesController.get_listaUnidadCarga);
+/**
+ * @swagger
+ * /solicitudes/getlistaGeocercasEmpresa:
+ *   post:
+ *     summary: Obtener lista de geocercas de una empresa
+ *     description: Obtiene una lista de geocercas asociadas a una empresa específica.
+ *     tags:
+ *       - Solicitudes
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               empresa:
+ *                 type: integer
+ *                 description: ID de la empresa.
+ *                 example: 1
+ *     responses:
+ *       200:
+ *         description: Lista de geocercas obtenida exitosamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la solicitud fue exitosa.
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       Nombre:
+ *                         type: string
+ *                         description: Nombre de la geocerca.
+ *                         example: Geocerca 1
+ *                       ID:
+ *                         type: integer
+ *                         description: ID de la geocerca.
+ *                         example: 1
+ *       400:
+ *         description: Error en la solicitud.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Token is missing
+ *       401:
+ *         description: Error de autenticación. El token es inválido o ha expirado.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la autenticación ha fallado.
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   description: Mensaje de error detallando la causa.
+ *                   example: Failed to authenticate token
+ *       500:
+ *         description: Error interno del servidor.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ */
+router.post('/getlistaGeocercasEmpresa', SolicitudesController.get_listaGeocercasEmpresa);
+/**
+ * @swagger
+ * /solicitudes/getlistaInstaladores:
+ *   get:
+ *     summary: Obtener lista de instaladores
+ *     description: Obtiene una lista de instaladores.
+ *     tags:
+ *       - Solicitudes
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Lista de instaladores obtenida exitosamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la solicitud fue exitosa.
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       CCInstalador:
+ *                         type: string
+ *                         description: Identificación del instalador.
+ *                         example: "12345678"
+ *                       NombreInstalador:
+ *                         type: string
+ *                         description: Nombre del instalador.
+ *                         example: "Juan Pérez"
+ *       400:
+ *         description: Error en la solicitud.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Token is missing
+ *       401:
+ *         description: Error de autenticación. El token es inválido o ha expirado.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la autenticación ha fallado.
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   description: Mensaje de error detallando la causa.
+ *                   example: Failed to authenticate token
+ *       500:
+ *         description: Error interno del servidor.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ */
+router.get('/getlistaInstaladores', SolicitudesController.get_listaInstaladores);
+/**
+ * @swagger
+ * /solicitudes/gettiposervicio:
+ *   post:
+ *     summary: Obtener tipos de servicio
+ *     description: Obtiene una lista de tipos de servicio negociados para una empresa y ruta específicos.
+ *     tags:
+ *       - Solicitudes
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               ruta:
+ *                 type: integer
+ *                 description: Identificación de la ruta.
+ *                 example: 1
+ *               empresa:
+ *                 type: integer
+ *                 description: Identificación de la empresa.
+ *                 example: 123
+ *     responses:
+ *       200:
+ *         description: Lista de tipos de servicio obtenida exitosamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la solicitud fue exitosa.
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       IDNegociacion:
+ *                         type: integer
+ *                         description: Identificación de la negociación.
+ *                         example: 456
+ *                       Descripcion:
+ *                         type: string
+ *                         description: Descripción del tipo de servicio.
+ *                         example: "Servicio Básico, Nota adicional"
+ *       400:
+ *         description: Error en la solicitud.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Token is missing
+ *       401:
+ *         description: Error de autenticación. El token es inválido o ha expirado.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la autenticación ha fallado.
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   description: Mensaje de error detallando la causa.
+ *                   example: Failed to authenticate token
+ *       500:
+ *         description: Error interno del servidor.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ */
+router.post('/gettiposervicio', SolicitudesController.get_tiposervicio);
+/**
+ * @swagger
+ * /solicitudes/getobtenerVehiculo:
+ *   post:
+ *     summary: Obtener información del vehículo
+ *     description: Obtiene la información detallada de un vehículo específico por su placa.
+ *     tags:
+ *       - Solicitudes
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               placa:
+ *                 type: string
+ *                 description: Placa del vehículo.
+ *                 example: "ABC123"
+ *     responses:
+ *       200:
+ *         description: Información del vehículo obtenida exitosamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la solicitud fue exitosa.
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       IdLokVehiculo:
+ *                         type: integer
+ *                         description: Identificación del vehículo.
+ *                         example: 1
+ *                       Placa:
+ *                         type: string
+ *                         description: Placa del vehículo.
+ *                         example: "ABC123"
+ *                       Marca:
+ *                         type: string
+ *                         description: Marca del vehículo.
+ *                         example: "Toyota"
+ *                       Color:
+ *                         type: string
+ *                         description: Color del vehículo.
+ *                         example: "Rojo"
+ *                       Linea:
+ *                         type: string
+ *                         description: Línea del vehículo.
+ *                         example: "Corolla"
+ *                       Modelo:
+ *                         type: integer
+ *                         description: Modelo del vehículo.
+ *                         example: 2020
+ *       400:
+ *         description: Error en la solicitud.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Token is missing
+ *       401:
+ *         description: Error de autenticación. El token es inválido o ha expirado.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la autenticación ha fallado.
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   description: Mensaje de error detallando la causa.
+ *                   example: Failed to authenticate token
+ *       500:
+ *         description: Error interno del servidor.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ */
+router.post('/getobtenerVehiculo', SolicitudesController.get_obtenerVehiculo);
 
 
 module.exports = router;
