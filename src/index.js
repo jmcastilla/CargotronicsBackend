@@ -65,15 +65,15 @@ app.use((req, res, next) => {
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
   next();
 });
-
+const solicitudesRouters = require('./routes/SolicitudesRoute');
 const operacionesRouters = require('./routes/OperacionesRoute');
 const empresasRouters = require('./routes/EmpresasRoute');
 const dianRouters = require('./routes/DianRoute');
-const solicitudesRouters = require('./routes/SolicitudesRoute');
+app.use('/solicitudes', solicitudesRouters);
 app.use('/operaciones', operacionesRouters);
 app.use('/empresas', empresasRouters);
 app.use('/dian', dianRouters);
-app.use('/solicitudes', solicitudesRouters);
+
 
 app.post('/editar-excel', async (req, res) => {
   try {
