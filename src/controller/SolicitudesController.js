@@ -29,6 +29,8 @@ controller.get_Solicitudes = async (req, res) => {
                         consulta += " AND LokSolicitudes.FKICEmpresa = " + decoded.idempresa;
                     }
                     consulta += " ORDER BY FechaHoraCita";
+                    console.log(decoded.idempresa);
+                    console.log(consulta);
                     let resultado=await sqlconfig.query(consulta);
                     res.json({success : true, data : resultado.recordsets[0]});
                 }
