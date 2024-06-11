@@ -26,7 +26,7 @@ controller.get_Solicitudes = async (req, res) => {
                     +" LEFT JOIN LokEstados e ON r.FKLokEstados = e.IDEstados"
                     +" WHERE(s.FKLokEstados = 2 OR s.FKLokEstados = 7)";
                     if(decoded.idempresa != 2){
-                        consulta += " AND LokSolicitudes.FKICEmpresa = " + decoded.idempresa;
+                        consulta += " AND s.FKICEmpresa = " + decoded.idempresa;
                     }
                     consulta += " ORDER BY FechaHoraCita";
                     console.log(decoded.idempresa);
