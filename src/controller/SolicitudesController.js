@@ -83,8 +83,11 @@ controller.get_numerosolicitudnuevo = async (req, res) => {
                     var consulta= "SELECT TOP 1 IDSolicitudes FROM LokSolicitudes ORDER BY IDSolicitudes desc";
                     let resultado=await sqlconfig.query(consulta);
                     var array=resultado.recordsets[0];
-                    console.log("****",array[0].IDSolicitudes);
-                    res.json({success : true, data : resultado.recordsets[0]});
+                    let ultimoIDSolicitud=array[0].IDSolicitudes;
+                    let numero = parseInt(ultimoIDSolicitud.slice(4)) + 1;
+                    let nuevoIDSolicitud = `SOL-${numero.toString().padStart(8, '0')}`;
+                    console.log(nuevoIDSolicitud);
+                    res.json({success : true, data : nuevoIDSolicitud});
                 }
             });
         }
