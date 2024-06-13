@@ -68,6 +68,30 @@ controller.delete_solicitud = async (req, res) => {
     }
 }
 
+//generar numero solicitud
+controller.get_numerosolicitudnuevo = async (req, res) => {
+    try{
+        var token = req.headers.authorization;
+        if (!token) {
+            return res.json({ success: false, message: 'Token is missing' });
+        }else{
+            token = req.headers.authorization.split(' ')[1];
+            jwt.verify(token, 'secret_key', async (err, decoded) => {
+                if (err) {
+                    res.json({ success: false, message: 'Failed to authenticate token' });
+                } else {
+                    var consulta= "SELECT TOP 1 IDSolicitudes FROM LokSolicitudes ORDER BY IDSolicitudes desc";
+                    let resultado=await sqlconfig.query(consulta);
+                    console.log("****",resultado.recordsets[0].IDSolicitudes);
+                    res.json({success : true, data : resultado.recordsets[0]});
+                }
+            });
+        }
+    }catch(err){
+        res.json({success : false});
+    }
+}
+
 controller.get_rutassolicitudesciudadorigen = async (req, res) => {
     try{
         var token = req.headers.authorization;
