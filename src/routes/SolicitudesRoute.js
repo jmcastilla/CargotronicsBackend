@@ -977,6 +977,71 @@ router.post('/getobtenerVehiculo', SolicitudesController.get_obtenerVehiculo);
  *               success: false
  */
 router.get('/getnumerosolicitudnuevo', SolicitudesController.get_numerosolicitudnuevo);
+/**
+ * @swagger
+ * /solicitudes/getcategoriasservicios:
+ *   get:
+ *     summary: Obtener categorías de servicios
+ *     description: Retorna una lista de todas las categorías de servicios disponibles.
+ *     tags:
+ *       - Solicitudes
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Lista de categorías de servicios obtenida exitosamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la solicitud fue exitosa.
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       IdCategoriaServ:
+ *                         type: integer
+ *                         description: ID de la categoría de servicio.
+ *                         example: 1
+ *                       CategoriaServ:
+ *                         type: string
+ *                         description: Nombre de la categoría de servicio.
+ *                         example: "Transporte"
+ *       400:
+ *         description: Error en la solicitud.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Token is missing
+ *       401:
+ *         description: Error de autenticación. El token es inválido o ha expirado.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la autenticación ha fallado.
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   description: Mensaje de error detallando la causa.
+ *                   example: Failed to authenticate token
+ *       500:
+ *         description: Error interno del servidor.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ */
+router.get('/getcategoriasservicios', SolicitudesController.get_categoriasservicios);
 
 
 module.exports = router;
