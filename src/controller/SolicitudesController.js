@@ -82,7 +82,8 @@ controller.get_numerosolicitudnuevo = async (req, res) => {
                 } else {
                     var consulta= "SELECT TOP 1 IDSolicitudes FROM LokSolicitudes ORDER BY IDSolicitudes desc";
                     let resultado=await sqlconfig.query(consulta);
-                    console.log("****",resultado.recordsets[0]);
+                    var array=resultado.recordsets[0];
+                    console.log("****",array[0].IDSolicitudes);
                     res.json({success : true, data : resultado.recordsets[0]});
                 }
             });
