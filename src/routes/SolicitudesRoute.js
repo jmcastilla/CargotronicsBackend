@@ -187,7 +187,7 @@ router.post('/deletesolicitud', SolicitudesController.delete_solicitud);
 /**
  * @swagger
  * /solicitudes/getrutassolicitudesciudadorigen:
- *   post:
+ *   get:
  *     summary: Obtener rutas de solicitudes por ciudad de origen
  *     description: Obtiene una lista de ciudades de origen de las rutas de solicitudes con estado específico.
  *     tags:
