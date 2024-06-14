@@ -369,5 +369,62 @@ controller.get_obtenerVehiculo = async (req, res) => {
     }
 }
 
+controller.set_insertSolicitud = async (req, res) => {
+    try{
+        var token = req.headers.authorization;
+        if (!token) {
+            return res.json({ success: false, message: 'Token is missing' });
+        }else{
+            token = req.headers.authorization.split(' ')[1];
+            jwt.verify(token, 'secret_key', async (err, decoded) => {
+                if (err) {
+                    res.json({ success: false, message: 'Failed to authenticate token' });
+                } else {
+                    let data = {
+                        "IDSolicitudes": 0,
+                        "FKICEmpresa": req.body.FKICEmpresa,
+                        "Ref": req.body.Ref,
+                        "ContainerNum": req.body.ContainerNum,
+                        "DigitoVerificacion": req.body.DigitoVerificacion,
+                        "FKInstaladorId": req.body.FKInstaladorId,
+                        "Notas": req.body.Notas,
+                        "NombreConductor": req.body.NombreConductor,
+                        "NitConductor": req.body.NitConductor,
+                        "MovilConductor": req.body.MovilConductor,
+                        "FKLokTipoUnidadCarga": req.body.FKLokTipoUnidadCarga,
+                        "PlacaTruck": req.body.PlacaTruck,
+                        "ColorTruck": req.body.ColorTruck,
+                        "PlacaTrailer": req.body.PlacaTrailer,
+                        "NombreEscolta": req.body.NombreEscolta,
+                        "MovilEscolta": req.body.MovilEscolta,
+                        "FKLokCategoriaServ": req.body.FKLokCategoriaServ,
+                        "NotasTI": req.body.NotasTI,
+                        "Marca": req.body.Marca,
+                        "FKICTransportadora": req.body.FKICTransportadora,
+                        "FKICEmpresaConsulta": req.body.FKICEmpresaConsulta,
+                        "bitRestriccion": req.body.bitRestriccion,
+                        "HoraInicioR": req.body.HoraInicioR,
+                        "HoraFinR": req.body.HoraFinR,
+                        "FKICEmpresaConsulta2": req.body.FKICEmpresaConsulta2,
+                        "FKLokEstados": req.body.FKLokEstados,
+                        "FechaHoraCita": req.body.FechaHoraCita,
+                        "FechaHoraCitaDescargue": req.body.FechaHoraCitaDescargue,
+                        "NotasDatosEntrega": req.body.NotasDatosEntrega,
+                        "UserSolicitud": req.body.UserSolicitud,
+                        "FKNegociacion": req.body.FKNegociacion,
+                        "Solicitante": req.body.Solicitante,
+                        "Contacto": req.body.Contacto,
+                        "FKCercaAutorizada": req.body.FKCercaAutorizada
+                    };
+                    let resultado=await sqlconfig.queryProcedure('InsertSolicitud', data);
+                    res.json({success : true, data : resultado.recordsets[0]});
+                }
+            });
+        }
+    }catch(err){
+        res.json({success : false});
+    }
+}
+
 
 module.exports = controller;
