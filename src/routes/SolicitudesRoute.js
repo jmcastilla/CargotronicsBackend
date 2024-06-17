@@ -1042,7 +1042,171 @@ router.get('/getnumerosolicitudnuevo', SolicitudesController.get_numerosolicitud
  *               success: false
  */
 router.get('/getcategoriasservicios', SolicitudesController.get_categoriasservicios);
-
+/**
+ * @swagger
+ * /solicitudes/setinsertSolicitud:
+ *   post:
+ *     summary: Insertar una nueva solicitud
+ *     description: Inserta una nueva solicitud en el sistema.
+ *     tags:
+ *       - Solicitudes
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               FKICEmpresa:
+ *                 type: integer
+ *                 example: 1
+ *               Ref:
+ *                 type: string
+ *                 example: "ABC123"
+ *               ContainerNum:
+ *                 type: string
+ *                 example: "C123456"
+ *               DigitoVerificacion:
+ *                 type: string
+ *                 example: "1"
+ *               FKInstaladorId:
+ *                 type: integer
+ *                 example: 2
+ *               Notas:
+ *                 type: string
+ *                 example: "Notas adicionales"
+ *               NombreConductor:
+ *                 type: string
+ *                 example: "Juan Pérez"
+ *               NitConductor:
+ *                 type: string
+ *                 example: "12345678"
+ *               MovilConductor:
+ *                 type: string
+ *                 example: "3001234567"
+ *               FKLokTipoUnidadCarga:
+ *                 type: integer
+ *                 example: 1
+ *               PlacaTruck:
+ *                 type: string
+ *                 example: "ABC123"
+ *               ColorTruck:
+ *                 type: string
+ *                 example: "Rojo"
+ *               PlacaTrailer:
+ *                 type: string
+ *                 example: "XYZ987"
+ *               NombreEscolta:
+ *                 type: string
+ *                 example: "Carlos Gómez"
+ *               MovilEscolta:
+ *                 type: string
+ *                 example: "3111234567"
+ *               FKLokCategoriaServ:
+ *                 type: integer
+ *                 example: 1
+ *               NotasTI:
+ *                 type: string
+ *                 example: "Notas técnicas"
+ *               Marca:
+ *                 type: string
+ *                 example: "Marca del vehículo"
+ *               FKICTransportadora:
+ *                 type: integer
+ *                 example: 1
+ *               FKICEmpresaConsulta:
+ *                 type: integer
+ *                 example: 1
+ *               bitRestriccion:
+ *                 type: boolean
+ *                 example: false
+ *               HoraInicioR:
+ *                 type: string
+ *                 format: date-time
+ *                 example: "2023-01-01T08:00:00Z"
+ *               HoraFinR:
+ *                 type: string
+ *                 format: date-time
+ *                 example: "2023-01-01T17:00:00Z"
+ *               FKICEmpresaConsulta2:
+ *                 type: integer
+ *                 example: 1
+ *               FKLokEstados:
+ *                 type: integer
+ *                 example: 1
+ *               FechaHoraCita:
+ *                 type: string
+ *                 format: date-time
+ *                 example: "2023-01-01T08:00:00Z"
+ *               FechaHoraCitaDescargue:
+ *                 type: string
+ *                 format: date-time
+ *                 example: "2023-01-01T17:00:00Z"
+ *               NotasDatosEntrega:
+ *                 type: string
+ *                 example: "Detalles de la entrega"
+ *               UserSolicitud:
+ *                 type: string
+ *                 example: "user123"
+ *               FKNegociacion:
+ *                 type: integer
+ *                 example: 1
+ *               Solicitante:
+ *                 type: string
+ *                 example: "John Doe"
+ *               Contacto:
+ *                 type: string
+ *                 example: "contacto@empresa.com"
+ *               FKCercaAutorizada:
+ *                 type: integer
+ *                 example: 1
+ *     responses:
+ *       200:
+ *         description: Solicitud insertada exitosamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la solicitud fue exitosa.
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *       400:
+ *         description: Error en la solicitud.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Token is missing
+ *       401:
+ *         description: Error de autenticación. El token es inválido o ha expirado.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la autenticación ha fallado.
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   description: Mensaje de error detallando la causa.
+ *                   example: Failed to authenticate token
+ *       500:
+ *         description: Error interno del servidor.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ */
 router.post('/setinsertSolicitud', SolicitudesController.set_insertSolicitud);
 
 
