@@ -1043,5 +1043,7 @@ router.get('/getnumerosolicitudnuevo', SolicitudesController.get_numerosolicitud
  */
 router.get('/getcategoriasservicios', SolicitudesController.get_categoriasservicios);
 
+router.post('/setinsertSolicitud', SolicitudesController.set_insertSolicitud);
+
 
 module.exports = router;
