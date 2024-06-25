@@ -154,9 +154,14 @@ controller.get_listaempresas = async (req, res) => {
                 if (err) {
                     res.json({ success: false, message: 'Failed to authenticate token' });
                 } else {
+                    var formulario="completo";
                     var consulta= "SELECT DISTINCT IdEmpresa, NombreEmpresa FROM ICEmpresa WHERE FKLokProyectoEmpresa ="+decoded.proyecto+" ORDER BY NombreEmpresa";
+                    if(decoded.idempresa != 2){
+                        consulta= "SELECT DISTINCT IdEmpresa, NombreEmpresa FROM ICEmpresa WHERE IdEmpresa="+decoded.idempresa;
+                        formulario="reducido";
+                    }
                     let resultado=await sqlconfig.query(consulta);
-                    res.json({success : true, data : resultado.recordsets[0]});
+                    res.json({success : true, data : resultado.recordsets[0], formulario: formulario});
                 }
             });
         }
