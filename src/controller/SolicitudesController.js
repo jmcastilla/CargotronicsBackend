@@ -156,7 +156,7 @@ controller.get_listaempresas = async (req, res) => {
                 } else {
                     var formulario="completo";
                     var consulta= "SELECT DISTINCT IdEmpresa, NombreEmpresa FROM ICEmpresa WHERE FKLokProyectoEmpresa ="+decoded.proyecto+" ORDER BY NombreEmpresa";
-                    if(decoded.idempresa != 2){
+                    if(decoded.idempresa !== 2){
                         consulta= "SELECT DISTINCT IdEmpresa, NombreEmpresa FROM ICEmpresa WHERE IdEmpresa="+decoded.idempresa;
                         formulario="reducido";
                     }
