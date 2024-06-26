@@ -422,7 +422,7 @@ controller.set_insertSolicitud = async (req, res) => {
                         "Contacto": req.body.Contacto,
                         "FKCercaAutorizada": req.body.FKCercaAutorizada
                     };
-                    let resultado=await sqlconfig.queryProcedure('InsertSolicitud', data);
+                    let resultado=await sqlconfig.queryProcedure('InsertSolicitud2', data);
                     res.json({success : true, data : resultado.recordsets[0]});
                 }
             });
