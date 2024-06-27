@@ -1273,6 +1273,231 @@ router.post('/setinsertSolicitud', SolicitudesController.set_insertSolicitud);
  *               success: false
  */
 router.get('/getlistaEstadosSolicitudes', SolicitudesController.get_listaEstadosSolicitudes);
+/**
+ * @swagger
+ * /solicitudes/getobtenerSolicitud:
+ *   post:
+ *     summary: Obtener detalles de una solicitud
+ *     description: Retorna los detalles de una solicitud específica.
+ *     tags:
+ *       - Solicitudes
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               id:
+ *                 type: integer
+ *                 description: ID de la solicitud a obtener.
+ *                 example: 123
+ *     responses:
+ *       200:
+ *         description: Detalles de la solicitud obtenidos exitosamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la solicitud fue exitosa.
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       IDSolicitudes:
+ *                         type: integer
+ *                         description: ID de la solicitud.
+ *                         example: 123
+ *                       bitRestriccion:
+ *                         type: boolean
+ *                         description: Indica si hay una restricción.
+ *                         example: false
+ *                       HoraInicioR:
+ *                         type: string
+ *                         description: Hora de inicio de la restricción.
+ *                         example: "08:00"
+ *                       HoraFinR:
+ *                         type: string
+ *                         description: Hora de fin de la restricción.
+ *                         example: "18:00"
+ *                       FKICEmpresa:
+ *                         type: integer
+ *                         description: ID de la empresa.
+ *                         example: 1
+ *                       FKICEmpresaConsulta:
+ *                         type: integer
+ *                         description: ID de la empresa de consulta.
+ *                         example: 2
+ *                       FKICEmpresaConsulta2:
+ *                         type: integer
+ *                         description: ID de la segunda empresa de consulta.
+ *                         example: 3
+ *                       FKICEmpresaConsulta3:
+ *                         type: integer
+ *                         description: ID de la tercera empresa de consulta.
+ *                         example: 4
+ *                       Ref:
+ *                         type: string
+ *                         description: Referencia de la solicitud.
+ *                         example: "REF123"
+ *                       PlacaTruck:
+ *                         type: string
+ *                         description: Placa del camión.
+ *                         example: "ABC123"
+ *                       ColorTruck:
+ *                         type: string
+ *                         description: Color del camión.
+ *                         example: "Rojo"
+ *                       PlacaTriler:
+ *                         type: string
+ *                         description: Placa del tráiler.
+ *                         example: "DEF456"
+ *                       NombreConductor:
+ *                         type: string
+ *                         description: Nombre del conductor.
+ *                         example: "Juan Perez"
+ *                       NitConductor:
+ *                         type: string
+ *                         description: NIT del conductor.
+ *                         example: "123456789"
+ *                       FKInstaladorId:
+ *                         type: integer
+ *                         description: ID del instalador.
+ *                         example: 5
+ *                       MovilConductor:
+ *                         type: string
+ *                         description: Móvil del conductor.
+ *                         example: "3001234567"
+ *                       ContainerNum:
+ *                         type: string
+ *                         description: Número del contenedor.
+ *                         example: "CONT123"
+ *                       FKLokCercaAutorizada:
+ *                         type: integer
+ *                         description: ID de la cerca autorizada.
+ *                         example: 6
+ *                       Notas:
+ *                         type: string
+ *                         description: Notas adicionales de la solicitud.
+ *                         example: "Sin observaciones"
+ *                       DigitoVerificacion:
+ *                         type: string
+ *                         description: Dígito de verificación.
+ *                         example: "9"
+ *                       FKLokTipoUnidadCarga:
+ *                         type: integer
+ *                         description: ID del tipo de unidad de carga.
+ *                         example: 7
+ *                       Contacto:
+ *                         type: string
+ *                         description: Contacto de la solicitud.
+ *                         example: "Maria Gomez"
+ *                       NombreEscolta:
+ *                         type: string
+ *                         description: Nombre del escolta.
+ *                         example: "Carlos Ramirez"
+ *                       MovilEscolta:
+ *                         type: string
+ *                         description: Móvil del escolta.
+ *                         example: "3011234567"
+ *                       NotasTI:
+ *                         type: string
+ *                         description: Notas técnicas de instalación.
+ *                         example: "Instalar en la bodega 1"
+ *                       FKLokCategoriaServ:
+ *                         type: integer
+ *                         description: ID de la categoría de servicio.
+ *                         example: 8
+ *                       Marca:
+ *                         type: string
+ *                         description: Marca del vehículo.
+ *                         example: "Toyota"
+ *                       FKICTransportadora:
+ *                         type: integer
+ *                         description: ID de la transportadora.
+ *                         example: 9
+ *                       FKLokEstados:
+ *                         type: integer
+ *                         description: ID del estado de la solicitud.
+ *                         example: 10
+ *                       FechaHoraSolicitud:
+ *                         type: string
+ *                         description: Fecha y hora de la solicitud.
+ *                         example: "2022-01-01 08:00:00"
+ *                       Hora:
+ *                         type: string
+ *                         description: Hora de la cita.
+ *                         example: "2022-01-01 10:00:00"
+ *                       HoraCita:
+ *                         type: string
+ *                         description: Hora de la cita de descargue.
+ *                         example: "2022-01-01 12:00:00"
+ *                       NotasDatosEntrega:
+ *                         type: string
+ *                         description: Notas de datos de entrega.
+ *                         example: "Entrega en la bodega 2"
+ *                       UserSolicitud:
+ *                         type: string
+ *                         description: Usuario que creó la solicitud.
+ *                         example: "admin"
+ *                       FKNegociacion:
+ *                         type: integer
+ *                         description: ID de la negociación.
+ *                         example: 11
+ *                       Solicitante:
+ *                         type: string
+ *                         description: Nombre del solicitante.
+ *                         example: "Pedro Martinez"
+ *                       FKICRutas:
+ *                         type: integer
+ *                         description: ID de la ruta.
+ *                         example: 12
+ *                       IdClienteExterno:
+ *                         type: integer
+ *                         description: ID del cliente externo.
+ *                         example: 13
+ *                       bitMostrarCritico:
+ *                         type: boolean
+ *                         description: Indica si se debe mostrar como crítico.
+ *                         example: true
+ *       400:
+ *         description: Error en la solicitud.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Token is missing
+ *       401:
+ *         description: Error de autenticación. El token es inválido o ha expirado.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la autenticación ha fallado.
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   description: Mensaje de error detallando la causa.
+ *                   example: Failed to authenticate token
+ *       500:
+ *         description: Error interno del servidor.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ */
+
+router.post('/getobtenerSolicitud', SolicitudesController.get_obtenerSolicitud);
 
 
 module.exports = router;

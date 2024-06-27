@@ -456,5 +456,33 @@ controller.get_listaEstadosSolicitudes = async (req, res) => {
     }
 }
 
+//ver solicitud
+controller.get_obtenerSolicitud = async (req, res) => {
+    try{
+        var token = req.headers.authorization;
+        if (!token) {
+            return res.json({ success: false, message: 'Token is missing' });
+        }else{
+            token = req.headers.authorization.split(' ')[1];
+            jwt.verify(token, 'secret_key', async (err, decoded) => {
+                if (err) {
+                    res.json({ success: false, message: 'Failed to authenticate token' });
+                } else {
+                    var id=req.body.id;
+                    var consulta="SELECT IDSolicitudes, bitRestriccion, LokNegociacion.HoraInicioR, LokNegociacion.HoraFinR, LokSolicitudes.FKICEmpresa, FKICEmpresaConsulta, FKICEmpresaConsulta2, FKICEmpresaConsulta3, Ref, PlacaTruck, ColorTruck, PlacaTriler, NombreConductor, NitConductor, FKInstaladorId, "
+                    +" MovilConductor, ContainerNum, FKLokCercaAutorizada, LokSolicitudes.Notas, LokSolicitudes.DigitoVerificacion, FKLokTipoUnidadCarga, Contacto, NombreEscolta, MovilEscolta, NotasTI, FKLokCategoriaServ, Marca, FKICTransportadora, FKLokEstados, "
+                    +" FechaHoraSolicitud, CASE when FechaHoraCita < '2012-01-01 00:00:00.000' then 'Hora-Nula Fecha-Nula' else CONVERT(nvarchar(30), FechaHoraCita, 120) end AS Hora, CASE when FechaHoraCitaDescargue is null or FechaHoraCitaDescargue < '2012-01-01 00:00:00.000' then 'Hora-Nula Fecha-Nula' else CONVERT(nvarchar(30), FechaHoraCitaDescargue, 120) end AS HoraCita, "
+                    +" NotasDatosEntrega, UserSolicitud, FKNegociacion, Solicitante, FKICRutas, LokClienteExt.IdClienteExterno, bitMostrarCritico"
+                    +" FROM LokSolicitudes INNER JOIN LokNegociacion ON FKNegociacion = IDNegociacion  LEFT JOIN LokClienteExt ON FKLokClienteExt = IdClienteExterno WHERE IDSolicitudes = '" + id + "'";
+                    //agregar antes el no asignado
+                    let resultado=await sqlconfig.query(consulta);
+                    res.json({success : true, data : resultado.recordsets[0]});
+                }
+            });
+        }
+    }catch(err){
+        res.json({success : false});
+    }
+}
 
 module.exports = controller;
