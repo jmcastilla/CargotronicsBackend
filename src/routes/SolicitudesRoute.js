@@ -1208,6 +1208,71 @@ router.get('/getcategoriasservicios', SolicitudesController.get_categoriasservic
  *               success: false
  */
 router.post('/setinsertSolicitud', SolicitudesController.set_insertSolicitud);
+/**
+ * @swagger
+ * /solicitudes/getlistaEstadosSolicitudes:
+ *   get:
+ *     summary: Obtener lista de estados de solicitudes
+ *     description: Retorna una lista de todos los estados disponibles para las solicitudes.
+ *     tags:
+ *       - Solicitudes
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Lista de estados de solicitudes obtenida exitosamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la solicitud fue exitosa.
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       IDEstados:
+ *                         type: integer
+ *                         description: ID del estado.
+ *                         example: 1
+ *                       Descripcion:
+ *                         type: string
+ *                         description: Descripción del estado.
+ *                         example: "En proceso"
+ *       400:
+ *         description: Error en la solicitud.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Token is missing
+ *       401:
+ *         description: Error de autenticación. El token es inválido o ha expirado.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la autenticación ha fallado.
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   description: Mensaje de error detallando la causa.
+ *                   example: Failed to authenticate token
+ *       500:
+ *         description: Error interno del servidor.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ */
+router.get('/getlistaEstadosSolicitudes', SolicitudesController.get_listaEstadosSolicitudes);
 
 
 module.exports = router;
