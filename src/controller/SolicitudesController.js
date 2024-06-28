@@ -423,6 +423,7 @@ controller.set_insertSolicitud = async (req, res) => {
                     };
                     console.log(data);
                     let resultado=await sqlconfig.queryProcedure('InsertSolicitud2', data);
+                    console.log(resultado);
                     res.json({success : true, data : resultado.recordsets[0]});
                 }
             });
