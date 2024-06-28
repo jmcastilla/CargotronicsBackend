@@ -415,13 +415,13 @@ controller.set_insertSolicitud = async (req, res) => {
                         "Contacto": req.body.Contacto,
                         "FKLokTipoUnidadCarga": req.body.FKLokTipoUnidadCarga,
                         "DigitoVerificacion": req.body.DigitoVerificacion,
-                        "FKCercaAutorizada": req.body.FKCercaAutorizada
+                        "FKCercaAutorizada": req.body.FKCercaAutorizada,
                         "FKInstaladorId": req.body.FKInstaladorId,
                         "bitRestriccion": req.body.bitRestriccion,
                         "HoraInicioR": req.body.HoraInicioR,
                         "HoraFinR": req.body.HoraFinR,
                         "NotasDatosEntrega": req.body.NotasDatosEntrega,
-                        "FechaHoraCitaDescargue": req.body.FechaHoraCitaDescargue  
+                        "FechaHoraCitaDescargue": req.body.FechaHoraCitaDescargue
                     };
                     console.log(data);
                     let resultado=await sqlconfig.queryProcedure('InsertSolicitud2', data);
