@@ -387,7 +387,6 @@ controller.set_insertSolicitud = async (req, res) => {
                     res.json({ success: false, message: 'Failed to authenticate token' });
                 } else {
                     let data = {
-                        "IDSolicitudes": 0,
                         "FKICEmpresa": req.body.FKICEmpresa,
                         "Ref": req.body.Ref,
                         "ContainerNum": req.body.ContainerNum,
