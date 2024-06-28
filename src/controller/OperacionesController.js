@@ -780,7 +780,9 @@ controller.get_fotoscontractvisuallogistic = async (req, res) => {
                     res.json({ success: false, message: 'Failed to authenticate token' });
                 } else {
                     var contrato=req.body.contrato;
+                    console.log(contrato);
                     const varEndpoint= `https://visuallogisticsapp.azurewebsites.net/get-contract-summary/${contrato}`;
+                    console.log(varEndpoint);
                     try {
                         const response = await axios.get(varEndpoint, {
                             headers: {
