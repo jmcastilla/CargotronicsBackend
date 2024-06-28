@@ -388,6 +388,7 @@ controller.set_insertSolicitud = async (req, res) => {
                 } else {
                     let data = {
                         "FKICEmpresa": req.body.FKICEmpresa,
+                        "FKICRutas": req.body.FKICRutas,
                         "Ref": req.body.Ref,
                         "ContainerNum": req.body.ContainerNum,
                         "DigitoVerificacion": req.body.DigitoVerificacion,
