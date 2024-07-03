@@ -435,6 +435,66 @@ controller.set_insertSolicitud = async (req, res) => {
     }
 }
 
+controller.set_updateSolicitud = async (req, res) => {
+    try{
+        var token = req.headers.authorization;
+        if (!token) {
+            return res.json({ success: false, message: 'Token is missing' });
+        }else{
+            token = req.headers.authorization.split(' ')[1];
+            jwt.verify(token, 'secret_key', async (err, decoded) => {
+                if (err) {
+                    res.json({ success: false, message: 'Failed to authenticate token' });
+                } else {
+                    let data = {
+                        "FKICEmpresa": req.body.FKICEmpresa,
+                        "IDSolicitudes": req.body.IDSolicitudes,
+                        "FKICEmpresaConsulta": req.body.FKICEmpresaConsulta,
+                        "FKICEmpresaConsulta2": req.body.FKICEmpresaConsulta2,
+                        "FKICEmpresaConsulta3": req.body.FKICEmpresaConsulta3,
+                        "Ref": req.body.Ref,
+                        "PlacaTruck": req.body.PlacaTruck,
+                        "ColorTruck": req.body.ColorTruck,
+                        "PlacaTrailer": req.body.PlacaTrailer,
+                        "NombreConductor": req.body.NombreConductor,
+                        "NitConductor": req.body.NitConductor,
+                        "MovilConductor": req.body.MovilConductor,
+                        "ContainerNum": req.body.ContainerNum,
+                        "Notas": req.body.Notas,
+                        "NombreEscolta": req.body.NombreEscolta,
+                        "MovilEscolta": req.body.MovilEscolta,
+                        "NotasTI": req.body.NotasTI,
+                        "FKLokCategoriaServ": req.body.FKLokCategoriaServ,
+                        "Marca": req.body.Marca,
+                        "FKICTransportadora": req.body.FKICTransportadora,
+                        "FechaHoraCita": req.body.FechaHoraCita,
+                        "Solicitante": req.body.Solicitante,
+                        "Contacto": req.body.Contacto,
+                        "FKICRutas": req.body.FKICRutas,
+                        "FKNegociacion": req.body.FKNegociacion,
+                        "FKLokTipoUnidadCarga": req.body.FKLokTipoUnidadCarga,
+                        "DigitoVerificacion": req.body.DigitoVerificacion,
+                        "FKCercaAutorizada": req.body.FKCercaAutorizada,
+                        "usuario": req.body.usuario,
+                        "FKInstaladorId": req.body.FKInstaladorId,
+                        "bitRestriccion": req.body.bitRestriccion,
+                        "HoraInicioR": req.body.HoraInicioR,
+                        "HoraFinR": req.body.HoraFinR,
+                        "NotasDatosEntrega": req.body.NotasDatosEntrega,
+                        "FechaHoraCitaDescargue": req.body.FechaHoraCitaDescargue
+                    };
+                    console.log(data);
+                    let resultado=await sqlconfig.queryProcedure('UpdateSolicitud', data);
+                    console.log(resultado);
+                    res.json({success : true, data : resultado.recordsets[0]});
+                }
+            });
+        }
+    }catch(err){
+        res.json({success : false});
+    }
+}
+
 //Estados
 controller.get_listaEstadosSolicitudes = async (req, res) => {
     try{
