@@ -1914,6 +1914,91 @@ router.post('/getobtenerSolicitud', SolicitudesController.get_obtenerSolicitud);
  */
 
 router.post('/setupdateSolicitud', SolicitudesController.set_updateSolicitud);
+/**
+ * @swagger
+ * /solicitudes/getlistaNegociacionesFinal:
+ *   post:
+ *     summary: Obtener lista de negociaciones finales
+ *     description: Recupera una lista de negociaciones finales basada en la empresa, la ruta y si es externo.
+ *     tags:
+ *       - Solicitudes
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               empresa:
+ *                 type: integer
+ *                 description: ID de la empresa.
+ *                 example: 1
+ *               ruta:
+ *                 type: integer
+ *                 description: ID de la ruta.
+ *                 example: 1
+ *               externo:
+ *                 type: integer
+ *                 description: ID del cliente externo.
+ *                 example: 1
+ *     responses:
+ *       200:
+ *         description: Lista de negociaciones recuperada exitosamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la solicitud fue exitosa.
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       IDNegociacion:
+ *                         type: integer
+ *                         description: ID de la negociación.
+ *                         example: 1
+ *                       Descripcion:
+ *                         type: string
+ *                         description: Descripción de la negociación.
+ *                         example: "Negociación 1, Nota"
+ *       400:
+ *         description: Error en la solicitud.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Token is missing
+ *       401:
+ *         description: Error de autenticación. El token es inválido o ha expirado.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la autenticación ha fallado.
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   description: Mensaje de error detallando la causa.
+ *                   example: Failed to authenticate token
+ *       500:
+ *         description: Error interno del servidor.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ */
+
+router.post('/getlistaNegociacionesFinal', SolicitudesController.get_listaNegociacionesFinal);
 
 
 module.exports = router;
