@@ -245,6 +245,33 @@ controller.get_listaNegociaciones = async (req, res) => {
         res.json({success : false});
     }
 }
+
+controller.get_listaNegociacionesFinal = async (req, res) => {
+    try{
+        var token = req.headers.authorization;
+        if (!token) {
+            return res.json({ success: false, message: 'Token is missing' });
+        }else{
+            token = req.headers.authorization.split(' ')[1];
+            jwt.verify(token, 'secret_key', async (err, decoded) => {
+                if (err) {
+                    res.json({ success: false, message: 'Failed to authenticate token' });
+                } else {
+                    var empresa=req.body.empresa;
+                    var ruta=req.body.ruta;
+                    var externo=req.body.externo;
+                    var consulta= "SELECT IDNegociacion, Descripcion + CASE WHEN Notas <> '' THEN ', ' + Notas ELSE '' END as Descripcion "+
+                    "FROM LokNegociacion INNER JOIN LokTipoServicios ON LokNegociacion.FKLokTipoServicio = LokTipoServicios.IDTipoServicios "+
+                    "WHERE FKICEmpresa = "+empresa+" and FKICRuta = "+ruta+" AND FKLokClienteExt = "+externo+" AND Activo = 1 ORDER BY Descripcion";
+                    let resultado=await sqlconfig.query(consulta);
+                    res.json({success : true, data : resultado.recordsets[0]});
+                }
+            });
+        }
+    }catch(err){
+        res.json({success : false});
+    }
+}
 //unidades de carga
 controller.get_listaUnidadCarga = async (req, res) => {
     try{
