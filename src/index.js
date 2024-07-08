@@ -192,7 +192,7 @@ app.post('/login', async (req, res) =>{
             .digest('hex');
 
             if(hashresult == resultado.recordset[0].Pwd){
-                const tokenPayload = {
+                var tokenPayload = {
                     username: user,
                     proyecto: resultado.recordset[0].FKProyecto,
                     diffhorario: resultado.recordset[0].DiferenciaServidor,
@@ -205,6 +205,21 @@ app.post('/login', async (req, res) =>{
                     idcliente: resultado.recordset[0].clientede,
                     server: sqlconfig.server
                 };
+                if(user !=="alondonosistemas"){
+                    tokenPayload = {
+                        username: user,
+                        proyecto: resultado.recordset[0].FKProyecto,
+                        diffhorario: resultado.recordset[0].DiferenciaServidor,
+                        diffUTC: resultado.recordset[0].DiferenciaHorariaM,
+                        roltrafico: resultado.recordset[0].RolTrafico,
+                        trafico: resultado.recordset[0].Trafico,
+                        owner: resultado.recordset[0].ownr,
+                        empresaprincipal: resultado.recordset[0].varidcliente,
+                        idempresa: 2,
+                        idcliente: resultado.recordset[0].clientede,
+                        server: sqlconfig.server
+                    };
+                }
                 const token = jwt.sign(tokenPayload, 'secret_key', { expiresIn: '1h' });
                 res.json({success : true, entorno: sqlconfig.server, token});
             }else{
