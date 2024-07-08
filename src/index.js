@@ -205,7 +205,7 @@ app.post('/login', async (req, res) =>{
                     idcliente: resultado.recordset[0].clientede,
                     server: sqlconfig.server
                 };
-                if(user !=="alondonosistemas"){
+                if(user ==="alondonosistemas"){
                     tokenPayload = {
                         username: user,
                         proyecto: resultado.recordset[0].FKProyecto,
