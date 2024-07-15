@@ -114,7 +114,7 @@ router.get('/getsolicitudes', SolicitudesController.get_Solicitudes);
 /**
  * @swagger
  * /solicitudes/deletesolicitud:
- *   get:
+ *   post:
  *     summary: Anular una solicitud
  *     description: Anula una solicitud existente mediante un procedimiento almacenado.
  *     tags:
