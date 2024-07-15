@@ -1999,6 +1999,403 @@ router.post('/setupdateSolicitud', SolicitudesController.set_updateSolicitud);
  */
 
 router.post('/getlistaNegociacionesFinal', SolicitudesController.get_listaNegociacionesFinal);
+/**
+ * @swagger
+ * /solicitudes/getreportesSolicitudes:
+ *   post:
+ *     summary: Obtener reportes de solicitudes
+ *     description: Recupera una lista de reportes para una solicitud específica.
+ *     tags:
+ *       - Solicitudes
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               id:
+ *                 type: integer
+ *                 description: ID de la solicitud.
+ *                 example: 123
+ *     responses:
+ *       200:
+ *         description: Lista de reportes recuperada exitosamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la solicitud fue exitosa.
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       id:
+ *                         type: integer
+ *                         description: ID del reporte.
+ *                         example: 1
+ *                       solicitud:
+ *                         type: integer
+ *                         description: ID de la solicitud.
+ *                         example: 123
+ *                       usuario:
+ *                         type: integer
+ *                         description: ID del usuario que hizo el reporte.
+ *                         example: 456
+ *                       nota:
+ *                         type: string
+ *                         description: Nota del reporte.
+ *                         example: "Reporte de prueba"
+ *                       estado:
+ *                         type: string
+ *                         description: Estado de la solicitud.
+ *                         example: "En proceso"
+ *                       hora:
+ *                         type: string
+ *                         format: date-time
+ *                         description: Hora del reporte.
+ *                         example: "2024-07-01T12:34:56Z"
+ *       400:
+ *         description: Error en la solicitud.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Token is missing
+ *       401:
+ *         description: Error de autenticación. El token es inválido o ha expirado.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la autenticación ha fallado.
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   description: Mensaje de error detallando la causa.
+ *                   example: Failed to authenticate token
+ *       500:
+ *         description: Error interno del servidor.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ */
+
+router.post('/getreportesSolicitudes', SolicitudesController.get_reportesSolicitudes);
+/**
+ * @swagger
+ * /solicitudes/setinsertReporteSolicitud:
+ *   post:
+ *     summary: Insertar reporte de solicitud
+ *     description: Inserta un nuevo reporte para una solicitud específica.
+ *     tags:
+ *       - Solicitudes
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               FKLokEstadoID:
+ *                 type: integer
+ *                 description: ID del estado.
+ *                 example: 1
+ *               Nota:
+ *                 type: string
+ *                 description: Nota del reporte.
+ *                 example: "Se inició el proceso"
+ *               XTime:
+ *                 type: string
+ *                 format: date-time
+ *                 description: Tiempo del reporte.
+ *                 example: "2024-07-01T12:34:56Z"
+ *               XUser:
+ *                 type: string
+ *                 description: Usuario que realizó el reporte.
+ *                 example: "user123"
+ *               FKLokSolicitudID:
+ *                 type: integer
+ *                 description: ID de la solicitud.
+ *                 example: 123
+ *     responses:
+ *       200:
+ *         description: Reporte insertado exitosamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la inserción fue exitosa.
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       FKLokEstadoID:
+ *                         type: integer
+ *                         description: ID del estado.
+ *                         example: 1
+ *                       Nota:
+ *                         type: string
+ *                         description: Nota del reporte.
+ *                         example: "Se inició el proceso"
+ *                       XTime:
+ *                         type: string
+ *                         format: date-time
+ *                         description: Tiempo del reporte.
+ *                         example: "2024-07-01T12:34:56Z"
+ *                       XUser:
+ *                         type: string
+ *                         description: Usuario que realizó el reporte.
+ *                         example: "user123"
+ *                       FKLokSolicitudID:
+ *                         type: integer
+ *                         description: ID de la solicitud.
+ *                         example: 123
+ *       400:
+ *         description: Error en la solicitud.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Token is missing
+ *       401:
+ *         description: Error de autenticación. El token es inválido o ha expirado.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la autenticación ha fallado.
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   description: Mensaje de error detallando la causa.
+ *                   example: Failed to authenticate token
+ *       500:
+ *         description: Error interno del servidor.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ */
+
+router.post('/setinsertReporteSolicitud', SolicitudesController.set_insertReporteSolicitud);
+/**
+ * @swagger
+ * /solicitudes/setupdateReporteSolicitud:
+ *   post:
+ *     summary: Actualizar reporte de solicitud
+ *     description: Actualiza un reporte existente para una solicitud específica.
+ *     tags:
+ *       - Solicitudes
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               FKLokEstadoID:
+ *                 type: integer
+ *                 description: ID del estado.
+ *                 example: 1
+ *               Nota:
+ *                 type: string
+ *                 description: Nota del reporte.
+ *                 example: "Actualización del estado del proceso"
+ *               IdReport:
+ *                 type: integer
+ *                 description: ID del reporte.
+ *                 example: 456
+ *               XUser:
+ *                 type: string
+ *                 description: Usuario que realiza la actualización.
+ *                 example: "user123"
+ *               FKLokSolicitudID:
+ *                 type: integer
+ *                 description: ID de la solicitud.
+ *                 example: 123
+ *     responses:
+ *       200:
+ *         description: Reporte actualizado exitosamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la actualización fue exitosa.
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       FKLokEstadoID:
+ *                         type: integer
+ *                         description: ID del estado.
+ *                         example: 1
+ *                       Nota:
+ *                         type: string
+ *                         description: Nota del reporte.
+ *                         example: "Actualización del estado del proceso"
+ *                       IdReport:
+ *                         type: integer
+ *                         description: ID del reporte.
+ *                         example: 456
+ *                       XUser:
+ *                         type: string
+ *                         description: Usuario que realiza la actualización.
+ *                         example: "user123"
+ *                       FKLokSolicitudID:
+ *                         type: integer
+ *                         description: ID de la solicitud.
+ *                         example: 123
+ *       400:
+ *         description: Error en la solicitud.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Token is missing
+ *       401:
+ *         description: Error de autenticación. El token es inválido o ha expirado.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la autenticación ha fallado.
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   description: Mensaje de error detallando la causa.
+ *                   example: Failed to authenticate token
+ *       500:
+ *         description: Error interno del servidor.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ */
+
+router.post('/setupdateReporteSolicitud', SolicitudesController.set_updateReporteSolicitud);
+/**
+ * @swagger
+ * /solicitudes/setdeleteReporteSolicitud:
+ *   post:
+ *     summary: Eliminar reporte de solicitud
+ *     description: Elimina un reporte específico para una solicitud.
+ *     tags:
+ *       - Solicitudes
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               IdReport:
+ *                 type: integer
+ *                 description: ID del reporte.
+ *                 example: 456
+ *               XUser:
+ *                 type: string
+ *                 description: Usuario que realiza la eliminación.
+ *                 example: "user123"
+ *               FKLokSolicitudID:
+ *                 type: integer
+ *                 description: ID de la solicitud.
+ *                 example: 123
+ *     responses:
+ *       200:
+ *         description: Reporte eliminado exitosamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la eliminación fue exitosa.
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       IdReport:
+ *                         type: integer
+ *                         description: ID del reporte.
+ *                         example: 456
+ *                       XUser:
+ *                         type: string
+ *                         description: Usuario que realiza la eliminación.
+ *                         example: "user123"
+ *                       FKLokSolicitudID:
+ *                         type: integer
+ *                         description: ID de la solicitud.
+ *                         example: 123
+ *       400:
+ *         description: Error en la solicitud.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Token is missing
+ *       401:
+ *         description: Error de autenticación. El token es inválido o ha expirado.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la autenticación ha fallado.
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   description: Mensaje de error detallando la causa.
+ *                   example: Failed to authenticate token
+ *       500:
+ *         description: Error interno del servidor.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ */
+
+router.post('/setdeleteReporteSolicitud', SolicitudesController.set_deleteReporteSolicitud);
+
+
 
 
 module.exports = router;

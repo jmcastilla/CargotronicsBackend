@@ -575,4 +575,117 @@ controller.get_obtenerSolicitud = async (req, res) => {
     }
 }
 
+controller.get_reportesSolicitudes = async (req, res) => {
+    try{
+        var token = req.headers.authorization;
+        if (!token) {
+            return res.json({ success: false, message: 'Token is missing' });
+        }else{
+            token = req.headers.authorization.split(' ')[1];
+            jwt.verify(token, 'secret_key', async (err, decoded) => {
+                if (err) {
+                    res.json({ success: false, message: 'Failed to authenticate token' });
+                } else {
+                    var id=req.body.id;
+                    var consulta= "SELECT idReporteSolicitud as id, FKLokSolicitudes as solicitud, FKICUsers as usuario, NotaReporte as nota, e.Descripcion as estado, HoraReporte as hora"
+                    +" FROM LokReporteSolicitudes r INNER JOIN LokEstados e on r.FKLokEstados = e.IDEstados"
+                    +" WHERE FKLokSolicitudes = '" + id + "' ORDER BY r.HoraReporte DESC";
+                    let resultado=await sqlconfig.query(consulta);
+                    res.json({success : true, data : resultado.recordsets[0]});
+                }
+            });
+        }
+    }catch(err){
+        res.json({success : false});
+    }
+}
+
+controller.set_insertReporteSolicitud = async (req, res) => {
+    try{
+        var token = req.headers.authorization;
+        if (!token) {
+            return res.json({ success: false, message: 'Token is missing' });
+        }else{
+            token = req.headers.authorization.split(' ')[1];
+            jwt.verify(token, 'secret_key', async (err, decoded) => {
+                if (err) {
+                    res.json({ success: false, message: 'Failed to authenticate token' });
+                } else {
+                    let data = {
+                        "FKLokEstadoID": req.body.FKLokEstadoID,
+                        "Nota": req.body.Nota,
+                        "XTime": req.body.XTime,
+                        "XUser": req.body.XUser,
+                        "FKLokSolicitudID": req.body.FKLokSolicitudID
+                    };
+                    console.log(data);
+                    let resultado=await sqlconfig.queryProcedure('LokInsertSolReport', data);
+                    console.log(resultado);
+                    res.json({success : true, data : resultado.recordsets[0]});
+                }
+            });
+        }
+    }catch(err){
+        res.json({success : false});
+    }
+}
+
+controller.set_updateReporteSolicitud = async (req, res) => {
+    try{
+        var token = req.headers.authorization;
+        if (!token) {
+            return res.json({ success: false, message: 'Token is missing' });
+        }else{
+            token = req.headers.authorization.split(' ')[1];
+            jwt.verify(token, 'secret_key', async (err, decoded) => {
+                if (err) {
+                    res.json({ success: false, message: 'Failed to authenticate token' });
+                } else {
+                    let data = {
+                        "FKLokEstadoID": req.body.FKLokEstadoID,
+                        "Nota": req.body.Nota,
+                        "IdReport": req.body.IdReport,
+                        "XUser": req.body.XUser,
+                        "FKLokSolicitudID": req.body.FKLokSolicitudID
+                    };
+                    console.log(data);
+                    let resultado=await sqlconfig.queryProcedure('LokUpdateReportSol', data);
+                    console.log(resultado);
+                    res.json({success : true, data : resultado.recordsets[0]});
+                }
+            });
+        }
+    }catch(err){
+        res.json({success : false});
+    }
+}
+
+controller.set_deleteReporteSolicitud = async (req, res) => {
+    try{
+        var token = req.headers.authorization;
+        if (!token) {
+            return res.json({ success: false, message: 'Token is missing' });
+        }else{
+            token = req.headers.authorization.split(' ')[1];
+            jwt.verify(token, 'secret_key', async (err, decoded) => {
+                if (err) {
+                    res.json({ success: false, message: 'Failed to authenticate token' });
+                } else {
+                    let data = {
+                        "IdReport": req.body.IdReport,
+                        "XUser": req.body.XUser,
+                        "FKLokSolicitudID": req.body.FKLokSolicitudID
+                    };
+                    console.log(data);
+                    let resultado=await sqlconfig.queryProcedure('LokDeleteReportSol', data);
+                    console.log(resultado);
+                    res.json({success : true, data : resultado.recordsets[0]});
+                }
+            });
+        }
+    }catch(err){
+        res.json({success : false});
+    }
+}
+
 module.exports = controller;
