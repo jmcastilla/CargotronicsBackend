@@ -534,7 +534,7 @@ controller.get_listaEstadosSolicitudes = async (req, res) => {
                 if (err) {
                     res.json({ success: false, message: 'Failed to authenticate token' });
                 } else {
-                    var consulta="SELECT IDEstados, Descripcion FROM LokEstados WHERE Tipo = 'T' ORDER BY Descripcion";
+                    var consulta="SELECT IDEstados, Descripcion FROM LokEstados WHERE Tipo = 'S' ORDER BY Descripcion";
                     //agregar antes el no asignado
                     let resultado=await sqlconfig.query(consulta);
                     res.json({success : true, data : resultado.recordsets[0]});
