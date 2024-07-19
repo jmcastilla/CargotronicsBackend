@@ -69,7 +69,7 @@ controller.get_rutas = async (req, res) => {
     }
 }
 
-controller.get_controlescontrato = async (req, res) => {
+controller.get_controlestrafico = async (req, res) => {
     try{
         var token = req.headers.authorization;
         if (!token) {
@@ -80,7 +80,9 @@ controller.get_controlescontrato = async (req, res) => {
                 if (err) {
                     res.json({ success: false, message: 'Failed to authenticate token' });
                 } else {
-                    var consulta= "SELECT dbo.TotalServicios("+decoded.idempresa+", "+decoded.proyecto+", "+decoded.roltrafico+") AS Total";
+                    var consulta= "SELECT dbo.TotalServicios("+decoded.idempresa+", "+decoded.proyecto+", "+decoded.roltrafico+") AS Blanco, "+
+                    "dbo.ServiciosPrev("+decoded.idempresa+", "+decoded.proyecto+", "+decoded.roltrafico+") AS Amarillo, "+
+                    "dbo.ServiciosWarn("+decoded.idempresa+", "+decoded.proyecto+", "+decoded.roltrafico+")  AS Rojo;"
                     let resultado=await sqlconfig.query(consulta);
                     res.json({success : true, data : resultado.recordsets[0]});
                 }
