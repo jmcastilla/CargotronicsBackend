@@ -69,6 +69,30 @@ controller.get_rutas = async (req, res) => {
     }
 }
 
+controller.get_barras = async (req, res) => {
+    try{
+        var token = req.headers.authorization;
+        if (!token) {
+            return res.json({ success: false, message: 'Token is missing' });
+        }else{
+            token = req.headers.authorization.split(' ')[1];
+            jwt.verify(token, 'secret_key', async (err, decoded) => {
+                if (err) {
+                    res.json({ success: false, message: 'Failed to authenticate token' });
+                } else {
+                    var consulta= "SELECT BarsID FROM LokBarsSLM "+
+                    "LEFT JOIN LokContractID ON LokBarsSLM.LastContractID = LokContractID.ContractID "+
+                    "WHERE (LokContractID.Active = 0 OR LokBarsSLM.LastContractID = 'none')";
+                    let resultado=await sqlconfig.query(consulta);
+                    res.json({success : true, data : resultado.recordsets[0]});
+                }
+            });
+        }
+    }catch(err){
+        res.json({success : false});
+    }
+}
+
 controller.get_controlestrafico = async (req, res) => {
     try{
         var token = req.headers.authorization;
