@@ -7,7 +7,7 @@ const options = {
     openapi: "3.0.0",
     info: { title: 'Infocarga API', version: "1.0.0"},
   },
-  apis: ["./routes/OperacionesRoute.js", "./routes/EmpresasRoute.js", "./routes/SolicitudesRoute.js", "./routes/MaestrosRoute.js", "index.js"],
+  apis: ["./routes/OperacionesRoute.js", "./routes/EmpresasRoute.js", "./routes/SolicitudesRoute.js", "./routes/MaestrosRoute.js", "./routes/ContratosRoute.js", "index.js"],
 };
 
 const swaggerSpec = swaggerJSDoc(options);

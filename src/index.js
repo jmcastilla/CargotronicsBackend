@@ -65,12 +65,13 @@ app.use((req, res, next) => {
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
   next();
 });
-
+const contratosRouters = require('./routes/ContratosRoute');
 const maestrosRouters = require('./routes/MaestrosRoute');
 const solicitudesRouters = require('./routes/SolicitudesRoute');
 const operacionesRouters = require('./routes/OperacionesRoute');
 const empresasRouters = require('./routes/EmpresasRoute');
 const dianRouters = require('./routes/DianRoute');
+app.use('/contratos', contratosRouters);
 app.use('/maestros', maestrosRouters);
 app.use('/solicitudes', solicitudesRouters);
 app.use('/operaciones', operacionesRouters);
