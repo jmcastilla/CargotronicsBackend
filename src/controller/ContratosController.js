@@ -117,4 +117,30 @@ controller.get_controlestrafico = async (req, res) => {
     }
 }
 
+controller.get_listachequeo = async (req, res) => {
+    try{
+        var token = req.headers.authorization;
+        if (!token) {
+            return res.json({ success: false, message: 'Token is missing' });
+        }else{
+            token = req.headers.authorization.split(' ')[1];
+            jwt.verify(token, 'secret_key', async (err, decoded) => {
+                if (err) {
+                    res.json({ success: false, message: 'Failed to authenticate token' });
+                } else {
+                    var contrato= req.body.contrato;
+                    var consulta= "SELECT id_chequeo, usuario1, Fk_ContractID, patio, naviera, doc_conductor1, nombre_conductor1, embarcador, placa1, precinto1, respuestas1, "+
+                    "observaciones1, datetime_patio, usuario2, vigilante1, precinto2, respuestas2, observaciones2, datetime_iplanta, usuario3, vigilante2, "+
+                    "doc_conductor2, nombre_conductor2, placa2, etiqueta1, etiqueta2, sellobotella, datetime_splanta, completo, (ContainerNum + CAST(isnull(DigitoVerificacion, '') AS CHAR(1))) as contenedor "+
+                    "FROM ValitronicsChequeo V LEFT JOIN LokContractID C ON V.Fk_ContractID = C.ContractID WHERE Fk_ContractID = '"+contrato+"'";
+                    let resultado=await sqlconfig.query(consulta);
+                    res.json({success : true, data : resultado.recordsets[0]});
+                }
+            });
+        }
+    }catch(err){
+        res.json({success : false});
+    }
+}
+
 module.exports = controller;
