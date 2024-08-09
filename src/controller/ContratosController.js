@@ -143,4 +143,113 @@ controller.get_listachequeo = async (req, res) => {
     }
 }
 
+controller.get_infocontrato = async (req, res) => {
+    try{
+        var token = req.headers.authorization;
+        if (!token) {
+            return res.json({ success: false, message: 'Token is missing' });
+        }else{
+            token = req.headers.authorization.split(' ')[1];
+            jwt.verify(token, 'secret_key', async (err, decoded) => {
+                if (err) {
+                    res.json({ success: false, message: 'Failed to authenticate token' });
+                } else {
+                    var contrato= req.body.contrato;
+                    var vissolicitud = await isSolicitud(contrato);
+                    var consulta = "SELECT LokContractID.ContractID, LokContractID.LightBit, LokContractID.FKICEmpresa, LokContractID.FKICEmpresaConsulta, LokContractID.FKICEmpresaConsulta2, LokContractID.FKICEmpresaConsulta3,";
+                    consulta += "LokContractID.FKICRutas, LokContractID.FKLokBarsSLM, LokContractID.Active, LokContractID.FKLokDeviceID, LokContractID.Ref, ";
+                    consulta += "LokContractID.PlacaTruck, LokContractID.ColorTruck, LokContractID.PlacaTrailer, LokContractID.NombreConductor, LokContractID.NitConductor, ";
+                    consulta += "LokContractID.FechaHoraCita, LokContractID.FechaHoraCitaDescargue, LokContractID.NotasDatosEntrega, LokContractID.FechaHoraDescargue, FKCercaAutorizada, UserCreacion, LokSolicitudes.Solicitante, LokContractID.bitRestriccion, LokContractID.HoraInicioR, LokContractID.HoraFinR, LokContractID.MovilConductor, LokContractID.ContainerNum, LokContractID.Notas, LokContractID.UserDesinstalacion, LokContractID.UserInstalacion, ";
+                    consulta += "LokContractID.NombreEscolta, LokContractID.FKLokTipoDocumento, LokContractID.Documento, LokContractID.AlertasActivas, LokContractID.FKCelloTrack, LokContractID.FKLokSolicitud, LokContractID.MovilEscolta, ";
+                    consulta += "LokContractID.NotasTI, Equivalencia, LokContractID.FKLokCategoriaServ, LokContractID.OtrosDatosTruck, LokContractID.FKICTransportadora, LokContractID.FKLokInstalador, ";
+                    consulta += "LokContractID.FKLokDesistaladores, LokContractID.DigitoVerificacion, LokContractID.NotaDesisntalaciones, LokSolicitudes.FKLokEstados, LokContractID.Contacto, LokContractID.LokTipoServicios, ";
+                    consulta += "LokContractID.FKLokTipoUnidadCarga, LokContractID.SlavesAsignados, Comprobante, FKQrMaestro, FKLokModalidadServ, ";
+                    consulta += "(SELECT TOP 1 id_chequeo FROM ValitronicsChequeo WHERE Fk_ContractID = LokContractID.ContractID) as chequeo_ident, LokContractID.LokTipoServicios as tipo_equipo, LokContractID.bitMostrarCritico ";
+                    consulta += "FROM LokContractID  INNER JOIN LokSolicitudes ON LokContractID.FKLokSolicitud = LokSolicitudes.IDSolicitudes ";
+                    consulta += "LEFT JOIN QR_Maestro ON FKQrMaestro = ID_QRMaestro ";
+                    consulta += "WHERE LokContractID.ContractID = '" + contrato + "' ";
+                    if(!vissolicitud){
+                        consulta = " SELECT ContractID, LightBit, FKICEmpresa, UserCreacion,  FKICEmpresaConsulta, FKQrMaestro,  FKICEmpresaConsulta2, FKICEmpresaConsulta3, FKICRutas , bitRestriccion, HoraInicioR, HoraFinR, FKLokBarsSLM, Active, ";
+                        consulta += "FKLokDeviceID, Ref, PlacaTruck, ColorTruck, Equivalencia, PlacaTrailer, NombreConductor, NitConductor, MovilConductor, ContainerNum, UserDesinstalacion, UserInstalacion, ";
+                        consulta += "Notas, NombreEscolta, AlertasActivas, FKCercaAutorizada, Comprobante, LokContractID.FKLokTipoDocumento, LokContractID.Documento,FKCelloTrack, DigitoVerificacion, FKLokSolicitud, MovilEscolta, NotasTI, FKLokCategoriaServ, ";
+                        consulta += "OtrosDatosTruck, FKICTransportadora, FKLokInstalador, FKLokDesistaladores, NotaDesisntalaciones, Contacto, LokTipoServicios, FKLokModalidadServ, bitMostrarCritico,";
+                        consulta += "FKLokTipoUnidadCarga, SlavesAsignados, ";
+                        consulta += "(SELECT TOP 1 id_chequeo FROM ValitronicsChequeo WHERE Fk_ContractID = LokContractID.ContractID) as chequeo_ident, LokContractID.LokTipoServicios as tipo_equipo ";
+                        consulta += "FROM LokContractID LEFT JOIN QR_Maestro ON FKQrMaestro = ID_QRMaestro WHERE ContractID = '" + contrato + "'";
+                    }
+
+                    let resultado=await sqlconfig.query(consulta);
+                    res.json({success : true, data : resultado.recordsets[0]});
+                }
+            });
+        }
+    }catch(err){
+        res.json({success : false});
+    }
+}
+
+async function isSolicitud(contrato) {
+    try{
+        var consulta= "SELECT FKLokSolicitud FROM LokContractID WHERE ContractID = '" + contrato + "'";
+        let resultado=await sqlconfig.query(consulta);
+        if(resultado.recordsets[0] && resultado.recordsets[0].length > 0){
+            return true;
+        }else{
+            return false;
+        }
+    }catch(err){
+        return false;
+    }
+}
+
+controller.limpiar_contrato = async (req, res) => {
+    try{
+        var token = req.headers.authorization;
+        if (!token) {
+            return res.json({ success: false, message: 'Token is missing' });
+        }else{
+            token = req.headers.authorization.split(' ')[1];
+            jwt.verify(token, 'secret_key', async (err, decoded) => {
+                if (err) {
+                    res.json({ success: false, message: 'Failed to authenticate token' });
+                } else {
+                    let data = {
+                        "contractID": req.body.contractID,
+                        "usuario": decoded.username,
+                    };
+                    let resultado=await sqlconfig.queryProcedure('LokUpdateContractIdWhenFreed', data);
+                    res.json({success : true, data : resultado.recordsets[0]});
+                }
+            });
+        }
+    }catch(err){
+        res.json({success : false});
+    }
+}
+
+controller.limpiar_contratoSalvoInfo = async (req, res) => {
+    try{
+        var token = req.headers.authorization;
+        if (!token) {
+            return res.json({ success: false, message: 'Token is missing' });
+        }else{
+            token = req.headers.authorization.split(' ')[1];
+            jwt.verify(token, 'secret_key', async (err, decoded) => {
+                if (err) {
+                    res.json({ success: false, message: 'Failed to authenticate token' });
+                } else {
+                    let data = {
+                        "contractID": req.body.contractID,
+                        "usuario": decoded.username,
+                    };
+                    let resultado=await sqlconfig.queryProcedure('LokUpdateContractIdWhenFreedAndSalveInfo', data);
+                    res.json({success : true, data : resultado.recordsets[0]});
+                }
+            });
+        }
+    }catch(err){
+        res.json({success : false});
+    }
+}
+
 module.exports = controller;
