@@ -515,6 +515,352 @@ router.get('/getcontrolestrafico', ContratosController.get_controlestrafico);
  */
 
 router.post('/getlistachequeo', ContratosController.get_listachequeo);
+/**
+ * @swagger
+ * /getinfocontrato:
+ *   post:
+ *     summary: Obtener información del contrato
+ *     description: Retorna información detallada de un contrato específico.
+ *     tags:
+ *       - Contratos
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               contrato:
+ *                 type: string
+ *                 description: ID del contrato para el cual se solicita información.
+ *                 example: "12345"
+ *     responses:
+ *       200:
+ *         description: Información del contrato obtenida exitosamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la solicitud fue exitosa.
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       ContractID:
+ *                         type: string
+ *                         description: ID del contrato.
+ *                         example: "12345"
+ *                       LightBit:
+ *                         type: integer
+ *                         description: Bit de estado.
+ *                         example: 1
+ *                       FKICEmpresa:
+ *                         type: integer
+ *                         description: ID de la empresa.
+ *                         example: 1001
+ *                       FKICEmpresaConsulta:
+ *                         type: integer
+ *                         description: ID de la empresa consultada.
+ *                         example: 1002
+ *                       FKICEmpresaConsulta2:
+ *                         type: integer
+ *                         description: ID de la segunda empresa consultada.
+ *                         example: 1003
+ *                       FKICEmpresaConsulta3:
+ *                         type: integer
+ *                         description: ID de la tercera empresa consultada.
+ *                         example: 1004
+ *                       FKICRutas:
+ *                         type: integer
+ *                         description: ID de las rutas.
+ *                         example: 2001
+ *                       FKLokBarsSLM:
+ *                         type: integer
+ *                         description: ID de los bares SLM.
+ *                         example: 3001
+ *                       Active:
+ *                         type: boolean
+ *                         description: Estado activo del contrato.
+ *                         example: true
+ *                       FKLokDeviceID:
+ *                         type: integer
+ *                         description: ID del dispositivo.
+ *                         example: 4001
+ *                       Ref:
+ *                         type: string
+ *                         description: Referencia del contrato.
+ *                         example: "Ref12345"
+ *                       PlacaTruck:
+ *                         type: string
+ *                         description: Placa del camión.
+ *                         example: "ABC123"
+ *                       ColorTruck:
+ *                         type: string
+ *                         description: Color del camión.
+ *                         example: "Rojo"
+ *                       PlacaTrailer:
+ *                         type: string
+ *                         description: Placa del tráiler.
+ *                         example: "XYZ789"
+ *                       NombreConductor:
+ *                         type: string
+ *                         description: Nombre del conductor.
+ *                         example: "Juan Pérez"
+ *                       NitConductor:
+ *                         type: string
+ *                         description: NIT del conductor.
+ *                         example: "123456789"
+ *                       FechaHoraCita:
+ *                         type: string
+ *                         format: date-time
+ *                         description: Fecha y hora de la cita.
+ *                         example: "2024-08-09T08:00:00Z"
+ *                       FechaHoraCitaDescargue:
+ *                         type: string
+ *                         format: date-time
+ *                         description: Fecha y hora de la cita de descargue.
+ *                         example: "2024-08-09T12:00:00Z"
+ *                       NotasDatosEntrega:
+ *                         type: string
+ *                         description: Notas sobre los datos de entrega.
+ *                         example: "Entrega en bodega principal"
+ *                       FechaHoraDescargue:
+ *                         type: string
+ *                         format: date-time
+ *                         description: Fecha y hora de descargue.
+ *                         example: "2024-08-09T15:00:00Z"
+ *                       FKCercaAutorizada:
+ *                         type: integer
+ *                         description: ID de la cerca autorizada.
+ *                         example: 5001
+ *                       UserCreacion:
+ *                         type: string
+ *                         description: Usuario que creó el contrato.
+ *                         example: "admin"
+ *                       Solicitante:
+ *                         type: string
+ *                         description: Nombre del solicitante.
+ *                         example: "Empresa XYZ"
+ *                       bitRestriccion:
+ *                         type: boolean
+ *                         description: Indica si el contrato tiene restricción.
+ *                         example: false
+ *                       HoraInicioR:
+ *                         type: string
+ *                         format: date-time
+ *                         description: Hora de inicio de restricción.
+ *                         example: "2024-08-09T06:00:00Z"
+ *                       HoraFinR:
+ *                         type: string
+ *                         format: date-time
+ *                         description: Hora de fin de restricción.
+ *                         example: "2024-08-09T18:00:00Z"
+ *                       MovilConductor:
+ *                         type: string
+ *                         description: Móvil del conductor.
+ *                         example: "3001234567"
+ *                       ContainerNum:
+ *                         type: string
+ *                         description: Número de contenedor.
+ *                         example: "CONT1234567"
+ *                       Notas:
+ *                         type: string
+ *                         description: Notas adicionales.
+ *                         example: "Requiere escolta"
+ *                       chequeo_ident:
+ *                         type: integer
+ *                         description: Identificador del chequeo.
+ *                         example: 9876
+ *                       tipo_equipo:
+ *                         type: string
+ *                         description: Tipo de equipo.
+ *                         example: "GPS"
+ *                       bitMostrarCritico:
+ *                         type: boolean
+ *                         description: Indica si se debe mostrar como crítico.
+ *                         example: true
+ *       400:
+ *         description: Error en la solicitud.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Token is missing
+ *       401:
+ *         description: Error de autenticación. El token es inválido o ha expirado.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la autenticación ha fallado.
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   description: Mensaje de error detallando la causa.
+ *                   example: Failed to authenticate token
+ *       500:
+ *         description: Error interno del servidor.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ */
+
+router.post('/getinfocontrato', ContratosController.get_infocontrato);
+/**
+ * @swagger
+ * /limpiarcontrato:
+ *   post:
+ *     summary: Limpiar información del contrato
+ *     description: Ejecuta un procedimiento almacenado para limpiar la información de un contrato específico.
+ *     tags:
+ *       - Contratos
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               contractID:
+ *                 type: string
+ *                 description: ID del contrato que se desea limpiar.
+ *                 example: "12345"
+ *     responses:
+ *       200:
+ *         description: Contrato limpiado exitosamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la solicitud fue exitosa.
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     description: Resultado de la operación.
+ *                     example:
+ *                       column1: value1
+ *                       column2: value2
+ *       400:
+ *         description: Error en la solicitud.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Token is missing
+ *       401:
+ *         description: Error de autenticación. El token es inválido o ha expirado.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la autenticación ha fallado.
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   description: Mensaje de error detallando la causa.
+ *                   example: Failed to authenticate token
+ *       500:
+ *         description: Error interno del servidor.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ */
+
+router.post('/limpiarcontrato', ContratosController.limpiar_contrato);
+/**
+ * @swagger
+ * /limpiarcontratoSalvoInfo:
+ *   post:
+ *     summary: Limpiar información del contrato, salvo información específica
+ *     description: Ejecuta un procedimiento almacenado para limpiar la información de un contrato específico, preservando ciertos datos.
+ *     tags:
+ *       - Contratos
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               contractID:
+ *                 type: string
+ *                 description: ID del contrato que se desea limpiar.
+ *                 example: "12345"
+ *     responses:
+ *       200:
+ *         description: Contrato limpiado exitosamente, salvo la información específica.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la solicitud fue exitosa.
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     description: Resultado de la operación.
+ *                     example:
+ *                       column1: value1
+ *                       column2: value2
+ *       400:
+ *         description: Error en la solicitud.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Token is missing
+ *       401:
+ *         description: Error de autenticación. El token es inválido o ha expirado.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la autenticación ha fallado.
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   description: Mensaje de error detallando la causa.
+ *                   example: Failed to authenticate token
+ *       500:
+ *         description: Error interno del servidor.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ */
+
+router.post('/limpiarcontratoSalvoInfo', ContratosController.limpiar_contratoSalvoInfo);
 
 
 module.exports = router;
