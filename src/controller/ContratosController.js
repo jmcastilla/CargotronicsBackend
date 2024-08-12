@@ -155,6 +155,7 @@ controller.get_infocontrato = async (req, res) => {
                     res.json({ success: false, message: 'Failed to authenticate token' });
                 } else {
                     var contrato= req.body.contrato;
+                    console.log(contrato);
                     var vissolicitud = await isSolicitud(contrato);
                     var consulta = "SELECT LokContractID.ContractID, LokContractID.LightBit, LokContractID.FKICEmpresa, LokContractID.FKICEmpresaConsulta, LokContractID.FKICEmpresaConsulta2, LokContractID.FKICEmpresaConsulta3,";
                     consulta += "LokContractID.FKICRutas, LokContractID.FKLokBarsSLM, LokContractID.Active, LokContractID.FKLokDeviceID, LokContractID.Ref, ";
@@ -192,6 +193,7 @@ async function isSolicitud(contrato) {
     try{
         var consulta= "SELECT FKLokSolicitud FROM LokContractID WHERE ContractID = '" + contrato + "'";
         let resultado=await sqlconfig.query(consulta);
+        console.log(resultado);
         if(resultado.recordsets[0] && resultado.recordsets[0].length > 0){
             return true;
         }else{
