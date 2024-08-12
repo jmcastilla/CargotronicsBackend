@@ -517,7 +517,7 @@ router.get('/getcontrolestrafico', ContratosController.get_controlestrafico);
 router.post('/getlistachequeo', ContratosController.get_listachequeo);
 /**
  * @swagger
- * /getinfocontrato:
+ * /contratos/getinfocontrato:
  *   post:
  *     summary: Obtener información del contrato
  *     description: Retorna información detallada de un contrato específico.
@@ -719,7 +719,7 @@ router.post('/getlistachequeo', ContratosController.get_listachequeo);
 router.post('/getinfocontrato', ContratosController.get_infocontrato);
 /**
  * @swagger
- * /limpiarcontrato:
+ * /contratos/limpiarcontrato:
  *   post:
  *     summary: Limpiar información del contrato
  *     description: Ejecuta un procedimiento almacenado para limpiar la información de un contrato específico.
@@ -791,7 +791,7 @@ router.post('/getinfocontrato', ContratosController.get_infocontrato);
 router.post('/limpiarcontrato', ContratosController.limpiar_contrato);
 /**
  * @swagger
- * /limpiarcontratoSalvoInfo:
+ * /contratos/limpiarcontratoSalvoInfo:
  *   post:
  *     summary: Limpiar información del contrato, salvo información específica
  *     description: Ejecuta un procedimiento almacenado para limpiar la información de un contrato específico, preservando ciertos datos.
