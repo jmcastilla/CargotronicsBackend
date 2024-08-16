@@ -254,4 +254,77 @@ controller.limpiar_contratoSalvoInfo = async (req, res) => {
     }
 }
 
+
+controller.set_updatecontrato = async (req, res) => {
+    try{
+        var token = req.headers.authorization;
+        if (!token) {
+            return res.json({ success: false, message: 'Token is missing' });
+        }else{
+            token = req.headers.authorization.split(' ')[1];
+            jwt.verify(token, 'secret_key', async (err, decoded) => {
+                if (err) {
+                    res.json({ success: false, message: 'Failed to authenticate token' });
+                } else {
+                    let data = {
+                        "FKICEmpresa": req.body.FKICEmpresa,
+                        "FKICEmpresaConsulta": req.body.FKICEmpresaConsulta,
+                        "FKICEmpresaConsulta2": req.body.FKICEmpresaConsulta2,
+                        "FKICEmpresaConsulta3": req.body.FKICEmpresaConsulta3,
+                        "FKICRutas": req.body.FKICRutas,
+                        "Ref": req.body.Ref,
+                        "PlacaTruck": req.body.PlacaTruck,
+                        "ColorTruck": req.body.ColorTruck,
+                        "PlacaTrailer": req.body.PlacaTrailer,
+                        "NombreConductor": req.body.NombreConductor,
+                        "FKLokSolicitud": req.body.FKLokSolicitud, //si viene null numerror 4
+                        "NitConductor": req.body.NitConductor,
+                        "MovilConductor": req.body.MovilConductor,
+                        "ContainerNum": req.body.ContainerNum,
+                        "DigitoVerificacion": req.body.DigitoVerificacion,
+                        "FKLokTipoUnidadCarga": req.body.FKLokTipoUnidadCarga, //si viene null numerror 2
+                        "Notas": req.body.Notas,
+                        "NombreEscolta": req.body.NombreEscolta,
+                        "MovilEscolta": req.body.MovilEscolta,
+                        "NotasTI": req.body.NotasTI,
+                        "FKLokCategoriaServ": req.body.FKLokCategoriaServ,
+                        "OtrosDatosTruck": req.body.OtrosDatosTruck,
+                        "FKICTransportadora": req.body.FKICTransportadora, //si es diferente de 3 numerror 3
+                        "contractID": req.body.contractID,
+                        "FKLokInstalador": req.body.FKLokInstalador,
+                        "FechaHoraCita": req.body.FechaHoraCita,
+                        "FechaHoraCitaDescargue": req.body.FechaHoraCitaDescargue,
+                        "NotasDatosEntrega": req.body.NotasDatosEntrega,
+                        "FechaHoraDescargue": req.body.FechaHoraDescargue,
+                        "bitRestriccion": req.body.bitRestriccion,
+                        "HoraInicioR": req.body.HoraInicioR,
+                        "HoraFinR": req.body.HoraFinR,
+                        "Solicitante": req.body.Solicitante,
+                        "Contacto": req.body.Contacto,
+                        "usuario": usuario,
+                        "LightBit": req.body.LightBit,
+                        "critico": req.body.critico,
+                        "AlertasBit": req.body.AlertasBit,
+                        "FKCelloTrack": req.body.FKCelloTrack,
+                        "FKLokModalidadServ": req.body.FKLokModalidadServ,
+                        "FKTipoDocumento": req.body.FKTipoDocumento,
+                        "FKCercaAutorizada": req.body.FKCercaAutorizada,
+                        "Documento": req.body.Documento,
+                        "Equivalencia": req.body.Equivalencia,
+                        "FKLokBarsSLM": req.body.FKLokBarsSLM,
+                        "Active": req.body.Active,
+                        "FKLokDesistaladores": req.body.FKLokDesistaladores,
+                        "NotaDesisntalaciones": req.body.NotaDesisntalaciones
+
+                    };
+                    let resultado=await sqlconfig.queryProcedure('LokUpdateContractIDwhenEdit', data);
+                    res.json({success : true, data : resultado.recordsets[0]});
+                }
+            });
+        }
+    }catch(err){
+        res.json({success : false});
+    }
+}
+
 module.exports = controller;

@@ -861,6 +861,265 @@ router.post('/limpiarcontrato', ContratosController.limpiar_contrato);
  */
 
 router.post('/limpiarcontratoSalvoInfo', ContratosController.limpiar_contratoSalvoInfo);
+/**
+ * @swagger
+ * /setupdatecontrato:
+ *   post:
+ *     summary: Actualiza los detalles de un contrato.
+ *     description: Llama a un procedimiento almacenado para actualizar los detalles de un contrato especificado.
+ *     tags:
+ *       - Contratos
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               FKICEmpresa:
+ *                 type: integer
+ *                 description: ID de la empresa principal.
+ *                 example: 1
+ *               FKICEmpresaConsulta:
+ *                 type: integer
+ *                 description: ID de la empresa de consulta.
+ *                 example: 2
+ *               FKICEmpresaConsulta2:
+ *                 type: integer
+ *                 description: ID de la segunda empresa de consulta.
+ *                 example: 3
+ *               FKICEmpresaConsulta3:
+ *                 type: integer
+ *                 description: ID de la tercera empresa de consulta.
+ *                 example: 4
+ *               FKICRutas:
+ *                 type: integer
+ *                 description: ID de la ruta.
+ *                 example: 5
+ *               Ref:
+ *                 type: string
+ *                 description: Referencia del contrato.
+ *                 example: "REF123456"
+ *               PlacaTruck:
+ *                 type: string
+ *                 description: Placa del camión.
+ *                 example: "ABC123"
+ *               ColorTruck:
+ *                 type: string
+ *                 description: Color del camión.
+ *                 example: "Rojo"
+ *               PlacaTrailer:
+ *                 type: string
+ *                 description: Placa del remolque.
+ *                 example: "DEF456"
+ *               NombreConductor:
+ *                 type: string
+ *                 description: Nombre del conductor.
+ *                 example: "Juan Pérez"
+ *               FKLokSolicitud:
+ *                 type: integer
+ *                 description: ID de la solicitud Lok. No debe ser null.
+ *                 example: 6
+ *               NitConductor:
+ *                 type: string
+ *                 description: NIT del conductor.
+ *                 example: "987654321"
+ *               MovilConductor:
+ *                 type: string
+ *                 description: Número de móvil del conductor.
+ *                 example: "3001234567"
+ *               ContainerNum:
+ *                 type: string
+ *                 description: Número del contenedor.
+ *                 example: "CONT001"
+ *               DigitoVerificacion:
+ *                 type: string
+ *                 description: Dígito de verificación del contenedor.
+ *                 example: "2"
+ *               FKLokTipoUnidadCarga:
+ *                 type: integer
+ *                 description: ID del tipo de unidad de carga. No debe ser null.
+ *                 example: 7
+ *               Notas:
+ *                 type: string
+ *                 description: Notas adicionales del contrato.
+ *                 example: "Entregar a tiempo"
+ *               NombreEscolta:
+ *                 type: string
+ *                 description: Nombre del escolta.
+ *                 example: "Pedro González"
+ *               MovilEscolta:
+ *                 type: string
+ *                 description: Número de móvil del escolta.
+ *                 example: "3109876543"
+ *               NotasTI:
+ *                 type: string
+ *                 description: Notas de TI.
+ *                 example: "Verificar sistema"
+ *               FKLokCategoriaServ:
+ *                 type: integer
+ *                 description: ID de la categoría de servicio.
+ *                 example: 8
+ *               OtrosDatosTruck:
+ *                 type: string
+ *                 description: Otros datos del camión.
+ *                 example: "Nuevo modelo"
+ *               FKICTransportadora:
+ *                 type: integer
+ *                 description: ID de la transportadora. Debe ser diferente de 3.
+ *                 example: 9
+ *               contractID:
+ *                 type: string
+ *                 description: ID del contrato.
+ *                 example: "CONTRACT123"
+ *               FKLokInstalador:
+ *                 type: integer
+ *                 description: ID del instalador.
+ *                 example: 10
+ *               FechaHoraCita:
+ *                 type: string
+ *                 format: date-time
+ *                 description: Fecha y hora de la cita.
+ *                 example: "2024-08-16T10:00:00Z"
+ *               FechaHoraCitaDescargue:
+ *                 type: string
+ *                 format: date-time
+ *                 description: Fecha y hora de la cita de descargue.
+ *                 example: "2024-08-16T12:00:00Z"
+ *               NotasDatosEntrega:
+ *                 type: string
+ *                 description: Notas sobre los datos de entrega.
+ *                 example: "Cuidado con la carga"
+ *               FechaHoraDescargue:
+ *                 type: string
+ *                 format: date-time
+ *                 description: Fecha y hora de descargue.
+ *                 example: "2024-08-16T14:00:00Z"
+ *               bitRestriccion:
+ *                 type: boolean
+ *                 description: Indicador de restricción.
+ *                 example: false
+ *               HoraInicioR:
+ *                 type: string
+ *                 description: Hora de inicio de restricción.
+ *                 example: "08:00"
+ *               HoraFinR:
+ *                 type: string
+ *                 description: Hora de fin de restricción.
+ *                 example: "18:00"
+ *               Solicitante:
+ *                 type: string
+ *                 description: Nombre del solicitante.
+ *                 example: "Empresa XYZ"
+ *               Contacto:
+ *                 type: string
+ *                 description: Información de contacto.
+ *                 example: "contacto@empresa.com"
+ *               LightBit:
+ *                 type: boolean
+ *                 description: Estado del bit de luz.
+ *                 example: true
+ *               critico:
+ *                 type: boolean
+ *                 description: Indicador de si el contrato es crítico.
+ *                 example: true
+ *               AlertasBit:
+ *                 type: boolean
+ *                 description: Estado del bit de alertas.
+ *                 example: false
+ *               FKCelloTrack:
+ *                 type: integer
+ *                 description: ID del CelloTrack.
+ *                 example: 11
+ *               FKLokModalidadServ:
+ *                 type: integer
+ *                 description: ID de la modalidad de servicio.
+ *                 example: 12
+ *               FKTipoDocumento:
+ *                 type: integer
+ *                 description: ID del tipo de documento.
+ *                 example: 13
+ *               FKCercaAutorizada:
+ *                 type: integer
+ *                 description: ID de la cerca autorizada.
+ *                 example: 14
+ *               Documento:
+ *                 type: string
+ *                 description: Número de documento.
+ *                 example: "12345678"
+ *               Equivalencia:
+ *                 type: string
+ *                 description: Equivalencia del contrato.
+ *                 example: "Eq123"
+ *               FKLokBarsSLM:
+ *                 type: integer
+ *                 description: ID de las barras SLM.
+ *                 example: 15
+ *               Active:
+ *                 type: boolean
+ *                 description: Estado de activación del contrato.
+ *                 example: true
+ *               FKLokDesistaladores:
+ *                 type: integer
+ *                 description: ID de los desistaladores.
+ *                 example: 16
+ *               NotaDesisntalaciones:
+ *                 type: string
+ *                 description: Nota sobre las desinstalaciones.
+ *                 example: "Retirar con cuidado"
+ *     responses:
+ *       200:
+ *         description: Contrato actualizado exitosamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la solicitud fue exitosa.
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     description: Resultado de la operación.
+ *                     example:
+ *                       column1: value1
+ *                       column2: value2
+ *       400:
+ *         description: Error en la solicitud.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Token is missing
+ *       401:
+ *         description: Error de autenticación. El token es inválido o ha expirado.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la autenticación ha fallado.
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   description: Mensaje de error detallando la causa.
+ *                   example: Failed to authenticate token
+ *       500:
+ *         description: Error interno del servidor.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ */
+
+router.post('/setupdatecontrato', ContratosController.set_updatecontrato);
 
 
 module.exports = router;
