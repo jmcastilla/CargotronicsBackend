@@ -863,7 +863,7 @@ router.post('/limpiarcontrato', ContratosController.limpiar_contrato);
 router.post('/limpiarcontratoSalvoInfo', ContratosController.limpiar_contratoSalvoInfo);
 /**
  * @swagger
- * /setupdatecontrato:
+ * /contratos/setupdatecontrato:
  *   post:
  *     summary: Actualiza los detalles de un contrato.
  *     description: Llama a un procedimiento almacenado para actualizar los detalles de un contrato especificado.
