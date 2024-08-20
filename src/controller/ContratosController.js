@@ -267,6 +267,8 @@ controller.set_updatecontrato = async (req, res) => {
                     res.json({ success: false, message: 'Failed to authenticate token' });
                 } else {
                     let data = {
+                        "contractID": req.body.contractID,
+                        "Active": req.body.Active,
                         "FKICEmpresa": req.body.FKICEmpresa,
                         "FKICEmpresaConsulta": req.body.FKICEmpresaConsulta,
                         "FKICEmpresaConsulta2": req.body.FKICEmpresaConsulta2,
@@ -277,45 +279,42 @@ controller.set_updatecontrato = async (req, res) => {
                         "ColorTruck": req.body.ColorTruck,
                         "PlacaTrailer": req.body.PlacaTrailer,
                         "NombreConductor": req.body.NombreConductor,
-                        "FKLokSolicitud": req.body.FKLokSolicitud, //si viene null numerror 4
                         "NitConductor": req.body.NitConductor,
                         "MovilConductor": req.body.MovilConductor,
                         "ContainerNum": req.body.ContainerNum,
-                        "DigitoVerificacion": req.body.DigitoVerificacion,
-                        "FKLokTipoUnidadCarga": req.body.FKLokTipoUnidadCarga, //si viene null numerror 2
                         "Notas": req.body.Notas,
                         "NombreEscolta": req.body.NombreEscolta,
                         "MovilEscolta": req.body.MovilEscolta,
                         "NotasTI": req.body.NotasTI,
                         "FKLokCategoriaServ": req.body.FKLokCategoriaServ,
+                        "FKLokSolicitud": req.body.FKLokSolicitud, //si viene null numerror 4
                         "OtrosDatosTruck": req.body.OtrosDatosTruck,
-                        "FKICTransportadora": req.body.FKICTransportadora, //si es diferente de 3 numerror 3
-                        "contractID": req.body.contractID,
                         "FKLokInstalador": req.body.FKLokInstalador,
+                        "FKLokDesistaladores": req.body.FKLokDesistaladores,
+                        "NotaDesisntalaciones": req.body.NotaDesisntalaciones,
+                        "FKICTransportadora": req.body.FKICTransportadora, //si es diferente de 3 numerror 3
                         "FechaHoraCita": req.body.FechaHoraCita,
                         "FechaHoraCitaDescargue": req.body.FechaHoraCitaDescargue,
-                        "NotasDatosEntrega": req.body.NotasDatosEntrega,
-                        "FechaHoraDescargue": req.body.FechaHoraDescargue,
+                        "Contacto": req.body.Contacto,
+                        "Solicitante": req.body.Solicitante,
+                        "FKLokBarsSLM": req.body.FKLokBarsSLM,
+                        "FKCelloTrack": req.body.FKCelloTrack,
+                        "LightBit": req.body.LightBit,
+                        "AlertasBit": req.body.AlertasBit,
+                        "FKLokTipoUnidadCarga": req.body.FKLokTipoUnidadCarga, //si viene null numerror 2
+                        "FKTipoDocumento": req.body.FKTipoDocumento,
+                        "DigitoVerificacion": req.body.DigitoVerificacion,
+                        "Documento": req.body.Documento,
+                        "Equivalencia": req.body.Equivalencia,
+                        "FKCercaAutorizada": req.body.FKCercaAutorizada,
+                        "usuario": decoded.username,
                         "bitRestriccion": req.body.bitRestriccion,
                         "HoraInicioR": req.body.HoraInicioR,
                         "HoraFinR": req.body.HoraFinR,
-                        "Solicitante": req.body.Solicitante,
-                        "Contacto": req.body.Contacto,
-                        "usuario": decoded.username,
-                        "LightBit": req.body.LightBit,
-                        "critico": req.body.critico,
-                        "AlertasBit": req.body.AlertasBit,
-                        "FKCelloTrack": req.body.FKCelloTrack,
                         "FKLokModalidadServ": req.body.FKLokModalidadServ,
-                        "FKTipoDocumento": req.body.FKTipoDocumento,
-                        "FKCercaAutorizada": req.body.FKCercaAutorizada,
-                        "Documento": req.body.Documento,
-                        "Equivalencia": req.body.Equivalencia,
-                        "FKLokBarsSLM": req.body.FKLokBarsSLM,
-                        "Active": req.body.Active,
-                        "FKLokDesistaladores": req.body.FKLokDesistaladores,
-                        "NotaDesisntalaciones": req.body.NotaDesisntalaciones
-
+                        "FechaHoraDescargue": req.body.FechaHoraDescargue,
+                        "NotasDatosEntrega": req.body.NotasDatosEntrega,
+                        "critico": req.body.critico,
                     };
                     console.log(data);
                     let resultado=await sqlconfig.queryProcedure('LokUpdateContractIDwhenEdit', data);
