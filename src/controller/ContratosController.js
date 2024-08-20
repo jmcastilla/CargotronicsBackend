@@ -317,6 +317,7 @@ controller.set_updatecontrato = async (req, res) => {
                         "NotaDesisntalaciones": req.body.NotaDesisntalaciones
 
                     };
+                    console.log(data);
                     let resultado=await sqlconfig.queryProcedure('LokUpdateContractIDwhenEdit', data);
                     res.json({success : true, data : resultado.recordsets[0]});
                 }
