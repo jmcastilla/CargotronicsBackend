@@ -301,7 +301,7 @@ controller.set_updatecontrato = async (req, res) => {
                         "HoraFinR": req.body.HoraFinR,
                         "Solicitante": req.body.Solicitante,
                         "Contacto": req.body.Contacto,
-                        "usuario": usuario,
+                        "usuario": decoded.username,
                         "LightBit": req.body.LightBit,
                         "critico": req.body.critico,
                         "AlertasBit": req.body.AlertasBit,
