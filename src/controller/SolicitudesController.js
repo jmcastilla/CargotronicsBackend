@@ -559,7 +559,7 @@ controller.get_obtenerSolicitud = async (req, res) => {
                     res.json({ success: false, message: 'Failed to authenticate token' });
                 } else {
                     var id=req.body.id;
-                    var consulta="SELECT IDSolicitudes, bitRestriccion, LokNegociacion.HoraInicioR, LokNegociacion.HoraFinR, LokSolicitudes.FKICEmpresa, FKICEmpresaConsulta, FKICEmpresaConsulta2, FKICEmpresaConsulta3, Ref, PlacaTruck, ColorTruck, PlacaTriler, NombreConductor, NitConductor, FKInstaladorId, "
+                    var consulta="SELECT IDSolicitudes, bitRestriccion, LokSolicitudes.HoraInicioR, LokSolicitudes.HoraFinR, LokSolicitudes.FKICEmpresa, FKICEmpresaConsulta, FKICEmpresaConsulta2, FKICEmpresaConsulta3, Ref, PlacaTruck, ColorTruck, PlacaTriler, NombreConductor, NitConductor, FKInstaladorId, "
                     +" MovilConductor, ContainerNum, FKLokCercaAutorizada, LokSolicitudes.Notas, LokSolicitudes.DigitoVerificacion, FKLokTipoUnidadCarga, Contacto, NombreEscolta, MovilEscolta, NotasTI, FKLokCategoriaServ, Marca, FKICTransportadora, FKLokEstados, "
                     +" FechaHoraSolicitud, CASE when FechaHoraCita < '2012-01-01 00:00:00.000' then 'Hora-Nula Fecha-Nula' else CONVERT(nvarchar(30), FechaHoraCita, 120) end AS Hora, CASE when FechaHoraCitaDescargue is null or FechaHoraCitaDescargue < '2012-01-01 00:00:00.000' then 'Hora-Nula Fecha-Nula' else CONVERT(nvarchar(30), FechaHoraCitaDescargue, 120) end AS HoraCita, "
                     +" NotasDatosEntrega, UserSolicitud, FKNegociacion, Solicitante, FKICRutas, LokClienteExt.IdClienteExterno, bitMostrarCritico"
