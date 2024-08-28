@@ -204,11 +204,10 @@ app.post('/login', async (req, res) =>{
                     empresaprincipal: resultado.recordset[0].varidcliente,
                     idempresa: resultado.recordset[0].IdEmpresa,
                     idcliente: resultado.recordset[0].clientede,
-                    server: sqlconfig.server,
-                    timereload: resultado.recordset[0].TimeReload
+                    server: sqlconfig.server
                 };
                 const token = jwt.sign(tokenPayload, 'secret_key', { expiresIn: '1h' });
-                res.json({success : true, entorno: sqlconfig.server, token});
+                res.json({success : true, entorno: sqlconfig.server, timereload:resultado.recordset[0].TimeReload, token});
             }else{
                 res.json({success : false});
             }
