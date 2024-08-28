@@ -180,7 +180,7 @@ app.post('/login', async (req, res) =>{
         let pass=req.body.pass;
         var consulta= "SELECT u.Pwd, u.Salt, u.FKProyecto, p.DiferenciaServidor, p.DiferenciaHorariaM, "+
         "u.RolTrafico, u.Trafico, ISNULL(p.ProyectoPrincipal, 1) as ownr, ISNULL(p.varidcliente, 2) as varidcliente, "+
-        "e.IdEmpresa, ISNULL(clientede, 0) as clientede FROM ICUsers as u "+
+        "e.IdEmpresa, ISNULL(clientede, 0) as clientede, p.TimeReload FROM ICUsers as u "+
         "INNER JOIN ICEmpresa as e on e.IdEmpresa = u.FKICEmpresa "+
         "INNER JOIN LokProyectos as p on p.IDProyecto = u.FKProyecto "+
         "WHERE u.IdUser='"+user+"' and u.Activo=1";
@@ -204,7 +204,8 @@ app.post('/login', async (req, res) =>{
                     empresaprincipal: resultado.recordset[0].varidcliente,
                     idempresa: resultado.recordset[0].IdEmpresa,
                     idcliente: resultado.recordset[0].clientede,
-                    server: sqlconfig.server
+                    server: sqlconfig.server,
+                    timereload: resultado.recordset[0].TimeReload
                 };
                 const token = jwt.sign(tokenPayload, 'secret_key', { expiresIn: '1h' });
                 res.json({success : true, entorno: sqlconfig.server, token});
