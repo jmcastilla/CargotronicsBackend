@@ -189,6 +189,34 @@ controller.get_infocontrato = async (req, res) => {
     }
 }
 
+controller.get_infocontratoproyecto = async (req, res) => {
+    try{
+        var token = req.headers.authorization;
+        if (!token) {
+            return res.json({ success: false, message: 'Token is missing' });
+        }else{
+            token = req.headers.authorization.split(' ')[1];
+            jwt.verify(token, 'secret_key', async (err, decoded) => {
+                if (err) {
+                    res.json({ success: false, message: 'Failed to authenticate token' });
+                } else {
+                    var contrato= req.body.contrato;
+                    console.log(contrato);
+                    consulta = "SELECT l.ContractID, l.FKICEmpresa, SlavesAsignados, AlertasActivas, LightBit, l.FKICEmpresaConsulta, l.FKICEmpresaConsulta2, l.FKICEmpresaConsulta3, l.FKICRutas, l.Active, l.FKLokDeviceID, l.Ref, l.PlacaTruck, l.ColorTruck, l.PlacaTrailer, l.NombreConductor, l.NitConductor, l.FechaHoraCita, ";
+                    consulta +="l.MovilConductor, l.ContainerNum, l.Notas, l.NombreEscolta, l.FKCercaAutorizada, l.FKLokSolicitud, l.FKICEmpresaConsulta, l.MovilEscolta, l.NotasTI, l.FKLokCategoriaServ, l.OtrosDatosTruck, l.FKICTransportadora, l.FKLokInstalador, l.FKLokDesistaladores, l.NotaDesisntalaciones, l.Contacto, l.LokTipoServicios, l.FKICTransportadora, ";
+                    consulta +="(SELECT TOP 1 id_chequeo FROM ValitronicsChequeo WHERE Fk_ContractID = l.ContractID) as chequeo_ident ";
+                    consulta +="FROM LokContractID l WHERE l.ContractID = '" + contrato + "'";
+
+                    let resultado=await sqlconfig.query(consulta);
+                    res.json({success : true, data : resultado.recordsets[0]});
+                }
+            });
+        }
+    }catch(err){
+        res.json({success : false});
+    }
+}
+
 async function isSolicitud(contrato) {
     try{
         var consulta= "SELECT FKLokSolicitud FROM LokContractID WHERE ContractID = '" + contrato + "'";
