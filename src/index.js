@@ -207,7 +207,7 @@ app.post('/login', async (req, res) =>{
                     server: sqlconfig.server
                 };
                 const token = jwt.sign(tokenPayload, 'secret_key', { expiresIn: '1h' });
-                res.json({success : true, entorno: sqlconfig.server, timereload:resultado.recordset[0].TimeReload, token});
+                res.json({success : true, entorno: sqlconfig.server, timereload:resultado.recordset[0].TimeReload, proyecto:resultado.recordset[0].FKProyecto, token});
             }else{
                 res.json({success : false});
             }
