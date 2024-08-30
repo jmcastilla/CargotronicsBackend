@@ -717,6 +717,8 @@ router.post('/getlistachequeo', ContratosController.get_listachequeo);
  */
 
 router.post('/getinfocontrato', ContratosController.get_infocontrato);
+
+router.post('/getinfocontratoproyecto', ContratosController.get_infocontratoproyecto);
 /**
  * @swagger
  * /contratos/limpiarcontrato:
