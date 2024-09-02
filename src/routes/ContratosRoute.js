@@ -717,6 +717,181 @@ router.post('/getlistachequeo', ContratosController.get_listachequeo);
  */
 
 router.post('/getinfocontrato', ContratosController.get_infocontrato);
+/**
+ * @swagger
+ * /getinfocontratoproyecto:
+ *   post:
+ *     summary: Obtiene información detallada de un contrato de proyecto.
+ *     description: Retorna la información completa de un contrato específico basado en el ID del contrato proporcionado.
+ *     tags:
+ *       - Contratos
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               contrato:
+ *                 type: string
+ *                 description: El ID del contrato a consultar.
+ *                 example: "CONTRACT123"
+ *     responses:
+ *       200:
+ *         description: Información del contrato obtenida exitosamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la solicitud fue exitosa.
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     description: Detalles del contrato.
+ *                     properties:
+ *                       ContractID:
+ *                         type: string
+ *                         example: "CONTRACT123"
+ *                       FKICEmpresa:
+ *                         type: integer
+ *                         example: 1
+ *                       SlavesAsignados:
+ *                         type: integer
+ *                         example: 5
+ *                       AlertasActivas:
+ *                         type: integer
+ *                         example: 3
+ *                       LightBit:
+ *                         type: boolean
+ *                         example: true
+ *                       FKICEmpresaConsulta:
+ *                         type: integer
+ *                         example: 2
+ *                       FKICEmpresaConsulta2:
+ *                         type: integer
+ *                         example: 3
+ *                       FKICEmpresaConsulta3:
+ *                         type: integer
+ *                         example: 4
+ *                       FKICRutas:
+ *                         type: integer
+ *                         example: 6
+ *                       Active:
+ *                         type: boolean
+ *                         example: true
+ *                       FKLokDeviceID:
+ *                         type: integer
+ *                         example: 7
+ *                       Ref:
+ *                         type: string
+ *                         example: "REF123456"
+ *                       PlacaTruck:
+ *                         type: string
+ *                         example: "ABC123"
+ *                       ColorTruck:
+ *                         type: string
+ *                         example: "Rojo"
+ *                       PlacaTrailer:
+ *                         type: string
+ *                         example: "DEF456"
+ *                       NombreConductor:
+ *                         type: string
+ *                         example: "Juan Pérez"
+ *                       NitConductor:
+ *                         type: string
+ *                         example: "987654321"
+ *                       FechaHoraCita:
+ *                         type: string
+ *                         format: date-time
+ *                         example: "2024-08-16T10:00:00Z"
+ *                       MovilConductor:
+ *                         type: string
+ *                         example: "3001234567"
+ *                       ContainerNum:
+ *                         type: string
+ *                         example: "CONT001"
+ *                       Notas:
+ *                         type: string
+ *                         example: "Entregar a tiempo"
+ *                       NombreEscolta:
+ *                         type: string
+ *                         example: "Pedro González"
+ *                       FKCercaAutorizada:
+ *                         type: integer
+ *                         example: 8
+ *                       FKLokSolicitud:
+ *                         type: integer
+ *                         example: 9
+ *                       MovilEscolta:
+ *                         type: string
+ *                         example: "3109876543"
+ *                       NotasTI:
+ *                         type: string
+ *                         example: "Verificar sistema"
+ *                       FKLokCategoriaServ:
+ *                         type: integer
+ *                         example: 10
+ *                       OtrosDatosTruck:
+ *                         type: string
+ *                         example: "Nuevo modelo"
+ *                       FKICTransportadora:
+ *                         type: integer
+ *                         example: 11
+ *                       FKLokInstalador:
+ *                         type: integer
+ *                         example: 12
+ *                       FKLokDesistaladores:
+ *                         type: integer
+ *                         example: 13
+ *                       NotaDesisntalaciones:
+ *                         type: string
+ *                         example: "Retirar con cuidado"
+ *                       Contacto:
+ *                         type: string
+ *                         example: "contacto@empresa.com"
+ *                       LokTipoServicios:
+ *                         type: string
+ *                         example: "Transporte"
+ *                       chequeo_ident:
+ *                         type: integer
+ *                         description: ID del chequeo asociado al contrato.
+ *                         example: 1001
+ *       400:
+ *         description: Error en la solicitud.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Token is missing
+ *       401:
+ *         description: Error de autenticación. El token es inválido o ha expirado.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la autenticación ha fallado.
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   description: Mensaje de error detallando la causa.
+ *                   example: Failed to authenticate token
+ *       500:
+ *         description: Error interno del servidor.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ */
 
 router.post('/getinfocontratoproyecto', ContratosController.get_infocontratoproyecto);
 /**
@@ -1122,6 +1297,649 @@ router.post('/limpiarcontratoSalvoInfo', ContratosController.limpiar_contratoSal
  */
 
 router.post('/setupdatecontrato', ContratosController.set_updatecontrato);
+/**
+ * @swagger
+ * /gettiporeportes:
+ *   get:
+ *     summary: Obtiene los tipos de reportes disponibles.
+ *     description: Retorna una lista de los tipos de reportes que están configurados para ser mostrados.
+ *     tags:
+ *       - Contratos
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Lista de tipos de reportes obtenida exitosamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la solicitud fue exitosa.
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     description: Detalles del tipo de reporte.
+ *                     properties:
+ *                       IdTipoReporte:
+ *                         type: integer
+ *                         example: 1
+ *                       TipoReporte:
+ *                         type: string
+ *                         example: "Reporte de Seguridad"
+ *       400:
+ *         description: Error en la solicitud.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Token is missing
+ *       401:
+ *         description: Error de autenticación. El token es inválido o ha expirado.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la autenticación ha fallado.
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   description: Mensaje de error detallando la causa.
+ *                   example: Failed to authenticate token
+ *       500:
+ *         description: Error interno del servidor.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ */
 
+router.get('/gettiporeportes', ContratosController.get_tiporeportes);
+/**
+ * @swagger
+ * /gettipoacciones:
+ *   get:
+ *     summary: Obtiene los tipos de acciones disponibles.
+ *     description: Retorna una lista de los tipos de acciones configurados para ser mostrados.
+ *     tags:
+ *       - Contratos
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Lista de tipos de acciones obtenida exitosamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la solicitud fue exitosa.
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     description: Detalles del tipo de acción.
+ *                     properties:
+ *                       IdTipoAccion:
+ *                         type: integer
+ *                         example: 1
+ *                       TipoAccion:
+ *                         type: string
+ *                         example: "Acción Correctiva"
+ *       400:
+ *         description: Error en la solicitud.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Token is missing
+ *       401:
+ *         description: Error de autenticación. El token es inválido o ha expirado.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la autenticación ha fallado.
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   description: Mensaje de error detallando la causa.
+ *                   example: Failed to authenticate token
+ *       500:
+ *         description: Error interno del servidor.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ */
+
+router.get('/gettipoacciones', ContratosController.get_tipoacciones);
+/**
+ * @swagger
+ * /getreportetraficoid:
+ *   post:
+ *     summary: Obtiene un reporte de tráfico específico por ID.
+ *     description: Retorna los detalles de un reporte de tráfico específico según el ID proporcionado.
+ *     tags:
+ *       - Contratos
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               IdReport:
+ *                 type: integer
+ *                 description: ID del reporte de tráfico.
+ *                 example: 123
+ *     responses:
+ *       200:
+ *         description: Reporte de tráfico obtenido exitosamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la solicitud fue exitosa.
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     description: Detalles del reporte de tráfico.
+ *                     properties:
+ *                       IdReport:
+ *                         type: integer
+ *                         example: 123
+ *                       NombreReporte:
+ *                         type: string
+ *                         example: "Reporte de Tráfico 123"
+ *                       FechaCreacion:
+ *                         type: string
+ *                         format: date-time
+ *                         example: "2023-09-02T10:00:00Z"
+ *                       Estado:
+ *                         type: string
+ *                         example: "Completado"
+ *       400:
+ *         description: Error en la solicitud.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Token is missing
+ *       401:
+ *         description: Error de autenticación. El token es inválido o ha expirado.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la autenticación ha fallado.
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   description: Mensaje de error detallando la causa.
+ *                   example: Failed to authenticate token
+ *       500:
+ *         description: Error interno del servidor.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ */
+
+router.post('/getreportetraficoid', ContratosController.get_reportetraficoid);
+/**
+ * @swagger
+ * /getaseguradotiporeporte:
+ *   post:
+ *     summary: Obtiene el estado de aseguramiento para un tipo de reporte específico.
+ *     description: Retorna si un tipo de reporte está asegurado, según su ID proporcionado.
+ *     tags:
+ *       - Contratos
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               FKICTipoReporte:
+ *                 type: integer
+ *                 description: ID del tipo de reporte.
+ *                 example: 456
+ *     responses:
+ *       200:
+ *         description: Estado de aseguramiento obtenido exitosamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la solicitud fue exitosa.
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       Asegurar:
+ *                         type: boolean
+ *                         description: Indica si el tipo de reporte está asegurado.
+ *                         example: true
+ *       400:
+ *         description: Error en la solicitud.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Token is missing
+ *       401:
+ *         description: Error de autenticación. El token es inválido o ha expirado.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la autenticación ha fallado.
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   description: Mensaje de error detallando la causa.
+ *                   example: Failed to authenticate token
+ *       500:
+ *         description: Error interno del servidor.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ */
+
+router.post('/getaseguradotiporeporte', ContratosController.get_aseguradotiporeporte);
+/**
+ * @swagger
+ * /getreportestrafico:
+ *   post:
+ *     summary: Obtiene los reportes de tráfico asociados a un contrato específico.
+ *     description: Retorna una lista de reportes de tráfico para un contrato dado, incluyendo detalles como tipo de reporte, ubicación, nota, tiempo y usuario.
+ *     tags:
+ *       - Contratos
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               contrato:
+ *                 type: string
+ *                 description: ID del contrato para el cual se desean obtener los reportes.
+ *                 example: "CONTRACT123"
+ *     responses:
+ *       200:
+ *         description: Lista de reportes de tráfico obtenida exitosamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la solicitud fue exitosa.
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       IdReport:
+ *                         type: integer
+ *                         description: ID del reporte.
+ *                         example: 101
+ *                       TipoReporte:
+ *                         type: string
+ *                         description: Tipo de reporte asociado.
+ *                         example: "Trafico Normal"
+ *                       Ubicacion:
+ *                         type: string
+ *                         description: Ubicación asociada al reporte.
+ *                         example: "Ubicación XYZ"
+ *                       Nota:
+ *                         type: string
+ *                         description: Nota del reporte, incluyendo una indicación si el reporte es automático.
+ *                         example: "Nota del reporte (A)"
+ *                       XTime:
+ *                         type: string
+ *                         format: date-time
+ *                         description: Fecha y hora del reporte.
+ *                         example: "2023-12-01T14:30:00Z"
+ *                       XUser:
+ *                         type: string
+ *                         description: Usuario que generó el reporte.
+ *                         example: "user123"
+ *                       TipoAccion:
+ *                         type: string
+ *                         description: Tipo de acción asociada al reporte.
+ *                         example: "Accion XYZ"
+ *       400:
+ *         description: Error en la solicitud.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Token is missing
+ *       401:
+ *         description: Error de autenticación. El token es inválido o ha expirado.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la autenticación ha fallado.
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   description: Mensaje de error detallando la causa.
+ *                   example: Failed to authenticate token
+ *       500:
+ *         description: Error interno del servidor.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ */
+
+router.post('/getreportestrafico', ContratosController.get_reportestrafico);
+/**
+ * @swagger
+ * /deletereportetrafico:
+ *   post:
+ *     summary: Elimina un reporte de tráfico específico.
+ *     description: Permite eliminar un reporte de tráfico identificado por su ID. El usuario debe estar autenticado y autorizado para realizar esta acción.
+ *     tags:
+ *       - Contratos
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               IdReport:
+ *                 type: integer
+ *                 description: ID del reporte que se desea eliminar.
+ *                 example: 101
+ *     responses:
+ *       200:
+ *         description: Reporte eliminado exitosamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la operación fue exitosa.
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     description: Información adicional sobre la eliminación del reporte.
+ *                     example: []
+ *       400:
+ *         description: Error en la solicitud.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Token is missing
+ *       401:
+ *         description: Error de autenticación. El token es inválido o ha expirado.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la autenticación ha fallado.
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   description: Mensaje de error detallando la causa.
+ *                   example: Failed to authenticate token
+ *       500:
+ *         description: Error interno del servidor.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ */
+
+router.post('/deletereportetrafico', ContratosController.delete_reportetrafico);
+/**
+ * @swagger
+ * /insertreportetrafico:
+ *   post:
+ *     summary: Inserta un nuevo reporte de tráfico.
+ *     description: Permite agregar un nuevo reporte de tráfico a la base de datos. El usuario debe estar autenticado y autorizado para realizar esta acción.
+ *     tags:
+ *       - Reportes
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               FKICTipoReporte:
+ *                 type: integer
+ *                 description: ID del tipo de reporte.
+ *                 example: 1
+ *               FKLokTipoAccion:
+ *                 type: integer
+ *                 description: ID del tipo de acción.
+ *                 example: 2
+ *               Ubicacion:
+ *                 type: string
+ *                 description: Ubicación del evento.
+ *                 example: "Calle 123"
+ *               Nota:
+ *                 type: string
+ *                 description: Nota o comentario adicional.
+ *                 example: "Nuevo reporte de tráfico"
+ *               XTime:
+ *                 type: string
+ *                 description: Fecha y hora del reporte.
+ *                 example: "2023-09-01T12:34:56Z"
+ *               FKLokContractID:
+ *                 type: integer
+ *                 description: ID del contrato relacionado con el reporte.
+ *                 example: 101
+ *               Individual:
+ *                 type: boolean
+ *                 description: Indica si el reporte es individual.
+ *                 example: true
+ *     responses:
+ *       200:
+ *         description: Reporte insertado exitosamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la operación fue exitosa.
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     description: Información adicional sobre el reporte insertado.
+ *                     example: []
+ *       400:
+ *         description: Error en la solicitud.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Token is missing
+ *       401:
+ *         description: Error de autenticación. El token es inválido o ha expirado.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la operación fue exitosa.
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   description: Detalle del error de autenticación.
+ *                   example: "Failed to authenticate token"
+ *       500:
+ *         description: Error interno del servidor.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la operación fue exitosa.
+ *                   example: false
+ */
+
+router.post('/insertreportetrafico', ContratosController.insert_reportetrafico);
+/**
+ * @swagger
+ * /updatereportetrafico:
+ *   post:
+ *     summary: Actualiza un reporte de tráfico existente.
+ *     description: Permite actualizar los detalles de un reporte de tráfico existente. El usuario debe estar autenticado y autorizado para realizar esta acción.
+ *     tags:
+ *       - Contratos
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               FKICTipoReporte:
+ *                 type: integer
+ *                 description: ID del tipo de reporte.
+ *                 example: 1
+ *               FKLokTipoAccion:
+ *                 type: integer
+ *                 description: ID del tipo de acción.
+ *                 example: 2
+ *               Ubicacion:
+ *                 type: string
+ *                 description: Ubicación del evento.
+ *                 example: "Calle 123"
+ *               Nota:
+ *                 type: string
+ *                 description: Nota o comentario adicional.
+ *                 example: "Actualización de reporte"
+ *               IdReport:
+ *                 type: integer
+ *                 description: ID del reporte a actualizar.
+ *                 example: 1001
+ *     responses:
+ *       200:
+ *         description: Reporte actualizado exitosamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la operación fue exitosa.
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     description: Información adicional sobre la actualización del reporte.
+ *                     example: []
+ *       400:
+ *         description: Error en la solicitud.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Token is missing
+ *       401:
+ *         description: Error de autenticación. El token es inválido o ha expirado.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la operación fue exitosa.
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   description: Detalle del error de autenticación.
+ *                   example: "Failed to authenticate token"
+ *       500:
+ *         description: Error interno del servidor.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la operación fue exitosa.
+ *                   example: false
+ */
+
+router.post('/updatereportetrafico', ContratosController.update_reportetrafico);
 
 module.exports = router;

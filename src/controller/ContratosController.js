@@ -355,4 +355,206 @@ controller.set_updatecontrato = async (req, res) => {
     }
 }
 
+controller.get_tiporeportes = async (req, res) => {
+    try{
+        var token = req.headers.authorization;
+        if (!token) {
+            return res.json({ success: false, message: 'Token is missing' });
+        }else{
+            token = req.headers.authorization.split(' ')[1];
+            jwt.verify(token, 'secret_key', async (err, decoded) => {
+                if (err) {
+                    res.json({ success: false, message: 'Failed to authenticate token' });
+                } else {
+                    consulta = "SELECT IdTipoReporte, TipoReporte FROM ICTipoReporte WHERE MostrarT = 1 ORDER BY TipoReporte";
+                    let resultado=await sqlconfig.query(consulta);
+                    res.json({success : true, data : resultado.recordsets[0]});
+                }
+            });
+        }
+    }catch(err){
+        res.json({success : false});
+    }
+}
+
+controller.get_tipoacciones = async (req, res) => {
+    try{
+        var token = req.headers.authorization;
+        if (!token) {
+            return res.json({ success: false, message: 'Token is missing' });
+        }else{
+            token = req.headers.authorization.split(' ')[1];
+            jwt.verify(token, 'secret_key', async (err, decoded) => {
+                if (err) {
+                    res.json({ success: false, message: 'Failed to authenticate token' });
+                } else {
+                    consulta = "SELECT IdTipoAccion, TipoAccion FROM LokTipoAccion WHERE MostrarT = 1 ORDER BY TipoAccion";
+                    let resultado=await sqlconfig.query(consulta);
+                    res.json({success : true, data : resultado.recordsets[0]});
+                }
+            });
+        }
+    }catch(err){
+        res.json({success : false});
+    }
+}
+
+controller.get_reportetraficoid = async (req, res) => {
+    try{
+        var token = req.headers.authorization;
+        if (!token) {
+            return res.json({ success: false, message: 'Token is missing' });
+        }else{
+            token = req.headers.authorization.split(' ')[1];
+            jwt.verify(token, 'secret_key', async (err, decoded) => {
+                if (err) {
+                    res.json({ success: false, message: 'Failed to authenticate token' });
+                } else {
+                    var id= req.body.IdReport;
+                    consulta = "SELECT * FROM LokReport WHERE IdReport = " + id;
+                    let resultado=await sqlconfig.query(consulta);
+                    res.json({success : true, data : resultado.recordsets[0]});
+                }
+            });
+        }
+    }catch(err){
+        res.json({success : false});
+    }
+}
+
+controller.get_aseguradotiporeporte = async (req, res) => {
+    try{
+        var token = req.headers.authorization;
+        if (!token) {
+            return res.json({ success: false, message: 'Token is missing' });
+        }else{
+            token = req.headers.authorization.split(' ')[1];
+            jwt.verify(token, 'secret_key', async (err, decoded) => {
+                if (err) {
+                    res.json({ success: false, message: 'Failed to authenticate token' });
+                } else {
+                    var id= req.body.FKICTipoReporte;
+                    consulta = "select Asegurar from ICTipoReporte where IdTipoReporte = " + id;
+                    let resultado=await sqlconfig.query(consulta);
+                    res.json({success : true, data : resultado.recordsets[0]});
+                }
+            });
+        }
+    }catch(err){
+        res.json({success : false});
+    }
+}
+
+controller.get_reportestrafico = async (req, res) => {
+    try{
+        var token = req.headers.authorization;
+        if (!token) {
+            return res.json({ success: false, message: 'Token is missing' });
+        }else{
+            token = req.headers.authorization.split(' ')[1];
+            jwt.verify(token, 'secret_key', async (err, decoded) => {
+                if (err) {
+                    res.json({ success: false, message: 'Failed to authenticate token' });
+                } else {
+                    var contrato= req.body.contrato;
+                    consulta = "SELECT LokReport.IdReport, ICTipoReporte.TipoReporte, Ubicacion, Nota + CASE WHEN LokReport.ReporteAut = 1 THEN ' (A)' ELSE '' END AS Nota, XTime, XUser, LokTipoAccion.TipoAccion ";
+                    consulta += "FROM LokReport INNER JOIN ICTipoReporte ON LokReport.FKICTipoReporte = ICTipoReporte.IdTipoReporte ";
+                    consulta += "INNER JOIN LokTipoAccion ON LokReport.FKLokTipoAccion = LokTipoAccion.IdTipoAccion ";
+                    consulta += "WHERE FKLokContractID = '" + contrato + "' ORDER BY LokReport.XTime DESC";
+                    let resultado=await sqlconfig.query(consulta);
+                    res.json({success : true, data : resultado.recordsets[0]});
+                }
+            });
+        }
+    }catch(err){
+        res.json({success : false});
+    }
+}
+
+controller.delete_reportetrafico = async (req, res) => {
+    try{
+        var token = req.headers.authorization;
+        if (!token) {
+            return res.json({ success: false, message: 'Token is missing' });
+        }else{
+            token = req.headers.authorization.split(' ')[1];
+            jwt.verify(token, 'secret_key', async (err, decoded) => {
+                if (err) {
+                    res.json({ success: false, message: 'Failed to authenticate token' });
+                } else {
+                    let data = {
+                        "IdReport": req.body.IdReport,
+                        "XUser": decoded.username,
+                    };
+                    let resultado=await sqlconfig.queryProcedure('LokDeleteReport', data);
+                    res.json({success : true, data : resultado.recordsets[0]});
+                }
+            });
+        }
+    }catch(err){
+        res.json({success : false});
+    }
+}
+
+controller.insert_reportetrafico = async (req, res) => {
+    try{
+        var token = req.headers.authorization;
+        if (!token) {
+            return res.json({ success: false, message: 'Token is missing' });
+        }else{
+            token = req.headers.authorization.split(' ')[1];
+            jwt.verify(token, 'secret_key', async (err, decoded) => {
+                if (err) {
+                    res.json({ success: false, message: 'Failed to authenticate token' });
+                } else {
+                    let data = {
+                        "FKICTipoReporte": req.body.FKICTipoReporte,
+                        "FKLokTipoAccion": req.body.FKLokTipoAccion,
+                        "Ubicacion": req.body.Ubicacion,
+                        "Nota": req.body.Nota,
+                        "XTime": req.body.XTime,
+                        "XUser": decoded.username,
+                        "FKLokContractID": req.body.FKLokContractID,
+                        "Individual": req.body.Individual,
+                    };
+                    let resultado=await sqlconfig.queryProcedure('LokInsertReport', data);
+                    res.json({success : true, data : resultado.recordsets[0]});
+                }
+            });
+        }
+    }catch(err){
+        res.json({success : false});
+    }
+}
+
+controller.update_reportetrafico = async (req, res) => {
+    try{
+        var token = req.headers.authorization;
+        if (!token) {
+            return res.json({ success: false, message: 'Token is missing' });
+        }else{
+            token = req.headers.authorization.split(' ')[1];
+            jwt.verify(token, 'secret_key', async (err, decoded) => {
+                if (err) {
+                    res.json({ success: false, message: 'Failed to authenticate token' });
+                } else {
+                    let data = {
+                        "FKICTipoReporte": req.body.FKICTipoReporte,
+                        "FKLokTipoAccion": req.body.FKLokTipoAccion,
+                        "Ubicacion": req.body.Ubicacion,
+                        "Nota": req.body.Nota,
+                        "IdReport": req.body.IdReport,
+                        "XUser": decoded.username
+
+                    };
+                    let resultado=await sqlconfig.queryProcedure('LokUpdateReportwhenEdit', data);
+                    res.json({success : true, data : resultado.recordsets[0]});
+                }
+            });
+        }
+    }catch(err){
+        res.json({success : false});
+    }
+}
+
 module.exports = controller;
