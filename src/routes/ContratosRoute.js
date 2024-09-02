@@ -1299,7 +1299,7 @@ router.post('/limpiarcontratoSalvoInfo', ContratosController.limpiar_contratoSal
 router.post('/setupdatecontrato', ContratosController.set_updatecontrato);
 /**
  * @swagger
- * /gettiporeportes:
+ * /contratos/gettiporeportes:
  *   get:
  *     summary: Obtiene los tipos de reportes disponibles.
  *     description: Retorna una lista de los tipos de reportes que están configurados para ser mostrados.
@@ -1364,7 +1364,7 @@ router.post('/setupdatecontrato', ContratosController.set_updatecontrato);
 router.get('/gettiporeportes', ContratosController.get_tiporeportes);
 /**
  * @swagger
- * /gettipoacciones:
+ * /contratos/gettipoacciones:
  *   get:
  *     summary: Obtiene los tipos de acciones disponibles.
  *     description: Retorna una lista de los tipos de acciones configurados para ser mostrados.
@@ -1429,7 +1429,7 @@ router.get('/gettiporeportes', ContratosController.get_tiporeportes);
 router.get('/gettipoacciones', ContratosController.get_tipoacciones);
 /**
  * @swagger
- * /getreportetraficoid:
+ * /contratos/getreportetraficoid:
  *   post:
  *     summary: Obtiene un reporte de tráfico específico por ID.
  *     description: Retorna los detalles de un reporte de tráfico específico según el ID proporcionado.
@@ -1512,7 +1512,7 @@ router.get('/gettipoacciones', ContratosController.get_tipoacciones);
 router.post('/getreportetraficoid', ContratosController.get_reportetraficoid);
 /**
  * @swagger
- * /getaseguradotiporeporte:
+ * /contratos/getaseguradotiporeporte:
  *   post:
  *     summary: Obtiene el estado de aseguramiento para un tipo de reporte específico.
  *     description: Retorna si un tipo de reporte está asegurado, según su ID proporcionado.
@@ -1585,7 +1585,7 @@ router.post('/getreportetraficoid', ContratosController.get_reportetraficoid);
 router.post('/getaseguradotiporeporte', ContratosController.get_aseguradotiporeporte);
 /**
  * @swagger
- * /getreportestrafico:
+ * /contratos/getreportestrafico:
  *   post:
  *     summary: Obtiene los reportes de tráfico asociados a un contrato específico.
  *     description: Retorna una lista de reportes de tráfico para un contrato dado, incluyendo detalles como tipo de reporte, ubicación, nota, tiempo y usuario.
@@ -1683,7 +1683,7 @@ router.post('/getaseguradotiporeporte', ContratosController.get_aseguradotiporep
 router.post('/getreportestrafico', ContratosController.get_reportestrafico);
 /**
  * @swagger
- * /deletereportetrafico:
+ * /contratos/deletereportetrafico:
  *   post:
  *     summary: Elimina un reporte de tráfico específico.
  *     description: Permite eliminar un reporte de tráfico identificado por su ID. El usuario debe estar autenticado y autorizado para realizar esta acción.
@@ -1753,12 +1753,12 @@ router.post('/getreportestrafico', ContratosController.get_reportestrafico);
 router.post('/deletereportetrafico', ContratosController.delete_reportetrafico);
 /**
  * @swagger
- * /insertreportetrafico:
+ * /contratos/insertreportetrafico:
  *   post:
  *     summary: Inserta un nuevo reporte de tráfico.
  *     description: Permite agregar un nuevo reporte de tráfico a la base de datos. El usuario debe estar autenticado y autorizado para realizar esta acción.
  *     tags:
- *       - Reportes
+ *       - Contratos
  *     security:
  *       - bearerAuth: []
  *     requestBody:
