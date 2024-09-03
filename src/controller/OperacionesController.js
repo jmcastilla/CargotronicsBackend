@@ -459,7 +459,7 @@ controller.get_reportescontroldevice = async (req, res) => {
                     var filtro=req.body.filtro;
                     var orden1=req.body.orden1;
                     var orden2=req.body.orden2;
-                    console.log(proyecto+" - "+idcliente);
+                    var varcliente=decoded.empresaprincipal;
                     var consulta = "SELECT DeviceID, dbo.UltimoContrato(DeviceID) As UltContrato, ICRutas.DescripcionRuta AS Ruta, NombreEmpresa AS Cliente, LokDeviceIDEstado.Descripcion AS Estado, ISNULL(ROUND(BatteryVoltage, 2),3) AS voltage, dbo.iconbateria(ISNULL(ROUND(BatteryVoltage, 2),3)) AS icon_bat, Apn1, Apn2, ";
                     consulta += "dbo.Tiempo(DATEDIFF(SECOND, LoksysServerTime, GETUTCDATE())) AS Tiempo, dbo.Tiempo(DATEDIFF(SECOND, DATEADD(MINUTE, -" + utcServidor + ", PositionTime), UltActualizacionDevice)) as Diff,  DATEADD(MINUTE, -" + utcServidor + ", PositionTime) AS ";
                     consulta += " eventDateTime,  UltActualizacionDevice AS LastSaved, Ciudad + ', ' + Departamento AS Position, ISNULL(UltServer, '-') AS UltServer, ";
@@ -472,7 +472,7 @@ controller.get_reportescontroldevice = async (req, res) => {
                     consulta += "CASE WHEN Active = 0 THEN 0 ELSE CASE WHEN(ISNULL(CantReportes, 0) = 0) OR((ROUND(ISNULL(VoltageInit, 0) - BatteryVoltage, 2, 1)) <= 0) THEN 0 ELSE ROUND(ISNULL(CantReportes, 0) / ROUND(ISNULL(VoltageInit, 0) - BatteryVoltage, 2, 1), 0, 1) END END AS ReporxVolt, ";
                     consulta += " ROUND(CASE WHEN Active = 0 THEN 0 ELSE CASE WHEN (ROUND(ISNULL(VoltageInit, 0) - BatteryVoltage, 2, 1)) <= 0 THEN 0 ELSE ROUND(ROUND((CASE WHEN  DATEDIFF(HH, InicioServicio, DATEADD(HH, 2, GETDATE())) = 0 THEN 1 ELSE DATEDIFF(HH, InicioServicio, DATEADD(HH, 2, GETDATE())) END) ,2,1)/ROUND(ISNULL(VoltageInit, 0) - BatteryVoltage, 2, 1),0,1) END END * (((CASE WHEN Active = 0 THEN 0 ELSE ROUND(ISNULL(VoltageInit, 0), 2, 0) END) - 3.5)/24), 1) AS ProyBat ";
                     consulta += " FROM LokDeviceID INNER JOIN LokProyectos ON IdProyecto = LokDeviceId.FKLokProyecto LEFT JOIN LokMcccPais ON cod_pais = FKPais and UltMccc = mcc LEFT JOIN LokContractID ON LokDeviceID.LastContractID = ContractID LEFT JOIN ICEmpresa ON FKICEmpresa = IdEmpresa LEFT JOIN ICRutas ON IdRuta = FKICRutas  INNER JOIN LokDeviceIDEstado ON Estado = IDEstado WHERE FKLokTipoEquipo <> 1 AND FKLokTipoEquipo <> 4 ";
-                    if(idcliente != 2 && proyecto != 1){
+                    if(varcliente != 2 && proyecto != 1){
                       consulta +=" AND LokDeviceId.FKLokProyecto=" + proyecto;
                     }
                     if (idcliente != 2 && proyecto == 1){
