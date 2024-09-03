@@ -1852,7 +1852,7 @@ router.post('/deletereportetrafico', ContratosController.delete_reportetrafico);
 router.post('/insertreportetrafico', ContratosController.insert_reportetrafico);
 /**
  * @swagger
- * /updatereportetrafico:
+ * /contratos/updatereportetrafico:
  *   post:
  *     summary: Actualiza un reporte de tráfico existente.
  *     description: Permite actualizar los detalles de un reporte de tráfico existente. El usuario debe estar autenticado y autorizado para realizar esta acción.
