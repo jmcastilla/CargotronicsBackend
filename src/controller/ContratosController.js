@@ -366,7 +366,7 @@ controller.get_tiporeportes = async (req, res) => {
                 if (err) {
                     res.json({ success: false, message: 'Failed to authenticate token' });
                 } else {
-                    consulta = "SELECT IdTipoReporte, TipoReporte FROM ICTipoReporte WHERE MostrarT = 1 ORDER BY TipoReporte";
+                    consulta = "SELECT IdTipoReporte, TipoReporte FROM ICTipoReporte WHERE MostrarTR =  ORDER BY TipoReporte";
                     let resultado=await sqlconfig.query(consulta);
                     res.json({success : true, data : resultado.recordsets[0]});
                 }
