@@ -840,6 +840,8 @@ router.post('/getfind2', OperacionesController.get_find2);
  *               success: false
  */
 router.get('/getcontratostrafico', OperacionesController.get_contratostrafico);
+
+router.get('/getcontratostraficocritico', OperacionesController.get_contratostraficocritico);
 /**
  * @swagger
  * /operaciones/updatecontratotrayecto:
