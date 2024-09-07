@@ -325,7 +325,7 @@ controller.get_contratostraficocritico = async (req, res) => {
                     if(decoded.roltrafico != 0){
                         consulta+="INNER JOIN (SELECT * FROM LokEmpresaRol WHERE id_roltrafico_ = "+decoded.roltrafico+") as Rol ON Rol.id_empresa = c.FKICEmpresa ";
                     }
-                    consulta+="WHERE c.Active=1 AND c.FKLokProyecto="+decoded.proyecto+" AND LokDeviceID.FKLokTipoEquipo IN (SELECT IDTipoEquipo FROM LokTipoEquipo WHERE Critico = 1)";
+                    consulta+="WHERE c.Active=1 AND c.FKLokProyecto="+decoded.proyecto+" AND d.FKLokTipoEquipo IN (SELECT IDTipoEquipo FROM LokTipoEquipo WHERE Critico = 1)";
                     if(decoded.proyecto == 1){
                         consulta+=" AND bitMostrarCritico = 1 AND c.FKICEmpresa IS NOT NULL AND ISNULL(e.bitCritico,0) = 1 AND (bitAperturaRespo = 0 OR bitBackRespo = 0 OR bitAlejadoRespo = 0 OR bitDesvioRespo = 0 OR bitDetencionRespo = 0 OR Locked = 0 OR";
                         consulta+=" Desautorizado = 1 OR ContadorGps > 3 OR dbo.TiemposDetencion(ContractID) = 1 OR DATEDIFF(SECOND, LoksysServerTime, GETUTCDATE()) > 960 OR ROUND(d.BatteryVoltage,2) <= 3.65) ";
