@@ -328,7 +328,7 @@ controller.get_contratostraficocritico = async (req, res) => {
                     consulta+="WHERE c.Active=1 AND c.FKLokProyecto="+decoded.proyecto+" AND LokDeviceID.FKLokTipoEquipo IN (SELECT IDTipoEquipo FROM LokTipoEquipo WHERE Critico = 1)";
                     if(decoded.proyecto == 1){
                         consulta+=" AND bitMostrarCritico = 1 AND c.FKICEmpresa IS NOT NULL AND ISNULL(ICEmpresa.bitCritico,0) = 1 AND (bitAperturaRespo = 0 OR bitBackRespo = 0 OR bitAlejadoRespo = 0 OR bitDesvioRespo = 0 OR bitDetencionRespo = 0 OR Locked = 0 OR";
-                        consulta+=" Desautorizado = 1 OR ContadorGps > 3 OR dbo.TiemposDetencion(ContractID) = 1 OR DATEDIFF(SECOND, LoksysServerTime, GETUTCDATE()) > 960 OR ROUND(LokDeviceID.BatteryVoltage,2) <= 3.65)";
+                        consulta+=" Desautorizado = 1 OR ContadorGps > 3 OR dbo.TiemposDetencion(ContractID) = 1 OR DATEDIFF(SECOND, LoksysServerTime, GETUTCDATE()) > 960 OR ROUND(LokDeviceID.BatteryVoltage,2) <= 3.65) ";
                     }
                     if(decoded.idempresa != decoded.empresaprincipal && decoded.proyecto == decoded.owner){
                         consulta+=" AND (c.FKICEmpresa = "+decoded.idempresa+
