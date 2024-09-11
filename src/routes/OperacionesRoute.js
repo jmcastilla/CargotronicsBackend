@@ -840,8 +840,289 @@ router.post('/getfind2', OperacionesController.get_find2);
  *               success: false
  */
 router.get('/getcontratostrafico', OperacionesController.get_contratostrafico);
+/**
+ * @swagger
+ * /operaciones/getcontratostraficocritico:
+ *   get:
+ *     summary: Obtiene contratos de tráfico crítico.
+ *     description: Recupera una lista de contratos que están en estado crítico con detalles de ubicación, tiempo y más información relacionada. El usuario debe estar autenticado para realizar esta solicitud.
+ *     tags:
+ *       - Operaciones
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Lista de contratos en tráfico crítico recuperada exitosamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la operación fue exitosa.
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       ContractID:
+ *                         type: integer
+ *                         description: ID del contrato.
+ *                         example: 12345
+ *                       NombreEmpresa:
+ *                         type: string
+ *                         description: Nombre de la empresa.
+ *                         example: "Empresa XYZ"
+ *                       PlacaTruck:
+ *                         type: string
+ *                         description: Placa del camión.
+ *                         example: "ABC123"
+ *                       NombreConductor:
+ *                         type: string
+ *                         description: Nombre del conductor.
+ *                         example: "Juan Pérez"
+ *                       LastMsgLat:
+ *                         type: string
+ *                         description: Latitud del último mensaje.
+ *                         example: "-25.363882"
+ *                       LastMsgLong:
+ *                         type: string
+ *                         description: Longitud del último mensaje.
+ *                         example: "131.044922"
+ *                       LastReportUbica:
+ *                         type: string
+ *                         description: Última ubicación reportada.
+ *                         example: "Calle 123 (10 min)"
+ *                       Tiempo:
+ *                         type: string
+ *                         description: Tiempo transcurrido desde el último reporte.
+ *                         example: "5 minutos"
+ *                       Bateria:
+ *                         type: number
+ *                         description: Nivel de batería del dispositivo.
+ *                         example: 3.75
+ *       400:
+ *         description: Error en la solicitud.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Token is missing
+ *       401:
+ *         description: Error de autenticación. El token es inválido o ha expirado.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la operación fue exitosa.
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   description: Detalle del error de autenticación.
+ *                   example: "Failed to authenticate token"
+ *       500:
+ *         description: Error interno del servidor.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la operación fue exitosa.
+ *                   example: false
+ */
 
 router.get('/getcontratostraficocritico', OperacionesController.get_contratostraficocritico);
+/**
+ * @swagger
+ * /operaciones/getlatlngcontrato:
+ *   post:
+ *     summary: Obtiene la latitud y longitud de un contrato específico.
+ *     description: Recupera la última latitud y longitud asociada a un contrato proporcionado. El usuario debe estar autenticado para realizar esta solicitud.
+ *     tags:
+ *       - Operaciones
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       description: Contrato para el cual se solicita la latitud y longitud.
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               contrato:
+ *                 type: string
+ *                 description: ID del contrato.
+ *                 example: "12345"
+ *     responses:
+ *       200:
+ *         description: Latitud y longitud del contrato recuperadas exitosamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la operación fue exitosa.
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       LastMsgLat:
+ *                         type: string
+ *                         description: Última latitud registrada.
+ *                         example: "-25.363882"
+ *                       LastMsgLong:
+ *                         type: string
+ *                         description: Última longitud registrada.
+ *                         example: "131.044922"
+ *       400:
+ *         description: Error en la solicitud.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Token is missing
+ *       401:
+ *         description: Error de autenticación. El token es inválido o ha expirado.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la operación fue exitosa.
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   description: Detalle del error de autenticación.
+ *                   example: "Failed to authenticate token"
+ *       500:
+ *         description: Error interno del servidor.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la operación fue exitosa.
+ *                   example: false
+ */
+
+router.post('/getlatlngcontrato', OperacionesController.get_latlngcontrato);
+/**
+ * @swagger
+ * /operaciones/getinfocontrato:
+ *   post:
+ *     summary: Obtiene la información detallada de un contrato.
+ *     description: Recupera información clave asociada a un contrato específico, como el dispositivo asignado, el estado del servicio y la finalización del contrato.
+ *     tags:
+ *       - Operaciones
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       description: ID del contrato para el cual se solicita la información.
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               contrato:
+ *                 type: string
+ *                 description: ID del contrato.
+ *                 example: "12345"
+ *     responses:
+ *       200:
+ *         description: Información del contrato recuperada exitosamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la operación fue exitosa.
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       Dispositivo:
+ *                         type: string
+ *                         description: ID del dispositivo asignado.
+ *                         example: "98765"
+ *                       ComienzoServicio:
+ *                         type: string
+ *                         format: date-time
+ *                         description: Fecha y hora de inicio del servicio.
+ *                         example: "2023-09-15T08:30:00"
+ *                       backup_:
+ *                         type: string
+ *                         description: Indica si el contrato tiene respaldo.
+ *                         example: "NO"
+ *                       FinalServicio:
+ *                         type: string
+ *                         format: date-time
+ *                         description: Fecha y hora de finalización del servicio.
+ *                         example: "2023-09-15T18:30:00"
+ *                       isActive:
+ *                         type: boolean
+ *                         description: Indica si el contrato está activo.
+ *                         example: true
+ *                       FKLokTipoEquipo:
+ *                         type: string
+ *                         description: Tipo de equipo asignado al contrato.
+ *                         example: "GPS Tracker"
+ *       400:
+ *         description: Error en la solicitud.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Token is missing
+ *       401:
+ *         description: Error de autenticación. El token es inválido o ha expirado.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la operación fue exitosa.
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   description: Detalle del error de autenticación.
+ *                   example: "Failed to authenticate token"
+ *       500:
+ *         description: Error interno del servidor.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la operación fue exitosa.
+ *                   example: false
+ */
+
+router.post('/getinfocontrato', OperacionesController.get_infocontrato);
 /**
  * @swagger
  * /operaciones/updatecontratotrayecto:

@@ -512,6 +512,59 @@ controller.get_comprobantevalitronics = async (req, res) => {
 
 }
 
+controller.get_latlngcontrato = async (req, res) => {
+    try{
+        var token = req.headers.authorization;
+        if (!token) {
+            return res.json({ success: false, message: 'Token is missing' });
+        }else{
+            token = req.headers.authorization.split(' ')[1];
+            jwt.verify(token, 'secret_key', async (err, decoded) => {
+                if (err) {
+                    res.json({ success: false, message: 'Failed to authenticate token' });
+                } else {
+                    var contrato=req.body.contrato;
+                    var consulta= "select LastMsgLat, LastMsgLong  from LokContractID where ContractID = '" + contrato + "'";
+                    let resultado=await sqlconfig.query(consulta);
+                    res.json({success : true, data : resultado.recordsets[0]});
+                }
+            });
+        }
+    }catch(err){
+        res.json({success : false});
+    }
+
+}
+
+controller.get_infocontrato = async (req, res) => {
+    try{
+        var token = req.headers.authorization;
+        if (!token) {
+            return res.json({ success: false, message: 'Token is missing' });
+        }else{
+            token = req.headers.authorization.split(' ')[1];
+            jwt.verify(token, 'secret_key', async (err, decoded) => {
+                if (err) {
+                    res.json({ success: false, message: 'Failed to authenticate token' });
+                } else {
+                    var contrato=req.body.contrato;
+                    var consulta= "SELECT FKLokDeviceId as Dispositivo, ";
+                    consulta += "InicioServicio AS ComienzoServicio, CASE WHEN ISNULL(FechaHoraFin, DATEADD(hh,2,GETDATE())) >= '2016-05-01 00:00:00' THEN 'NO' ELSE 'SI' END AS backup_, ";
+                    consulta += "ISNULL(FechaHoraFin, DATEADD(hh,2,GETDATE())) AS FinalServicio, LokContractId.Active as isActive, FKLokTipoEquipo  ";
+                    consulta += "FROM LokContractID ";
+                    consulta += "LEFT JOIN LokDeviceID ON FKLokDeviceID = DeviceID ";
+                    consulta += "WHERE ContractID = '" + contrato + "'";
+                    let resultado=await sqlconfig.query(consulta);
+                    res.json({success : true, data : resultado.recordsets[0]});
+                }
+            });
+        }
+    }catch(err){
+        res.json({success : false});
+    }
+
+}
+
 // FUNCION QUE RETORNA EL LISTADO DE REPORTES DE TRAFICO DE UN CONTRATO
 controller.get_reportescontroldevice = async (req, res) => {
     try{
