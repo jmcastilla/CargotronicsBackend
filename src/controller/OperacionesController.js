@@ -39,7 +39,7 @@ controller.list_historicos = async (req, res) => {
                     "ISNULL(c.FKTrayecto, 0) as trayecto, r.DescripcionRuta, t.DescripcionTrayecto, c.ContainerNum, c.NombreConductor, "+
                     "c.Ref, tp.NombreTranspo, c.MovilConductor, c.PlacaTrailer, CONVERT(varchar,DATEADD(minute,0,c.FechaHoraInicio),20) as fechainicio, "+
                     "ISNULL(CONVERT(varchar,DATEADD(minute,0,c.FechaHoraFin),20), CONVERT(varchar,DATEADD(minute,"+decoded.diffhorario+",GETDATE()),20)) as fechafin, c.LastMsgLat, c.LastMsgLong, c.Active, d.Locked, ISNULL(t.DistanciaReal,0) as DistanciaCompleta, t.Origen, d.FKLokTipoEquipo, "+
-                    "c.LastReportUbica, c.LastReportTime, dbo.Tiempo3(DATEDIFF(MI, CASE WHEN primer_cierre IS NULL THEN InicioServicio ELSE primer_cierre END, CASE WHEN Active = 1 THEN DATEADD(HH, 2, GETDATE()) ELSE CASE WHEN ult_apertura IS NULL THEN FechaHoraFin ELSE ult_apertura END END)) AS TiempoServ FROM LokcontractID as c "+
+                    "c.LastReportNota, c.LastReportUbica, c.LastReportTime, dbo.Tiempo3(DATEDIFF(MI, CASE WHEN primer_cierre IS NULL THEN InicioServicio ELSE primer_cierre END, CASE WHEN Active = 1 THEN DATEADD(HH, 2, GETDATE()) ELSE CASE WHEN ult_apertura IS NULL THEN FechaHoraFin ELSE ult_apertura END END)) AS TiempoServ FROM LokcontractID as c "+
                     "INNER JOIN LokDeviceID as d ON d.DeviceID = c.FKLokDeviceID "+
                     "LEFT JOIN ICEmpresa as e ON e.IdEmpresa = c.FKICEmpresa "+
                     "LEFT JOIN ICRutas as r ON r.IdRuta = c.FKICRutas "+
