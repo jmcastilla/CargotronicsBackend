@@ -60,6 +60,42 @@ controller.list_historicos = async (req, res) => {
 
 }
 
+controller.get_contratounico = async (req, res) => {
+    try{
+        var token = req.headers.authorization;
+        if (!token) {
+          	return res.json({ success: false, message: 'Token is missing' });
+      	}else{
+            token = req.headers.authorization.split(' ')[1];
+            jwt.verify(token, 'secret_key', async (err, decoded) => {
+                if (err) {
+                    res.json({ success: false, message: 'Failed to authenticate token' });
+                } else {
+                    var contrato=req.body.contrato;
+
+                    var consulta= "SELECT ContractID, FKLokDeviceID, e.NombreEmpresa, c.PlacaTruck, '"+decoded.username+"' as username, "+
+                    "CONVERT(varchar,DATEADD(MINUTE,0,c.FechaHoraInicio),20) as fecha, CONCAT(c.LastMsgLat,',',c.LastMsgLong) as pos, "+
+                    "ISNULL(c.FKTrayecto, 0) as trayecto, r.DescripcionRuta, t.DescripcionTrayecto, c.ContainerNum, c.NombreConductor, "+
+                    "c.Ref, tp.NombreTranspo, c.MovilConductor, c.PlacaTrailer, CONVERT(varchar,DATEADD(minute,0,c.FechaHoraInicio),20) as fechainicio, "+
+                    "ISNULL(CONVERT(varchar,DATEADD(minute,0,c.FechaHoraFin),20), CONVERT(varchar,DATEADD(minute,"+decoded.diffhorario+",GETDATE()),20)) as fechafin, c.LastMsgLat, c.LastMsgLong, c.Active, d.Locked, ISNULL(t.DistanciaReal,0) as DistanciaCompleta, t.Origen, d.FKLokTipoEquipo, "+
+                    "c.LastReportNota, c.LastReportUbica, c.LastReportTime, dbo.Tiempo3(DATEDIFF(MI, CASE WHEN primer_cierre IS NULL THEN InicioServicio ELSE primer_cierre END, CASE WHEN Active = 1 THEN DATEADD(HH, 2, GETDATE()) ELSE CASE WHEN ult_apertura IS NULL THEN FechaHoraFin ELSE ult_apertura END END)) AS TiempoServ FROM LokcontractID as c "+
+                    "INNER JOIN LokDeviceID as d ON d.DeviceID = c.FKLokDeviceID "+
+                    "LEFT JOIN ICEmpresa as e ON e.IdEmpresa = c.FKICEmpresa "+
+                    "LEFT JOIN ICRutas as r ON r.IdRuta = c.FKICRutas "+
+                    "LEFT JOIN Trayectos as t ON c.FKTrayecto =  t.IDTrayecto "+
+                    "LEFT JOIN ICTransportadora as tp ON tp.IdTransportadora = c.FKICTransportadora "+
+                    "WHERE c.ContractID='"+contrato+"'";
+                    let resultado=await sqlconfig.query(consulta);
+                    res.json({success : true, data : resultado.recordsets[0]});
+                }
+            });
+        }
+    }catch(err){
+        res.json({success : false});
+    }
+
+}
+
 // FUNCION QUE RETORNA EL LISTADO DE TRAYECTOS
 controller.get_eventos = async (req, res) => {
     try{
@@ -277,6 +313,7 @@ controller.get_contratostrafico = async (req, res) => {
         res.json({success : false});
     }
 }
+
 
 // FUNCION QUE RETORNA EL LISTADO DE CONTRATOS CRITICO, GRILLA DE TRAFICO
 controller.get_contratostraficocritico = async (req, res) => {

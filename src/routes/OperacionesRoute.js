@@ -590,6 +590,202 @@ router.get('/getreportesbi', OperacionesController.get_reportesBI);
 router.post('/gethistoricos', OperacionesController.list_historicos);
 /**
  * @swagger
+ * /operaciones/getcontratounico:
+ *   post:
+ *     summary: Obtiene información detallada de un contrato único.
+ *     description: Recupera información relacionada a un contrato único, como detalles del vehículo, conductor, ubicación y tiempos de servicio.
+ *     tags:
+ *       - Operaciones
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       description: ID del contrato para obtener la información.
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               contrato:
+ *                 type: string
+ *                 description: ID del contrato.
+ *                 example: "12345"
+ *     responses:
+ *       200:
+ *         description: Información del contrato recuperada exitosamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la operación fue exitosa.
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       ContractID:
+ *                         type: string
+ *                         description: ID del contrato.
+ *                         example: "12345"
+ *                       FKLokDeviceID:
+ *                         type: string
+ *                         description: ID del dispositivo asociado.
+ *                         example: "98765"
+ *                       NombreEmpresa:
+ *                         type: string
+ *                         description: Nombre de la empresa.
+ *                         example: "Transportes XYZ"
+ *                       PlacaTruck:
+ *                         type: string
+ *                         description: Placa del camión.
+ *                         example: "ABC123"
+ *                       username:
+ *                         type: string
+ *                         description: Nombre de usuario que hizo la consulta.
+ *                         example: "admin"
+ *                       fecha:
+ *                         type: string
+ *                         format: date-time
+ *                         description: Fecha y hora de la consulta.
+ *                         example: "2023-09-15T08:30:00"
+ *                       pos:
+ *                         type: string
+ *                         description: Ubicación (latitud, longitud).
+ *                         example: "10.123456,-84.123456"
+ *                       trayecto:
+ *                         type: integer
+ *                         description: ID del trayecto.
+ *                         example: 2
+ *                       DescripcionRuta:
+ *                         type: string
+ *                         description: Descripción de la ruta.
+ *                         example: "Ruta Norte"
+ *                       DescripcionTrayecto:
+ *                         type: string
+ *                         description: Descripción del trayecto.
+ *                         example: "Trayecto Principal"
+ *                       ContainerNum:
+ *                         type: string
+ *                         description: Número del contenedor.
+ *                         example: "C12345"
+ *                       NombreConductor:
+ *                         type: string
+ *                         description: Nombre del conductor.
+ *                         example: "Juan Pérez"
+ *                       Ref:
+ *                         type: string
+ *                         description: Referencia del contrato.
+ *                         example: "REF-001"
+ *                       NombreTranspo:
+ *                         type: string
+ *                         description: Nombre de la empresa transportadora.
+ *                         example: "Transportadora ABC"
+ *                       MovilConductor:
+ *                         type: string
+ *                         description: Número de móvil del conductor.
+ *                         example: "+50612345678"
+ *                       PlacaTrailer:
+ *                         type: string
+ *                         description: Placa del remolque.
+ *                         example: "DEF456"
+ *                       fechainicio:
+ *                         type: string
+ *                         format: date-time
+ *                         description: Fecha y hora de inicio del servicio.
+ *                         example: "2023-09-15T08:30:00"
+ *                       fechafin:
+ *                         type: string
+ *                         format: date-time
+ *                         description: Fecha y hora de fin del servicio.
+ *                         example: "2023-09-15T18:30:00"
+ *                       LastMsgLat:
+ *                         type: string
+ *                         description: Última latitud reportada.
+ *                         example: "10.123456"
+ *                       LastMsgLong:
+ *                         type: string
+ *                         description: Última longitud reportada.
+ *                         example: "-84.123456"
+ *                       Active:
+ *                         type: boolean
+ *                         description: Indica si el contrato está activo.
+ *                         example: true
+ *                       Locked:
+ *                         type: boolean
+ *                         description: Indica si el dispositivo está bloqueado.
+ *                         example: false
+ *                       DistanciaCompleta:
+ *                         type: number
+ *                         format: float
+ *                         description: Distancia total recorrida en el trayecto.
+ *                         example: 150.75
+ *                       Origen:
+ *                         type: string
+ *                         description: Origen del trayecto.
+ *                         example: "San José"
+ *                       FKLokTipoEquipo:
+ *                         type: string
+ *                         description: Tipo de equipo asociado al contrato.
+ *                         example: "GPS Tracker"
+ *                       LastReportNota:
+ *                         type: string
+ *                         description: Última nota reportada.
+ *                         example: "Todo en orden"
+ *                       LastReportUbica:
+ *                         type: string
+ *                         description: Última ubicación reportada.
+ *                         example: "Punto A"
+ *                       LastReportTime:
+ *                         type: string
+ *                         format: date-time
+ *                         description: Última fecha y hora del reporte.
+ *                         example: "2023-09-15T08:30:00"
+ *                       TiempoServ:
+ *                         type: string
+ *                         description: Tiempo total de servicio.
+ *                         example: "3 horas 15 minutos"
+ *       400:
+ *         description: Error en la solicitud.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Token is missing
+ *       401:
+ *         description: Error de autenticación. El token es inválido o ha expirado.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la operación fue exitosa.
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   description: Detalle del error de autenticación.
+ *                   example: "Failed to authenticate token"
+ *       500:
+ *         description: Error interno del servidor.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la operación fue exitosa.
+ *                   example: false
+ */
+
+router.post('/getcontratounico', OperacionesController.get_contratounico);
+/**
+ * @swagger
  * /operaciones/savetrayecto:
  *   post:
  *     summary: Guardar o actualizar trayecto
