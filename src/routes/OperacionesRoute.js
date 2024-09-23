@@ -1882,6 +1882,67 @@ router.get('/getroles', OperacionesController.get_roles);
  *               success: false
  */
 router.get('/getusuarios', OperacionesController.get_usuarios);
+/**
+ * @swagger
+ * /operaciones/getproyectos:
+ *   get:
+ *     summary: Obtiene la lista de proyectos.
+ *     description: Recupera la información de proyectos. Si el token pertenece a un usuario con un proyecto específico, solo devuelve ese proyecto.
+ *     tags:
+ *       - Operaciones
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Lista de proyectos recuperada exitosamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la operación fue exitosa.
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       IDProyecto:
+ *                         type: integer
+ *                         description: ID del proyecto.
+ *                         example: 1
+ *                       Descripcion:
+ *                         type: string
+ *                         description: Descripción del proyecto.
+ *                         example: "Proyecto A"
+ *       400:
+ *         description: Error en la solicitud, falta el token.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Token is missing
+ *       401:
+ *         description: Error de autenticación, token inválido o expirado.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Failed to authenticate token
+ *       500:
+ *         description: Error interno del servidor.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la operación fue exitosa.
+ *                   example: false
+ */
 
 router.get('/getproyectos', OperacionesController.get_proyectos);
 
