@@ -1883,5 +1883,7 @@ router.get('/getroles', OperacionesController.get_roles);
  */
 router.get('/getusuarios', OperacionesController.get_usuarios);
 
+router.get('/getproyectos', OperacionesController.get_proyectos);
+
 
 module.exports = router;

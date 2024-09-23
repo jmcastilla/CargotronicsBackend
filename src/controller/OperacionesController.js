@@ -614,7 +614,7 @@ controller.get_reportescontroldevice = async (req, res) => {
                 if (err) {
                     res.json({ success: false, message: 'Failed to authenticate token' });
                 } else {
-                    var proyecto=decoded.proyecto;
+                    var proyecto=req.body.proyecto;
                     var idcliente=decoded.empresaprincipal;
                     var utcServidor=decoded.diffhorario;
                     var filtro=req.body.filtro;
@@ -669,6 +669,33 @@ controller.get_reportescontroldevice = async (req, res) => {
                         consulta += " ORDER BY DATEDIFF(SECOND, DATEADD(MINUTE,-"+utcServidor+", PositionTime), UltActualizacionDevice) DESC ";
                     }
                     console.log(consulta);
+                    let resultado=await sqlconfig.query(consulta);
+                    res.json({success : true, data : resultado.recordsets[0]});
+                }
+            });
+        }
+    }catch(err){
+        res.json({success : false});
+    }
+
+}
+
+controller.get_proyectos = async (req, res) => {
+    try{
+        var token = req.headers.authorization;
+        if (!token) {
+            res.json({ success: false, message: 'Token is missing' });
+        }else{
+            token = req.headers.authorization.split(' ')[1];
+            jwt.verify(token, 'secret_key', async (err, decoded) => {
+                if (err) {
+                    res.json({ success: false, message: 'Failed to authenticate token' });
+                } else {
+                    var proyecto=decoded.proyecto;
+                    var consulta = "SELECT IDProyecto, Descripcion FROM LokProyectos";
+                    if(proyecto !== 1){
+                      consulta +=" WHERE IDProyecto="+proyecto;
+                    }
                     let resultado=await sqlconfig.query(consulta);
                     res.json({success : true, data : resultado.recordsets[0]});
                 }
