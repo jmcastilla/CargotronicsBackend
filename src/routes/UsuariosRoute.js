@@ -920,3 +920,5 @@ router.post('/inhabilitarusuario', UsuariosController.inhabilitar_usuario);
  */
 
 router.post('/insertusuario', UsuariosController.insert_usuario);
+
+module.exports = router;
