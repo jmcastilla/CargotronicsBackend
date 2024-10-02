@@ -72,12 +72,14 @@ const solicitudesRouters = require('./routes/SolicitudesRoute');
 const operacionesRouters = require('./routes/OperacionesRoute');
 const empresasRouters = require('./routes/EmpresasRoute');
 const dianRouters = require('./routes/DianRoute');
+const usuariosRouters = require('./routes/UsuariosRoute');
 app.use('/contratos', contratosRouters);
 app.use('/maestros', maestrosRouters);
 app.use('/solicitudes', solicitudesRouters);
 app.use('/operaciones', operacionesRouters);
 app.use('/empresas', empresasRouters);
 app.use('/dian', dianRouters);
+app.use('/usuarios', usuariosRouters);
 
 
 app.post('/editar-excel', async (req, res) => {
@@ -181,7 +183,7 @@ app.post('/login', async (req, res) =>{
         let pass=req.body.pass;
         var consulta= "SELECT u.Pwd, u.Salt, u.FKProyecto, p.DiferenciaServidor, p.DiferenciaHorariaM, "+
         "u.RolTrafico, u.Trafico, ISNULL(p.ProyectoPrincipal, 1) as ownr, ISNULL(p.varidcliente, 2) as varidcliente, "+
-        "e.IdEmpresa, ISNULL(clientede, 0) as clientede, p.TimeReload FROM ICUsers as u "+
+        "e.IdEmpresa, ISNULL(clientede, 0) as clientede, p.TimeReload, u.tipoUser FROM ICUsers as u "+
         "INNER JOIN ICEmpresa as e on e.IdEmpresa = u.FKICEmpresa "+
         "INNER JOIN LokProyectos as p on p.IDProyecto = u.FKProyecto "+
         "WHERE u.IdUser='"+user+"' and u.Activo=1";
@@ -205,6 +207,7 @@ app.post('/login', async (req, res) =>{
                     empresaprincipal: resultado.recordset[0].varidcliente,
                     idempresa: resultado.recordset[0].IdEmpresa,
                     idcliente: resultado.recordset[0].clientede,
+                    tipouser: resultado.recordset[0].tipoUser,
                     server: sqlconfig.server
                 };
                 const token = jwt.sign(tokenPayload, 'secret_key', { expiresIn: '1h' });
