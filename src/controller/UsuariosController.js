@@ -344,3 +344,5 @@ function toBase32StringSuitableForDirName(buffer) {
 
     return output;
 }
+
+module.exports = controller;
