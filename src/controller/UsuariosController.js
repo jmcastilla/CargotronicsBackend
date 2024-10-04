@@ -132,6 +132,7 @@ controller.get_listaRolusuarios = async (req, res) => {
                         }
                     }
                     consulta+= " ORDER BY NombreRol ";
+                    console.log(consulta);
                     let resultado=await sqlconfig.query(consulta);
                     res.json({success : true, data : resultado.recordset});
                 }
