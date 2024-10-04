@@ -210,6 +210,7 @@ app.post('/login', async (req, res) =>{
                     tipouser: resultado.recordset[0].tipoUser,
                     server: sqlconfig.server
                 };
+                console.log(resultado.recordset[0].tipoUser);
                 const token = jwt.sign(tokenPayload, 'secret_key', { expiresIn: '1h' });
                 res.json({success : true, entorno: sqlconfig.server, timereload:resultado.recordset[0].TimeReload, proyecto:resultado.recordset[0].FKProyecto, token});
             }else{
