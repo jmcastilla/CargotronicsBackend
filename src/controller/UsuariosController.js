@@ -45,7 +45,7 @@ controller.get_listaproyectos = async (req, res) => {
                     res.json({ success: false, message: 'Failed to authenticate token' });
                 } else {
                     var consulta= "select * from LokProyectos";
-                    if(decode.proyecto !== 1){
+                    if(decoded.proyecto !== 1){
                         consulta+=" where IDProyecto = " + decoded.proyecto + " or ProyectoOwner = " + decoded.proyecto;
                     }
                     consulta+=" ORDER BY Descripcion ASC ";
