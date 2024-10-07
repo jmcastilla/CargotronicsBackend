@@ -920,5 +920,201 @@ router.post('/inhabilitarusuario', UsuariosController.inhabilitar_usuario);
  */
 
 router.post('/insertusuario', UsuariosController.insert_usuario);
+/**
+ * @swagger
+ * /usuarios/updateusuario:
+ *   post:
+ *     summary: Actualiza los datos de un usuario en el sistema.
+ *     description: Modifica los datos de un usuario existente en función de la información proporcionada.
+ *     tags:
+ *       - Usuarios
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               IdUser:
+ *                 type: string
+ *                 description: Identificador único del usuario.
+ *                 example: "user123"
+ *               FKICEmpresa:
+ *                 type: string
+ *                 description: ID de la empresa asociada al usuario.
+ *                 example: "empresa001"
+ *               tipouser:
+ *                 type: integer
+ *                 description: Tipo de usuario (rol).
+ *                 example: 1
+ *               FKProyecto:
+ *                 type: string
+ *                 description: ID del proyecto al que pertenece el usuario.
+ *                 example: "proyecto001"
+ *               Pwd:
+ *                 type: string
+ *                 description: Contraseña del usuario. Se actualizará si el campo "cambiar" es verdadero.
+ *                 example: "newpassword123"
+ *               Inventario:
+ *                 type: boolean
+ *                 description: Indica si el usuario tiene acceso a inventario.
+ *                 example: true
+ *               Geocerca:
+ *                 type: boolean
+ *                 description: Indica si el usuario tiene acceso a geocerca.
+ *                 example: true
+ *               CreacionRutas:
+ *                 type: boolean
+ *                 description: Indica si el usuario puede crear rutas.
+ *                 example: true
+ *               Trafico:
+ *                 type: boolean
+ *                 description: Indica si el usuario tiene acceso a tráfico.
+ *                 example: true
+ *               ipfija:
+ *                 type: string
+ *                 description: Dirección IP fija del usuario.
+ *                 example: "192.168.1.1"
+ *               RolTrafico:
+ *                 type: string
+ *                 description: Rol de tráfico del usuario.
+ *                 example: "Rol1"
+ *               comando:
+ *                 type: string
+ *                 description: Comando asociado al usuario.
+ *                 example: "Comando1"
+ *               NombreCompleto:
+ *                 type: string
+ *                 description: Nombre completo del usuario.
+ *                 example: "Juan Pérez"
+ *               FKIp:
+ *                 type: string
+ *                 description: ID de la dirección IP asociada al usuario.
+ *                 example: "direccionIp001"
+ *               CorreoUsers:
+ *                 type: string
+ *                 description: Correo electrónico del usuario.
+ *                 example: "juan.perez@example.com"
+ *               EmpresaInventario:
+ *                 type: string
+ *                 description: Nombre de la empresa asociada al inventario.
+ *                 example: "Empresa XYZ"
+ *               cambiar:
+ *                 type: boolean
+ *                 description: Indica si se debe actualizar la contraseña del usuario.
+ *                 example: true
+ *     responses:
+ *       200:
+ *         description: Usuario actualizado exitosamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la operación fue exitosa.
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   description: Resultado de la operación de actualización.
+ *                   items:
+ *                     type: object
+ *       400:
+ *         description: Error en la solicitud, falta el token.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Token is missing
+ *       401:
+ *         description: Error de autenticación, token inválido o expirado.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Failed to authenticate token
+ *       500:
+ *         description: Error interno del servidor.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la operación fue exitosa.
+ *                   example: false
+ */
+
+router.post('/updateusuario', UsuariosController.update_usuario);
+/**
+ * @swagger
+ * /usuarios/updateusuariopass:
+ *   post:
+ *     summary: Actualiza la contraseña del usuario autenticado.
+ *     description: Permite que un usuario autenticado actualice su contraseña.
+ *     tags:
+ *       - Usuarios
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               Pwd:
+ *                 type: string
+ *                 description: Nueva contraseña del usuario.
+ *                 example: "newSecurePassword123"
+ *     responses:
+ *       200:
+ *         description: Contraseña actualizada exitosamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la operación fue exitosa.
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   description: Resultado de la operación de actualización.
+ *                   items:
+ *                     type: object
+ *       400:
+ *         description: Error en la solicitud, falta el token.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Token is missing
+ *       401:
+ *         description: Error de autenticación, token inválido o expirado.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Failed to authenticate token
+ *       500:
+ *         description: Error interno del servidor.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la operación fue exitosa.
+ *                   example: false
+ */
+
+router.post('/updateusuariopass', UsuariosController.update_usuariopass);
 
 module.exports = router;

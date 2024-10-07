@@ -311,6 +311,86 @@ controller.insert_usuario = async (req, res) => {
     }
 }
 
+controller.update_usuario = async (req, res) => {
+    try{
+        var token = req.headers.authorization;
+        if (!token) {
+            return res.json({ success: false, message: 'Token is missing' });
+        }else{
+            token = req.headers.authorization.split(' ')[1];
+            jwt.verify(token, 'secret_key', async (err, decoded) => {
+                if (err) {
+                    res.json({ success: false, message: 'Failed to authenticate token' });
+                } else {
+                    var idUser=req.body.IdUser;
+                    var fKICEmpresa = req.body.FKICEmpresa;
+                    var tipouser = req.body.tipouser;
+                    var fkproyecto = req.body.FKProyecto;
+                    var salt = getRandomFileName();
+                    var password = hashString(req.body.Pwd, salt);
+                    var inventario = req.body.Inventario;
+                    var geocerca = req.body.Geocerca;
+                    var creacionRutas = req.body.CreacionRutas;
+                    var trafico = req.body.Trafico;
+                    var ipfija = req.body.ipfija;
+                    var rolTrafico = req.body.RolTrafico;
+                    var comando = req.body.comando;
+                    var nombreCompleto = req.body.NombreCompleto;
+                    var fKIp = req.body.FKIp;
+                    var correoUsers = req.body.CorreoUsers;
+                    var empresaInventario = req.body.EmpresaInventario;
+                    var cambiar = req.body.cambiar;
+
+                    var consulta = `
+                    UPDATE ICUsers SET FKICEmpresa ='${fKICEmpresa}', tipoUser ='${tipouser}', FKProyecto ='${fkproyecto}',
+                    Inventario ='${inventario}', Geocerca ='${geocerca}', CreacionRutas ='${creacionRutas}', Trafico ='${trafico}',
+                    ipfija ='${ipfija}', RolTrafico ='${rolTrafico}', comando ='${comando}', NombreCompleto ='${nombreCompleto}',
+                    FKIp ='${fKIp}', CorreoUsers ='${correoUsers}', EmpresaInventario ='${empresaInventario}' WHERE IdUser ='${idUser}'`;
+
+                    if(cambiar){
+                      consulta = `
+                      UPDATE ICUsers SET Pwd ='${password}', Salt ='${salt}', FKICEmpresa ='${fKICEmpresa}', tipoUser ='${tipouser}', FKProyecto ='${fkproyecto}',
+                      Inventario ='${inventario}', Geocerca ='${geocerca}', CreacionRutas ='${creacionRutas}', Trafico ='${trafico}',
+                      ipfija ='${ipfija}', RolTrafico ='${rolTrafico}', comando ='${comando}', NombreCompleto ='${nombreCompleto}',
+                      FKIp ='${fKIp}', CorreoUsers ='${correoUsers}', EmpresaInventario ='${empresaInventario}' WHERE IdUser ='${idUser}'`;
+                    }
+
+                    res.json({success : true, data : await sqlconfig.query(consulta)});
+                }
+            });
+        }
+    }catch(err){
+        res.json({success : false});
+    }
+}
+
+controller.update_usuariopass = async (req, res) => {
+    try{
+        var token = req.headers.authorization;
+        if (!token) {
+            return res.json({ success: false, message: 'Token is missing' });
+        }else{
+            token = req.headers.authorization.split(' ')[1];
+            jwt.verify(token, 'secret_key', async (err, decoded) => {
+                if (err) {
+                    res.json({ success: false, message: 'Failed to authenticate token' });
+                } else {
+                    var idUser=decoded.username;
+                    var salt = getRandomFileName();
+                    var password = hashString(req.body.Pwd, salt);
+
+                    const consulta = `
+                      UPDATE ICUsers SET Pwd ='${password}', Salt ='${salt}' WHERE IdUser ='${idUser}'`;
+
+                    res.json({success : true, data : await sqlconfig.query(consulta)});
+                }
+            });
+        }
+    }catch(err){
+        res.json({success : false});
+    }
+}
+
 function getRandomFileName() {
     const array = crypto.randomBytes(10);
     let fileName = toBase32StringSuitableForDirName(array);
