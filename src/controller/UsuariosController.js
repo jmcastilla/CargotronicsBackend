@@ -282,7 +282,7 @@ controller.insert_usuario = async (req, res) => {
                     var tipouser = req.body.tipouser;
                     var fkproyecto = req.body.FKProyecto;
                     var salt = getRandomFileName();
-                    var password = req.body.Pwd;
+                    var password = hashString(req.body.Pwd, salt);
                     var inventario = req.body.Inventario;
                     var geocerca = req.body.Geocerca;
                     var creacionRutas = req.body.CreacionRutas;
@@ -295,16 +295,14 @@ controller.insert_usuario = async (req, res) => {
                     var correoUsers = req.body.CorreoUsers;
                     var empresaInventario = req.body.EmpresaInventario;
                     const consulta = `
-                      INSERT INTO ICUsers
-                      (IdUser, Pwd, FKICEmpresa, tipoUser, FKProyecto, Salt, Inventario, Geocerca, CreacionRutas, Trafico,
-                      ipfija, RolTrafico, comando, NombreCompleto, FKIp, CorreoUsers, EmpresaInventario)
-                      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-                    const values = [
-                      idUser, password, fKICEmpresa, tipouser, fkproyecto, salt, inventario, geocerca, creacionRutas, trafico,
-                      ipfija, rolTrafico, comando, nombreCompleto, fKIp, correoUsers, empresaInventario
-                    ];
+                    INSERT INTO ICUsers (IdUser, Pwd, FKICEmpresa, tipoUser, FKProyecto, Salt, Inventario, Geocerca, CreacionRutas, Trafico,
+                    ipfija, RolTrafico, comando, NombreCompleto, FKIp, CorreoUsers, EmpresaInventario)
+                    VALUES ('${idUser}', '${password}', '${fKICEmpresa}', '${tipouser}', '${fkproyecto}', '${salt}', '${inventario}',
+                    '${geocerca}', '${creacionRutas}', '${trafico}', '${ipfija}', '${rolTrafico}', '${comando}',
+                    '${nombreCompleto}', '${fKIp}', '${correoUsers}', '${empresaInventario}')`;
+                    console.log(consulta);
 
-                    res.json({success : true, data : await sqlconfig.query(consulta, values)});
+                    res.json({success : true, data : await sqlconfig.query(consulta)});
                 }
             });
         }
@@ -344,6 +342,14 @@ function toBase32StringSuitableForDirName(buffer) {
     }
 
     return output;
+}
+
+
+function hashString(pass, salt) {
+    const convertir = `${str}|${clave}`;
+    const sha256 = crypto.createHash('sha256');  // Crea un hash SHA256
+    const hash = sha256.update(convertir, 'utf8').digest('hex');  // Codifica a hexadecimales
+    return hash;
 }
 
 module.exports = controller;
