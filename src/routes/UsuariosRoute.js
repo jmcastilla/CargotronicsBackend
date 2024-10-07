@@ -1117,4 +1117,6 @@ router.post('/updateusuario', UsuariosController.update_usuario);
 
 router.post('/updateusuariopass', UsuariosController.update_usuariopass);
 
+router.post('/updateusuariopass2', UsuariosController.update_usuariopass2);
+
 module.exports = router;

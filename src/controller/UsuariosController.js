@@ -391,6 +391,33 @@ controller.update_usuariopass = async (req, res) => {
     }
 }
 
+controller.update_usuariopass2 = async (req, res) => {
+    try{
+        var token = req.headers.authorization;
+        if (!token) {
+            return res.json({ success: false, message: 'Token is missing' });
+        }else{
+            token = req.headers.authorization.split(' ')[1];
+            jwt.verify(token, 'secret_key', async (err, decoded) => {
+                if (err) {
+                    res.json({ success: false, message: 'Failed to authenticate token' });
+                } else {
+                    var idUser=req.body.idUser;
+                    var salt = getRandomFileName();
+                    var password = hashString(req.body.Pwd, salt);
+
+                    const consulta = `
+                      UPDATE ICUsers SET Pwd ='${password}', Salt ='${salt}' WHERE IdUser ='${idUser}'`;
+                    console.log(consulta);
+                    res.json({success : true, data : await sqlconfig.query(consulta)});
+                }
+            });
+        }
+    }catch(err){
+        res.json({success : false});
+    }
+}
+
 function getRandomFileName() {
     const array = crypto.randomBytes(10);
     let fileName = toBase32StringSuitableForDirName(array);
