@@ -346,7 +346,7 @@ function toBase32StringSuitableForDirName(buffer) {
 
 
 function hashString(pass, salt) {
-    const convertir = `${str}|${clave}`;
+    const convertir = `${pass}|${salt}`;
     const sha256 = crypto.createHash('sha256');  // Crea un hash SHA256
     const hash = sha256.update(convertir, 'utf8').digest('hex');  // Codifica a hexadecimales
     return hash;
