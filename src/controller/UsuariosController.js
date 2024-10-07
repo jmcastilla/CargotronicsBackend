@@ -230,9 +230,9 @@ controller.get_obtenerusuario = async (req, res) => {
                     res.json({ success: false, message: 'Failed to authenticate token' });
                 } else {
                     var nick= req.body.username;
-                    var consulta= "SELECT IdUser, Inventario, Geocerca, CreacionRutas, Trafico, ModificarDisp, ipfija, NombreEmpresa, Descripcion, NombreRol, comando, direccion_ip, Nombre_direccion, CorreoUsers  ";
-                    consulta += " FROM ICUsers INNER JOIN ICEmpresa ON FKICEmpresa = IdEmpresa INNER JOIN LokProyectos ON FKProyecto = IDProyecto ";
-                    consulta += " INNER JOIN LokRoles ON tipoUser = IDRol LEFT JOIN LokDireccionesIp ON id_direccion = FKIp WHERE IdUser = '" + nick + "'";
+                    var consulta= "SELECT IdUser, FKICEmpresa, RolTrafico, tipoUser, FKProyecto , Inventario,  GeoCerca, CreacionRutas, "+
+                    "Trafico, ModificarDisp, ipfija, comando, id_direccion, NombreCompleto, CorreoUsers, EmpresaInventario FROM ICUsers "+
+                    "LEFT JOIN LokDireccionesIp ON id_direccion = FKIp WHERE IdUser = '" + nick + "'";
                     let resultado=await sqlconfig.query(consulta);
                     res.json({success : true, data : resultado.recordset});
                 }
