@@ -255,7 +255,7 @@ controller.inhabilitar_usuario = async (req, res) => {
                     res.json({ success: false, message: 'Failed to authenticate token' });
                 } else {
                     var username=req.body.username;
-                    var consulta = "UPDATE ICUsers SET Pwd = '-' AND Activo = 0 WHERE IdUser ="+username;
+                    var consulta = "UPDATE ICUsers SET Pwd = '-', Activo = 0 WHERE IdUser ="+username;
 
                     res.json({success : true, data : await sqlconfig.query(consulta)});
                 }
