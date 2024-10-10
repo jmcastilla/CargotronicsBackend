@@ -1154,19 +1154,19 @@ router.post('/updateusuariopass', UsuariosController.update_usuariopass);
  *                   items:
  *                     type: object
  *                     properties:
- *                       bitAbrir:
+ *                       bitOpen:
  *                         type: boolean
  *                         description: Permiso para abrir la página.
  *                         example: true
- *                       bitCrear:
+ *                       bitInsert:
  *                         type: boolean
  *                         description: Permiso para crear en la página.
  *                         example: false
- *                       bitEditar:
+ *                       bitEdit:
  *                         type: boolean
  *                         description: Permiso para editar en la página.
  *                         example: true
- *                       bitEliminar:
+ *                       bitDelete:
  *                         type: boolean
  *                         description: Permiso para eliminar en la página.
  *                         example: false

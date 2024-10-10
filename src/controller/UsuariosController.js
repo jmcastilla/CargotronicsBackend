@@ -473,7 +473,7 @@ controller.get_configuracionPagina = async (req, res) => {
                 } else {
                     var pagina= req.body.pagina;
                     var rol= decoded.tipouser;
-                    var consulta= "SELECT bitAbrir, bitCrear, bitEditar, bitEliminar FROM LokPermisos WHERE IDPagina = " + pagina + " AND IDRol = " + rol;
+                    var consulta= "SELECT bitOpen, bitInsert, bitEdit, bitDelete FROM CtPermisos WHERE IdPagina = " + pagina + " AND IdRolP = " + rol;
                     let resultado=await sqlconfig.query(consulta);
                     res.json({success : true, data : resultado.recordset});
                 }
