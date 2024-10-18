@@ -26,7 +26,7 @@ controller.get_usuarios = async (req, res) => {
                     if(decoded.proyecto !== 1){
                       consulta+=" AND (p.IDProyecto = " + decoded.proyecto + " OR p.ProyectoOwner = " + decoded.proyecto + ")";
                     }
-                    if(decoded.tipoUser !== 1){
+                    if(decoded.tipouser !== 1){
                       consulta+=" AND r.Jerarquia > "+decoded.jerarquia;
                     }
                     console.log(consulta);
@@ -127,7 +127,7 @@ controller.get_listaRolusuarios = async (req, res) => {
                 } else {
                     var proyecto= req.body.proyecto;
                     var consulta= "SELECT IDRol, NombreRol FROM LokRoles ";
-                    if(decoded.tipoUser === 1){
+                    if(decoded.tipouser === 1){
                       consulta+="WHERE Jerarquia >="+decoded.jerarquia;
                     }else{
                       consulta+="WHERE Jerarquia >"+decoded.jerarquia;
