@@ -183,9 +183,10 @@ app.post('/login', async (req, res) =>{
         let pass=req.body.pass;
         var consulta= "SELECT u.Pwd, u.Salt, u.FKProyecto, p.DiferenciaServidor, p.DiferenciaHorariaM, "+
         "u.RolTrafico, u.Trafico, ISNULL(p.ProyectoPrincipal, 1) as ownr, ISNULL(p.varidcliente, 2) as varidcliente, "+
-        "e.IdEmpresa, ISNULL(clientede, 0) as clientede, p.TimeReload, u.tipoUser FROM ICUsers as u "+
+        "e.IdEmpresa, ISNULL(clientede, 0) as clientede, p.TimeReload, u.tipoUser, r.Jerarquia FROM ICUsers as u "+
         "INNER JOIN ICEmpresa as e on e.IdEmpresa = u.FKICEmpresa "+
         "INNER JOIN LokProyectos as p on p.IDProyecto = u.FKProyecto "+
+        "INNER JOIN LokRoles as r on r.IDRol = u.tipoUser "+
         "WHERE u.IdUser='"+user+"' and u.Activo=1";
         console.log(consulta);
         let resultado=await sqlconfig.query(consulta);
@@ -208,9 +209,10 @@ app.post('/login', async (req, res) =>{
                     idempresa: resultado.recordset[0].IdEmpresa,
                     idcliente: resultado.recordset[0].clientede,
                     tipouser: resultado.recordset[0].tipoUser,
+                    jerarquia: resultado.recordset[0].Jerarquia,
                     server: sqlconfig.server
                 };
-                console.log(resultado.recordset[0].tipoUser);
+                console.log("jerarquia="+resultado.recordset[0].Jerarquia);
                 const token = jwt.sign(tokenPayload, 'secret_key', { expiresIn: '1h' });
                 res.json({success : true, entorno: sqlconfig.server, timereload:resultado.recordset[0].TimeReload, proyecto:resultado.recordset[0].FKProyecto, token});
             }else{
