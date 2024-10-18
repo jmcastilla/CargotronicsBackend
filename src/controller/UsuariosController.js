@@ -23,6 +23,9 @@ controller.get_usuarios = async (req, res) => {
                     "LEFT JOIN LokRolTrafico as rt on rt.id_roltrafico=u.RolTrafico "+
                     "LEFT JOIN ICEmpresa as e on e.IdEmpresa=u.FKICEmpresa "+
                     "WHERE Activo=1";
+                    if(decoded.proyecto !== 1){
+                      consulta+=" AND (p.IDProyecto = " + decoded.proyecto + " OR p.ProyectoOwner = " + decoded.proyecto + ")";
+                    }
                     let resultado=await sqlconfig.query(consulta);
                     res.json({success : true, data : resultado.recordset});
                 }
