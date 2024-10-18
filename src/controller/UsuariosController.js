@@ -26,6 +26,7 @@ controller.get_usuarios = async (req, res) => {
                     if(decoded.proyecto !== 1){
                       consulta+=" AND (p.IDProyecto = " + decoded.proyecto + " OR p.ProyectoOwner = " + decoded.proyecto + ")";
                     }
+                    console.log(consulta);
                     let resultado=await sqlconfig.query(consulta);
                     res.json({success : true, data : resultado.recordset});
                 }
