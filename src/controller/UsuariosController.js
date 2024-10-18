@@ -26,6 +26,9 @@ controller.get_usuarios = async (req, res) => {
                     if(decoded.proyecto !== 1){
                       consulta+=" AND (p.IDProyecto = " + decoded.proyecto + " OR p.ProyectoOwner = " + decoded.proyecto + ")";
                     }
+                    if(decoded.tipoUser !== 1){
+                      consulta+=" AND r.Jerarquia > "+decoded.jerarquia;
+                    }
                     console.log(consulta);
                     let resultado=await sqlconfig.query(consulta);
                     res.json({success : true, data : resultado.recordset});
@@ -124,8 +127,12 @@ controller.get_listaRolusuarios = async (req, res) => {
                 } else {
                     var proyecto= req.body.proyecto;
                     var consulta= "SELECT IDRol, NombreRol FROM LokRoles ";
-                    console.log(decoded.tipouser+"   -    "+decoded.proyecto);
-                    if(decoded.tipouser === 9){
+                    if(decoded.tipoUser === 1){
+                      consulta+="WHERE Jerarquia >="+decoded.jerarquia;
+                    }else{
+                      consulta+="WHERE Jerarquia >"+decoded.jerarquia;
+                    }
+                    /*if(decoded.tipouser === 9){
                         if(decoded.proyecto === 9 || decoded.proyecto === 11){
                             consulta += " WHERE IDRol = 9 OR IDRol = 6 OR IDRol = 12 OR IDRol = 5 OR IDRol = 13 ";
                         }else{
@@ -135,7 +142,7 @@ controller.get_listaRolusuarios = async (req, res) => {
                         if(decoded.tipouser !== 1){
                             consulta += " WHERE IDRolPadre = " + decoded.tipouser;
                         }
-                    }
+                    }*/
                     consulta+= " ORDER BY NombreRol ";
                     console.log(consulta);
                     let resultado=await sqlconfig.query(consulta);
