@@ -749,7 +749,7 @@ app.post('/uploadvideo', upload.array('files'), async (req, res) => {
   }
 });
 
-const wss = new WebSocket.Server({ port: 443 });
+const wss = new WebSocket.Server({ port: 8080 });
 let lastSolicitudId = "2024-10-23 00:00:00"; // Variable para almacenar el último ID procesado
 
 wss.on('connection', (ws) => {
