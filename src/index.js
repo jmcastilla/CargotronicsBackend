@@ -758,6 +758,7 @@ wss.on('connection', (ws) => {
     // Función para consultar la base de datos
     const checkSolicitudes = async () => {
         try {
+          console.log(lastSolicitudId);
           var consulta="SELECT count(1) as total, CONVERT(VARCHAR(19), MAX(FechaHoraSolicitud), 120) AS maxId FROM LokSolicitudes WHERE FechaHoraSolicitud>'"+lastSolicitudId+"'";
           let resultado=await sqlconfig.query(consulta);
           console.log(consulta);
