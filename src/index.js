@@ -760,6 +760,7 @@ wss.on('connection', (ws) => {
         try {
           var consulta="SELECT count(1) as total, MAX(FechaHoraSolicitud) AS maxId FROM LokSolicitudes WHERE FechaHoraSolicitud>'"+lastSolicitudId+"'";
           let resultado=await sqlconfig.query(consulta);
+          console.log(resultado);
           if (resultado.recordset.length > 0) {
             const newSolicitudId = result.recordset[0].maxId;
             const count= result.recordset[0].total;
