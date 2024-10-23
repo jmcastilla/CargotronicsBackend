@@ -749,7 +749,7 @@ app.post('/uploadvideo', upload.array('files'), async (req, res) => {
   }
 });
 
-const wss = new WebSocket.Server({ port: 8080 });
+const wss = new WebSocket.Server({ port: 443 });
 let lastSolicitudId = "2024-10-23 00:00:00"; // Variable para almacenar el último ID procesado
 
 wss.on('connection', (ws) => {
@@ -763,14 +763,10 @@ wss.on('connection', (ws) => {
           console.log(consulta);
           console.log(resultado);
           if (resultado.recordset.length > 0) {
-            console.log("entro");
             const newSolicitudId = resultado.recordset[0].maxId;
-            console.log("newSolicitudId: "+newSolicitudId);
             const count= resultado.recordset[0].total;
-            console.log("count: "+count);
 
             if (count > 0) {
-              console.log("entro a count > 0");
               lastSolicitudId = newSolicitudId+".999";
               console.log('Nueva solicitud encontrada:', lastSolicitudId);
 
