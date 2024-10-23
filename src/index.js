@@ -776,10 +776,12 @@ wss.on('connection', (ws) => {
 
               // Enviar mensaje al frontend con la nueva actualización
               ws.send(JSON.stringify({
+                event: true,
                 message: 'Nueva solicitud'
               }));
             }else{
               ws.send(JSON.stringify({
+                event: false,
                 message: 'No hay solicitud'
               }));
             }
