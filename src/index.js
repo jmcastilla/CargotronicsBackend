@@ -758,18 +758,14 @@ wss.on('connection', (ws) => {
     // Función para consultar la base de datos
     const checkSolicitudes = async () => {
         try {
-          console.log(lastSolicitudId);
           var consulta="SELECT count(1) as total, CONVERT(VARCHAR(19), MAX(FechaHoraSolicitud), 120) AS maxId FROM LokSolicitudes WHERE FechaHoraSolicitud>'"+lastSolicitudId+"'";
           let resultado=await sqlconfig.query(consulta);
-          console.log(consulta);
-          console.log(resultado);
           if (resultado.recordset.length > 0) {
             const newSolicitudId = resultado.recordset[0].maxId;
             const count= resultado.recordset[0].total;
 
             if (count > 0) {
               lastSolicitudId = newSolicitudId+".999";
-              console.log('Nueva solicitud encontrada:', lastSolicitudId);
 
               // Enviar mensaje al frontend con la nueva actualización
               ws.send(JSON.stringify({
