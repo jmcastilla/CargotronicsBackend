@@ -780,7 +780,7 @@ wss.on('connection', (ws) => {
     };
 
     // Ejecutar la consulta cada 5 segundos
-    const intervalId = setInterval(checkSolicitudes, 5000);
+    const intervalId = setInterval(checkSolicitudes, 10000);
 
     ws.on('close', () => {
         console.log('Client disconnected');
