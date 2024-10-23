@@ -764,9 +764,9 @@ wss.on('connection', (ws) => {
           console.log(resultado);
           if (resultado.recordset.length > 0) {
             console.log("entro");
-            const newSolicitudId = result.recordset[0].maxId;
+            const newSolicitudId = resultado.recordset[0].maxId;
             console.log("newSolicitudId: "+newSolicitudId);
-            const count= result.recordset[0].total;
+            const count= resultado.recordset[0].total;
             console.log("count: "+count);
 
             if (count > 0) {
