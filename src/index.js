@@ -17,6 +17,7 @@ const net = require('net');
 const fs = require('fs');
 const { Readable } = require('stream');
 const {swaggerDocs} = require('./swagger');
+const WebSocket = require('ws');
 const PORT = 3002;
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage, limits: {fileSize: 100 * 1024 * 1024} });
@@ -746,6 +747,44 @@ app.post('/uploadvideo', upload.array('files'), async (req, res) => {
         responseSent = true;  // Set the flag to true to indicate response has been sent
       }
   }
+});
+
+const wss = new WebSocket.Server({ port: 8080 });
+let lastSolicitudId = "2024-10-23 00:00:00"; // Variable para almacenar el último ID procesado
+
+wss.on('connection', (ws) => {
+    console.log('Client connected via WebSocket');
+
+    // Función para consultar la base de datos
+    const checkSolicitudes = async () => {
+        try {
+          var consulta="SELECT count(1) as total, MAX(FechaHoraSolicitud) AS maxId FROM LokSolicitudes WHERE FechaHoraSolicitud>'"+lastSolicitudId+"'";
+          let resultado=await sqlconfig.query(consulta);
+          if (resultado.recordset.length > 0) {
+            const newSolicitudId = result.recordset[0].maxId;
+            const count= result.recordset[0].total;
+            if (count > 0) {
+              lastSolicitudId = newSolicitudId.replace('T', ' ');
+              console.log('Nueva solicitud encontrada:', lastSolicitudId);
+
+              // Enviar mensaje al frontend con la nueva actualización
+              ws.send(JSON.stringify({
+                message: 'Nueva solicitud'
+              }));
+            }
+          }
+        } catch (err) {
+          console.error('Error al consultar la base de datos:', err);
+        }
+    };
+
+    // Ejecutar la consulta cada 5 segundos
+    const intervalId = setInterval(checkSolicitudes, 5000);
+
+    ws.on('close', () => {
+        console.log('Client disconnected');
+        clearInterval(intervalId); // Limpiar el intervalo cuando el cliente se desconecta
+    });
 });
 
 
