@@ -778,6 +778,10 @@ wss.on('connection', (ws) => {
               ws.send(JSON.stringify({
                 message: 'Nueva solicitud'
               }));
+            }else{
+              ws.send(JSON.stringify({
+                message: 'No hay solicitud'
+              }));
             }
           }
         } catch (err) {
