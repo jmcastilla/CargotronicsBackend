@@ -771,7 +771,7 @@ wss.on('connection', (ws) => {
 
             if (count > 0) {
               console.log("entro a count > 0");
-              lastSolicitudId = newSolicitudId;
+              lastSolicitudId = newSolicitudId+".999";
               console.log('Nueva solicitud encontrada:', lastSolicitudId);
 
               // Enviar mensaje al frontend con la nueva actualización
