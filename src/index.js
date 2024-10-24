@@ -751,6 +751,66 @@ app.post('/uploadvideo', upload.array('files'), async (req, res) => {
 
 const wss = new WebSocket.Server({ port: 8080 });
 let lastSolicitudId = "2024-10-23 00:00:00"; // Variable para almacenar el último ID procesado
+let clients = []; // Array para almacenar los clientes conectados
+
+// Función para consultar la base de datos
+const checkSolicitudes = async () => {
+    try {
+        var consulta = "SELECT count(1) as total, CONVERT(VARCHAR(19), MAX(FechaHoraSolicitud), 120) AS maxId FROM LokSolicitudes WHERE FechaHoraSolicitud > '" + lastSolicitudId + "'";
+        let resultado = await sqlconfig.query(consulta);
+
+        if (resultado.recordset.length > 0) {
+            const newSolicitudId = resultado.recordset[0].maxId;
+            const count = resultado.recordset[0].total;
+
+            if (count > 0) {
+                console.log(lastSolicitudId + " - " + newSolicitudId);
+                lastSolicitudId = newSolicitudId + ".999";
+
+                // Enviar mensaje a todos los clientes conectados
+                broadcast({
+                    event: true,
+                    message: 'Nueva solicitud'
+                });
+            } else {
+                broadcast({
+                    event: false,
+                    message: 'No hay solicitud'
+                });
+            }
+        }
+    } catch (err) {
+        console.error('Error al consultar la base de datos:', err);
+    }
+};
+
+// Función para enviar mensajes a todos los clientes conectados
+const broadcast = (data) => {
+    clients.forEach((client) => {
+        if (client.readyState === WebSocket.OPEN) {
+            client.send(JSON.stringify(data));
+        }
+    });
+};
+
+// Evento cuando un cliente se conecta
+wss.on('connection', (ws) => {
+    console.log('Client connected via WebSocket');
+    clients.push(ws);
+
+    // Eliminar cliente cuando se desconecta
+    ws.on('close', () => {
+        console.log('Client disconnected');
+        clients = clients.filter(client => client !== ws); // Eliminar el cliente desconectado del array
+    });
+});
+
+// Ejecutar la consulta cada 10 segundos
+setInterval(checkSolicitudes, 10000);
+
+
+/*const wss = new WebSocket.Server({ port: 8080 });
+let lastSolicitudId = "2024-10-23 00:00:00"; // Variable para almacenar el último ID procesado
 
 wss.on('connection', (ws) => {
     console.log('Client connected via WebSocket');
@@ -792,7 +852,7 @@ wss.on('connection', (ws) => {
         console.log('Client disconnected');
         clearInterval(intervalId); // Limpiar el intervalo cuando el cliente se desconecta
     });
-});
+});*/
 
 
 app.listen(PORT, () =>{
