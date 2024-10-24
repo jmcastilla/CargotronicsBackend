@@ -798,14 +798,22 @@ const checkSolicitudes = async () => {
                     // Filtrar los datos para cada cliente según su idempresa
                     clients.forEach((client) => {
                         if (client.readyState === WebSocket.OPEN && client.decoded) {
-                            const filteredData = globalSolicitudesData.data.filter(solicitud => solicitud.FKICEmpresa === client.decoded.idempresa);
+                            let dataToSend;
+                            // Verificar si la idempresa del cliente es diferente de 2
+                            if (client.decoded.idempresa !== 2) {
+                                // Filtrar los datos para el cliente con idempresa diferente de 2
+                                dataToSend = globalSolicitudesData.data.filter(solicitud => solicitud.FKICEmpresa === client.decoded.idempresa);
+                            } else {
+                                // Si la idempresa es 2, enviar todos los datos sin filtrar
+                                dataToSend = globalSolicitudesData.data;
+                            }
 
                             // Enviar los datos filtrados al cliente
-                            if (filteredData.length > 0) {
+                            if (dataToSend.length > 0) {
                                 client.send(JSON.stringify({
                                     event: true,
                                     message: 'Nueva solicitud',
-                                    data: filteredData
+                                    data: dataToSend
                                 }));
                             } else {
                                 client.send(JSON.stringify({
