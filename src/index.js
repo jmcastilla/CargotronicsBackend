@@ -763,8 +763,9 @@ wss.on('connection', (ws) => {
           if (resultado.recordset.length > 0) {
             const newSolicitudId = resultado.recordset[0].maxId;
             const count= resultado.recordset[0].total;
-
+            console.log(resultado.recordset[0]);
             if (count > 0) {
+              console.log(lastSolicitudId+" - "+newSolicitudId);
               lastSolicitudId = newSolicitudId+".999";
 
               // Enviar mensaje al frontend con la nueva actualización

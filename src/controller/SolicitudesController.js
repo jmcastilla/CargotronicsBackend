@@ -24,7 +24,7 @@ controller.get_Solicitudes = async (req, res) => {
                     +" LEFT JOIN LokInstaladores i ON i.CCInstalador = s.FKInstaladorId"
                     +" LEFT JOIN LokReporteSolicitudes r ON s.LastReport = r.idReporteSolicitud"
                     +" LEFT JOIN LokEstados e ON r.FKLokEstados = e.IDEstados"
-                    +" WHERE(s.FKLokEstados = 2 OR s.FKLokEstados = 7)";
+                    +" WHERE (s.FKLokEstados = 2 OR s.FKLokEstados = 7)";
                     if(decoded.idempresa != 2){
                         consulta += " AND s.FKICEmpresa = " + decoded.idempresa;
                     }
