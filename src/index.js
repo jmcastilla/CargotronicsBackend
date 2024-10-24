@@ -753,6 +753,30 @@ const wss = new WebSocket.Server({ port: 8080 });
 let lastSolicitudId = "2024-10-23 00:00:00"; // Variable para almacenar el último ID procesado
 let clients = []; // Array para almacenar los clientes conectados
 
+// Función para realizar una consulta global sin el filtro de empresa
+const getSolicitudesGlobal = async () => {
+    var consulta = "SELECT IDSolicitudes, PlacaTruck, NombreInstalador, NombreEmpresa, CASE when FechaHoraCita < '2012-01-01 00:00:00.000'"
+        + " THEN 'Hora-Nula Fecha-Nula' else CONVERT(nvarchar(30), FechaHoraCita, 120) end AS Hora, s.FKLokEstados , DescripcionRuta + '' + CASE WHEN n.FKLokClienteExt = 0 THEN '' ELSE '( ' + x.Descripcion + ' )' END AS Ruta, u.FKLokCiudadOrigen, "
+        + " ContainerNum + CASE WHEN DigitoVerificacion IS NOT NULL THEN '-' + CAST(DigitoVerificacion AS nvarchar(2)) ELSE '' END AS Contenedor,Contacto, DATEDIFF(MINUTE, GETUTCDATE(), DATEADD(hh, 5, FechaHoraCita)) AS Tiempo, r.NotaReporte as nota, e.Descripcion as estado, HoraReporte as hora_e"
+        + " FROM LokSolicitudes s INNER JOIN ICEmpresa m ON s.FKICEmpresa = m.IdEmpresa"
+        + " INNER JOIN LokNegociacion n ON FKNegociacion = IDNegociacion"
+        + " LEFT OUTER JOIN ICRutas u ON s.FKICRutas = u.IDRuta"
+        + " LEFT JOIN LokClienteExt x ON x.IdClienteExterno = n.FKLokClienteExt"
+        + " LEFT JOIN LokInstaladores i ON i.CCInstalador = s.FKInstaladorId"
+        + " LEFT JOIN LokReporteSolicitudes r ON s.LastReport = r.idReporteSolicitud"
+        + " LEFT JOIN LokEstados e ON r.FKLokEstados = e.IDEstados"
+        + " WHERE (s.FKLokEstados = 2 OR s.FKLokEstados = 7)"
+        + " ORDER BY FechaHoraCita";
+
+    try {
+        let resultado = await sqlconfig.query(consulta);
+        return { success: true, data: resultado.recordsets[0] };
+    } catch (error) {
+        console.error('Error al ejecutar la consulta:', error);
+        return { success: false, message: 'Error al ejecutar la consulta' };
+    }
+};
+
 // Función para consultar la base de datos
 const checkSolicitudes = async () => {
     try {
@@ -767,12 +791,39 @@ const checkSolicitudes = async () => {
                 console.log(lastSolicitudId + " - " + newSolicitudId);
                 lastSolicitudId = newSolicitudId + ".999";
 
-                // Enviar mensaje a todos los clientes conectados
-                broadcast({
-                    event: true,
-                    message: 'Nueva solicitud'
-                });
+                // Consumir la consulta global sin filtro por empresa
+                const globalSolicitudesData = await getSolicitudesGlobal();
+
+                if (globalSolicitudesData.success) {
+                    // Filtrar los datos para cada cliente según su idempresa
+                    clients.forEach((client) => {
+                        if (client.readyState === WebSocket.OPEN && client.decoded) {
+                            const filteredData = globalSolicitudesData.data.filter(solicitud => solicitud.FKICEmpresa === client.decoded.idempresa);
+
+                            // Enviar los datos filtrados al cliente
+                            if (filteredData.length > 0) {
+                                client.send(JSON.stringify({
+                                    event: true,
+                                    message: 'Nueva solicitud',
+                                    data: filteredData
+                                }));
+                            } else {
+                                client.send(JSON.stringify({
+                                    event: false,
+                                    message: 'No hay solicitudes para tu empresa'
+                                }));
+                            }
+                        }
+                    });
+                } else {
+                    // Enviar mensaje a todos los usuarios en caso de error en la consulta
+                    broadcast({
+                        event: false,
+                        message: 'Error al obtener datos de solicitudes'
+                    });
+                }
             } else {
+                // Si no hay solicitudes nuevas, enviar un mensaje de broadcast
                 broadcast({
                     event: false,
                     message: 'No hay solicitud'
@@ -781,6 +832,10 @@ const checkSolicitudes = async () => {
         }
     } catch (err) {
         console.error('Error al consultar la base de datos:', err);
+        broadcast({
+            event: false,
+            message: 'Error al verificar solicitudes'
+        });
     }
 };
 
@@ -794,15 +849,32 @@ const broadcast = (data) => {
 };
 
 // Evento cuando un cliente se conecta
-wss.on('connection', (ws) => {
+wss.on('connection', (ws, req) => {
     console.log('Client connected via WebSocket');
-    clients.push(ws);
+    const token = req.headers['sec-websocket-protocol'];
+    console.log("token="+token);
+    if (!token || token === 'undefined') {
+        ws.send(JSON.stringify({ success: false, message: 'Token is missing' }));
+        ws.close(); // Cerrar la conexión si no hay token
+    } else {
+        jwt.verify(token, 'secret_key', (err, decoded) => {
+            if (err) {
+                ws.send(JSON.stringify({ success: false, message: 'Failed to authenticate token' }));
+                ws.close(); // Cerrar la conexión si el token no es válido
+            } else {
+                // El token es válido, podemos agregar el socket al conjunto de clientes
+                ws.decoded = decoded;
+                clients.add(ws);
 
-    // Eliminar cliente cuando se desconecta
-    ws.on('close', () => {
-        console.log('Client disconnected');
-        clients = clients.filter(client => client !== ws); // Eliminar el cliente desconectado del array
-    });
+                ws.send(JSON.stringify({ success: true, message: 'Successfully authenticated' }));
+
+                // Cuando el cliente se desconecta
+                ws.on('close', () => {
+                    clients.delete(ws);
+                });
+            }
+        });
+    }
 });
 
 // Ejecutar la consulta cada 10 segundos
