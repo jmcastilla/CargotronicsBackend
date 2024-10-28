@@ -750,9 +750,10 @@ app.post('/uploadvideo', upload.array('files'), async (req, res) => {
 });
 
 const wss = new WebSocket.Server({ port: 8080 });
+const wss2 = new WebSocket.Server({ port: 8081 });
 let lastSolicitudId = "2024-10-23 00:00:00"; // Variable para almacenar el último ID procesado
 let clients = new Set(); // Array para almacenar los clientes conectados
-
+let clientsTrafico = new Set();
 // Función para realizar una consulta global sin el filtro de empresa
 const getSolicitudesGlobal = async () => {
     var consulta = "SELECT IDSolicitudes, PlacaTruck, NombreInstalador, NombreEmpresa, CASE when FechaHoraCita < '2012-01-01 00:00:00.000'"
@@ -767,6 +768,46 @@ const getSolicitudesGlobal = async () => {
         + " LEFT JOIN LokEstados e ON r.FKLokEstados = e.IDEstados"
         + " WHERE (s.FKLokEstados = 2 OR s.FKLokEstados = 7)"
         + " ORDER BY FechaHoraCita";
+
+    try {
+        let resultado = await sqlconfig.query(consulta);
+        return { success: true, data: resultado.recordsets[0] };
+    } catch (error) {
+        console.error('Error al ejecutar la consulta:', error);
+        return { success: false, message: 'Error al ejecutar la consulta' };
+    }
+};
+
+const getTraficoGlobal = async () => {
+    var consulta = "SELECT c.ContractID, c.FKLokDeviceID, e.NombreEmpresa, c.PlacaTruck, '' as username, "+
+    "CONVERT(varchar,DATEADD(MINUTE,0,c.FechaHoraInicio),20) as fecha, CONCAT(c.LastMsgLat,',',c.LastMsgLong) as pos, "+
+    "ISNULL(c.FKTrayecto, 0) as trayecto, r.DescripcionRuta, t.DescripcionTrayecto, c.NombreConductor, "+
+    "CASE WHEN c.ContainerNum IS NULL OR c.ContainerNum = 'ND' THEN (LEFT(c.Documento, 35) + CASE WHEN LEN(c.Documento) > 35 THEN '...' ELSE '' END) ELSE c.ContainerNum END as ContainerNum, "+
+    "c.Ref, tp.NombreTranspo, c.MovilConductor, c.PlacaTrailer, CONVERT(varchar,DATEADD(minute,0,c.FechaHoraInicio),20) as fechainicio, "+
+    "ISNULL(CONVERT(varchar,DATEADD(minute,0,c.FechaHoraFin),20), CONVERT(varchar,DATEADD(minute,0,GETDATE()),20)) as fechafin, c.LastMsgLat, c.LastMsgLong, "+
+    "d.Locked, c.Active, ISNULL(t.DistanciaReal,0) as DistanciaCompleta, t.Origen, d.FKLokTipoEquipo, "+
+    "dbo.Tiempo(DATEDIFF(SECOND, LoksysServerTime, GETUTCDATE())) as Tiempo, DATEDIFF(SECOND, '1970-01-01 00:00:00', LoksysServerTime) as tiempoUnix, "+
+    "dbo.iconbateria2(ISNULL(ROUND(BatteryVoltage, 2),3), d.FKLokTipoEquipo, c.FKLokDeviceID) as icon_bat, ROUND(BatteryVoltage, 2) as bateria, "+
+    "c.LastReportNota, tr.TipoReporte, c.LastReportUbica+ ' ('+CONVERT(NVARCHAR(20), DATEDIFF(MINUTE, LastReportTime, DATEADD(MINUTE,0, GETDATE())))+' min)' as LastReportUbica, "+
+    "d.Ciudad+': '+d.Location+ CASE WHEN ContadorGps <> 0 THEN ' ('+CONVERT(NVARCHAR(20), ContadorGps)+')' ELSE '' END as Ciudad, "+
+    "DATEADD(MINUTE, DATEDIFF(MINUTE, GETUTCDATE(), GETDATE()) + 0, LoksysServerTime) as LoksysServerTime, "+"SUBSTRING(iconos.IconMoving, 2, CHARINDEX('|', iconos.IconMoving) - 2) AS IconMoving, "+
+    "SUBSTRING(iconos.IconLocked, 2, CHARINDEX('|', iconos.IconLocked) - 2) AS IconLocked, "+
+    "SUBSTRING(iconos.IconDesvio, 2, CHARINDEX('|', iconos.IconDesvio) - 2) AS IconDesvio, "+
+    "SUBSTRING(iconos.IconSeguro, 2, CHARINDEX('|', iconos.IconSeguro) - 2) AS IconSeguro, "+
+    "SUBSTRING(iconos.IconBack, 2, CHARINDEX('|', iconos.IconBack) - 2) AS IconBack, "+
+    "CAST(CASE WHEN c.Active=1 THEN 0 ELSE 1 END AS BIT) AS expanded, "+
+    "CASE WHEN qr.Verificado_global=1 AND c.FKQrMaestro IS NOT NULL THEN '/images/valitronics.png' "+
+    "WHEN qr.Verificado_global=0 AND c.FKQrMaestro IS NOT NULL THEN '/images/valitronics_gris.png' "+
+    "ELSE '/images/transparent.png' END as IconValitronics, d.Speed, Convert(nvarchar(10),DATEDIFF(MINUTE, isnull(d.DateDetencion, DATEADD(hh,2,getdate())), DATEADD(hh,2,getdate()))) as tiempodetencion, c.FKLokProyecto, c.FKICEmpresa "+
+    "FROM LokcontractID as c "+
+    "INNER JOIN LokDeviceID as d ON d.DeviceID = c.FKLokDeviceID "+
+    "LEFT JOIN ICEmpresa as e ON e.IdEmpresa = c.FKICEmpresa "+
+    "LEFT JOIN ICRutas as r ON r.IdRuta = c.FKICRutas "+
+    "LEFT JOIN Trayectos as t ON c.FKTrayecto =  t.IDTrayecto "+
+    "LEFT JOIN ICTipoReporte as tr ON c.LastICTipoReporte =  tr.IdTipoReporte "+
+    "LEFT JOIN ICTransportadora as tp ON tp.IdTransportadora = c.FKICTransportadora "+
+    "LEFT JOIN QR_Maestro as qr ON c.FKQrMaestro = qr.ID_QRMaestro "+
+    "OUTER APPLY dbo.IconosContract(c.ContractID, c.FKLokDeviceID) AS iconos WHERE c.Active=1";
 
     try {
         let resultado = await sqlconfig.query(consulta);
@@ -847,6 +888,63 @@ const checkSolicitudes = async () => {
     }
 };
 
+const filtrarContratos = (contratos, decoded) => {
+    return contratos.filter(contrato => {
+        // Filtrar primero por FKLokProyecto
+        if (contrato.FKLokProyecto !== decoded.proyecto) {
+            return false; // Excluye el contrato si el proyecto no coincide
+        }
+
+        // Condición 1: Si el proyecto es 1, se requiere que FKICEmpresa no sea nulo
+        if (decoded.proyecto === 1 && contrato.FKICEmpresa == null) {
+            return false; // Excluye el contrato si FKICEmpresa es nulo
+        }
+
+        // Condición 2: Si idempresa no es igual a empresaprincipal y proyecto es igual a owner,
+        // se aplica la condición FKICEmpresa o alguna FKICEmpresaConsulta coincide con idempresa
+        if (decoded.idempresa !== decoded.empresaprincipal && decoded.proyecto === decoded.owner) {
+            return (
+                contrato.FKICEmpresa === decoded.idempresa ||
+                contrato.FKICEmpresaConsulta === decoded.idempresa ||
+                contrato.FKICEmpresaConsulta2 === decoded.idempresa ||
+                contrato.FKICEmpresaConsulta3 === decoded.idempresa ||
+                contrato.Owner === decoded.idempresa
+            );
+        }
+
+        // Si ninguna de las condiciones anteriores aplica, incluye el contrato en el resultado
+        return true;
+    });
+};
+
+const checkContratos = async () => {
+    try {
+        const globalContratosData = await getTraficoGlobal();
+        clients.forEach((client) => {
+            if (client.readyState === WebSocket.OPEN && client.decoded) {
+                let dataToSend= filtrarContratos(contratos, decoded);
+                // Enviar los datos filtrados al cliente
+                if (dataToSend.length > 0) {
+                    client.send(JSON.stringify({
+                        event: true,
+                        message: 'Actualizacion trafico',
+                        data: dataToSend,
+                        username: decoded.username,
+                        diffhorario: decoded.diffhorario
+                    }));
+                } else {
+                    client.send(JSON.stringify({
+                        event: false,
+                        message: 'No hay actualizacion de trafico'
+                    }));
+                }
+            }
+        });
+    } catch (err) {
+        console.error('Error al consultar contratos:', err);
+    }
+};
+
 // Función para enviar mensajes a todos los clientes conectados
 const broadcast = (data) => {
     clients.forEach((client) => {
@@ -858,9 +956,8 @@ const broadcast = (data) => {
 
 // Evento cuando un cliente se conecta
 wss.on('connection', (ws, req) => {
-    console.log('Client connected via WebSocket');
+    console.log('Client connected via WebSocket solicitudes');
     const token = req.headers['sec-websocket-protocol'];
-    console.log("token="+token);
     if (!token || token === 'undefined') {
         ws.send(JSON.stringify({ success: false, message: 'Token is missing' }));
         ws.close(); // Cerrar la conexión si no hay token
@@ -885,8 +982,31 @@ wss.on('connection', (ws, req) => {
     }
 });
 
+
+wss2.on('connection', (ws, req) => {
+  console.log('Client connected via WebSocket trafico');
+    const token = req.headers['sec-websocket-protocol'];
+    if (!token || token === 'undefined') {
+        ws.send(JSON.stringify({ success: false, message: 'Token is missing' }));
+        ws.close();
+    } else {
+        jwt.verify(token, 'secret_key', (err, decoded) => {
+            if (err) {
+                ws.send(JSON.stringify({ success: false, message: 'Failed to authenticate token' }));
+                ws.close();
+            } else {
+                ws.decoded = decoded;
+                clientsTrafico.add(ws);
+                ws.send(JSON.stringify({ success: true, message: 'Successfully authenticated for contratos' }));
+                ws.on('close', () => clientsTrafico.delete(ws));
+            }
+        });
+    }
+});
+
 // Ejecutar la consulta cada 10 segundos
 setInterval(checkSolicitudes, 10000);
+setInterval(checkContratos, 60000);
 
 
 /*const wss = new WebSocket.Server({ port: 8080 });
