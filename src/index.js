@@ -923,7 +923,7 @@ const checkContratos = async () => {
         const contratos = globalContratosData.data;
         clients.forEach((client) => {
             if (client.readyState === WebSocket.OPEN && client.decoded) {
-                let dataToSend= filtrarContratos(contratos, decoded);
+                let dataToSend= filtrarContratos(contratos, client.decoded);
                 // Enviar los datos filtrados al cliente
                 if (dataToSend.length > 0) {
                     client.send(JSON.stringify({
