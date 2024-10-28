@@ -930,8 +930,8 @@ const checkContratos = async () => {
                         event: true,
                         message: 'Actualizacion trafico',
                         data: dataToSend,
-                        username: decoded.username,
-                        diffhorario: decoded.diffhorario
+                        username: client.decoded.username,
+                        diffhorario: client.decoded.diffhorario
                     }));
                 } else {
                     client.send(JSON.stringify({
