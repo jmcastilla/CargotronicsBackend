@@ -288,10 +288,10 @@ controller.get_contratostrafico = async (req, res) => {
                     "LEFT JOIN ICTransportadora as tp ON tp.IdTransportadora = c.FKICTransportadora "+
                     "LEFT JOIN QR_Maestro as qr ON c.FKQrMaestro = qr.ID_QRMaestro "+
                     "OUTER APPLY dbo.IconosContract(c.ContractID, c.FKLokDeviceID) AS iconos ";
-                    if(decoded.roltrafico != 0){
+                    /*if(decoded.roltrafico != 0){
                         consulta+="INNER JOIN (SELECT * FROM LokEmpresaRol WHERE id_roltrafico_ = "+decoded.roltrafico+") as Rol ON Rol.id_empresa = c.FKICEmpresa ";
-                    }
-                    consulta+="WHERE c.Active=1 AND c.FKLokProyecto="+decoded.proyecto;
+                    }*/
+                    consulta+="WHERE c.Active=1 AND c.FKLokProyecto="+decoded.proyecto+" AND c.FKICEmpresa IN ("+decoded.empresastrafico+")";
                     if(decoded.proyecto == 1){
                         consulta+=" AND c.FKICEmpresa IS NOT NULL ";
                     }
