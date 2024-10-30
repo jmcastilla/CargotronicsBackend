@@ -1015,7 +1015,7 @@ wss2.on('connection', (ws, req) => {
 
 // Ejecutar la consulta cada 10 segundos
 setInterval(checkSolicitudes, 10000);
-setInterval(checkContratos, 60000);
+//setInterval(checkContratos, 60000);
 
 
 /*const wss = new WebSocket.Server({ port: 8080 });
