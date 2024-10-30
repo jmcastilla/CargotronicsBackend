@@ -301,9 +301,11 @@ controller.get_contratostrafico = async (req, res) => {
                         " OR c.FKICEmpresaConsulta = "+decoded.idempresa+
                         " OR c.FKICEmpresaConsulta2 = "+decoded.idempresa+
                         " OR c.FKICEmpresaConsulta3 = "+decoded.idempresa+
-                        " OR e.Owner = "+decoded.idempresa+") ";
+                        " OR e.Owner = "+decoded.idempresa+" ";
                         if (decoded.empresastrafico && decoded.empresastrafico.length > 0) {
-                            consulta+=" AND c.FKICEmpresa IN ("+decoded.empresastrafico+") ";
+                            consulta+=" OR c.FKICEmpresa IN ("+decoded.empresastrafico+")) ";
+                        }else{
+                            consulta+=")";
                         }
                     }
                     consulta+="ORDER BY d.Locked ASC, bitAperturaRespo ASC, bitBackRespo ASC, bitAlejadoRespo ASC, bitDesvioRespo ASC, bitDetencionRespo ASC, bitGpsRespo ASC, bitTiempoRespo ASC, d.LoksysServerTime";
