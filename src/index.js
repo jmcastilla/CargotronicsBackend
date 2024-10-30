@@ -896,18 +896,19 @@ const filtrarContratos = (contratos, decoded) => {
     console.log(empresasTraficoIds.length);
     return contratos.filter(contrato => {
         // Filtrar primero por FKLokProyecto
+        console.log("sent 1");
         if (contrato.FKLokProyecto !== decoded.proyecto) {
             return false; // Excluye el contrato si el proyecto no coincide
         }
-
+        console.log("sent 2");
         // Condición 1: Si el proyecto es 1, se requiere que FKICEmpresa no sea nulo
-        if (decoded.proyecto === 1 && contrato.FKICEmpresa == null) {
+        if (decoded.proyecto === 1 && contrato.FKICEmpresa === null) {
             return false; // Excluye el contrato si FKICEmpresa es nulo
         }
 
         // Condición 2: Si idempresa no es igual a empresaprincipal y proyecto es igual a owner,
         // se aplica la condición FKICEmpresa o alguna FKICEmpresaConsulta coincide con idempresa
-        if (decoded.idempresa !== decoded.empresaprincipal && decoded.proyecto === decoded.owner) {
+        /*if (decoded.idempresa !== decoded.empresaprincipal && decoded.proyecto === decoded.owner) {
             return (
                 contrato.FKICEmpresa === decoded.idempresa ||
                 contrato.FKICEmpresaConsulta === decoded.idempresa ||
@@ -915,12 +916,25 @@ const filtrarContratos = (contratos, decoded) => {
                 contrato.FKICEmpresaConsulta3 === decoded.idempresa ||
                 contrato.Owner === decoded.idempresa
             );
+        }*/
+        console.log("sent 3");
+        if (decoded.idempresa !== decoded.empresaprincipal && decoded.proyecto === decoded.owner) {
+            if (
+                contrato.FKICEmpresa !== decoded.idempresa &&
+                contrato.FKICEmpresaConsulta !== decoded.idempresa &&
+                contrato.FKICEmpresaConsulta2 !== decoded.idempresa &&
+                contrato.FKICEmpresaConsulta3 !== decoded.idempresa &&
+                contrato.Owner !== decoded.idempresa
+            ) {
+                return false; // Excluye el contrato si no hay coincidencias
+            }
         }
+        console.log("sent 4");
         console.log(empresasTraficoIds.length +" - "+ contrato.FKICEmpresa);
         if (empresasTraficoIds.length > 0 && !empresasTraficoIds.includes(contrato.FKICEmpresa)) {
             return false; // Excluye el contrato si FKICEmpresa no está en EmpresasTrafico
         }
-
+        console.log("sent final");
         // Si ninguna de las condiciones anteriores aplica, incluye el contrato en el resultado
         return true;
     });
