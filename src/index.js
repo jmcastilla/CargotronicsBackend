@@ -923,16 +923,12 @@ const filtrarContratos = (contratos, decoded) => {
                 contrato.FKICEmpresaConsulta3 !== decoded.idempresa &&
                 contrato.Owner !== decoded.idempresa
             ) {
-                console.log(decoded.empresastrafico +" - "+ contrato.FKICEmpresa);
                 if (empresasTraficoIds.length > 0 && !empresasTraficoIds.includes(contrato.FKICEmpresa)) {
                     return false; // Excluye el contrato si FKICEmpresa no está en EmpresasTrafico
-                }else{
-                    console.log("entro a true");
                 }
             }
         }
 
-        console.log("sent final");
         // Si ninguna de las condiciones anteriores aplica, incluye el contrato en el resultado
         return true;
     });
