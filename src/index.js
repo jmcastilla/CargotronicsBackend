@@ -184,7 +184,7 @@ app.post('/login', async (req, res) =>{
         let pass=req.body.pass;
         var consulta= "SELECT u.Pwd, u.Salt, u.FKProyecto, p.DiferenciaServidor, p.DiferenciaHorariaM, "+
         "u.RolTrafico, u.Trafico, ISNULL(p.ProyectoPrincipal, 1) as ownr, ISNULL(p.varidcliente, 2) as varidcliente, "+
-        "e.IdEmpresa, ISNULL(clientede, 0) as clientede, p.TimeReload, u.tipoUser, r.Jerarquia FROM ICUsers as u "+
+        "e.IdEmpresa, ISNULL(clientede, 0) as clientede, p.TimeReload, u.tipoUser, r.Jerarquia, u.EmpresasTrafico FROM ICUsers as u "+
         "INNER JOIN ICEmpresa as e on e.IdEmpresa = u.FKICEmpresa "+
         "INNER JOIN LokProyectos as p on p.IDProyecto = u.FKProyecto "+
         "INNER JOIN LokRoles as r on r.IDRol = u.tipoUser "+
@@ -211,9 +211,10 @@ app.post('/login', async (req, res) =>{
                     idcliente: resultado.recordset[0].clientede,
                     tipouser: resultado.recordset[0].tipoUser,
                     jerarquia: resultado.recordset[0].Jerarquia,
+                    empresastrafico: resultado.recordset[0].EmpresasTrafico,
                     server: sqlconfig.server
                 };
-                console.log("jerarquia="+resultado.recordset[0].Jerarquia);
+                console.log("empresastrafico="+resultado.recordset[0].EmpresasTrafico);
                 const token = jwt.sign(tokenPayload, 'secret_key', { expiresIn: '1h' });
                 res.json({success : true, entorno: sqlconfig.server, timereload:resultado.recordset[0].TimeReload, proyecto:resultado.recordset[0].FKProyecto, token});
             }else{
@@ -889,6 +890,9 @@ const checkSolicitudes = async () => {
 };
 
 const filtrarContratos = (contratos, decoded) => {
+    const empresasTraficoIds = decoded.empresastrafico
+      ? decoded.empresastrafico.split(',').map(id => parseInt(id.trim(), 10))
+      : [];
     return contratos.filter(contrato => {
         // Filtrar primero por FKLokProyecto
         if (contrato.FKLokProyecto !== decoded.proyecto) {
@@ -910,6 +914,10 @@ const filtrarContratos = (contratos, decoded) => {
                 contrato.FKICEmpresaConsulta3 === decoded.idempresa ||
                 contrato.Owner === decoded.idempresa
             );
+        }
+
+        if (empresasTraficoIds.length > 0 && !empresasTraficoIds.includes(contrato.FKICEmpresa)) {
+            return false; // Excluye el contrato si FKICEmpresa no está en EmpresasTrafico
         }
 
         // Si ninguna de las condiciones anteriores aplica, incluye el contrato en el resultado
