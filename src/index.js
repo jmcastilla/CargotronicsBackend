@@ -915,7 +915,7 @@ const filtrarContratos = (contratos, decoded) => {
                 contrato.Owner === decoded.idempresa
             );
         }
-
+        console.log(empresasTraficoIds.length +" - "+ contrato.FKICEmpresa);
         if (empresasTraficoIds.length > 0 && !empresasTraficoIds.includes(contrato.FKICEmpresa)) {
             return false; // Excluye el contrato si FKICEmpresa no está en EmpresasTrafico
         }
