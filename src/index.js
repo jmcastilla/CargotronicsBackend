@@ -893,6 +893,7 @@ const filtrarContratos = (contratos, decoded) => {
     const empresasTraficoIds = decoded.empresastrafico
       ? decoded.empresastrafico.split(',').map(id => parseInt(id.trim(), 10))
       : [];
+    console.log(empresasTraficoIds.length);
     return contratos.filter(contrato => {
         // Filtrar primero por FKLokProyecto
         if (contrato.FKLokProyecto !== decoded.proyecto) {
