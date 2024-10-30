@@ -291,7 +291,8 @@ controller.get_contratostrafico = async (req, res) => {
                     /*if(decoded.roltrafico != 0){
                         consulta+="INNER JOIN (SELECT * FROM LokEmpresaRol WHERE id_roltrafico_ = "+decoded.roltrafico+") as Rol ON Rol.id_empresa = c.FKICEmpresa ";
                     }*/
-                    consulta+="WHERE c.Active=1 AND c.FKLokProyecto="+decoded.proyecto+" OR c.FKICEmpresa IN ("+decoded.empresastrafico+")";
+                    consulta+="WHERE c.Active=1 AND c.FKLokProyecto="+decoded.proyecto;
+
                     if(decoded.proyecto == 1){
                         consulta+=" AND c.FKICEmpresa IS NOT NULL ";
                     }
@@ -301,6 +302,10 @@ controller.get_contratostrafico = async (req, res) => {
                         " OR c.FKICEmpresaConsulta2 = "+decoded.idempresa+
                         " OR c.FKICEmpresaConsulta3 = "+decoded.idempresa+
                         " OR e.Owner = "+decoded.idempresa+") ";
+                    }else{
+                        if (decoded.empresastrafico && decoded.empresastrafico.length > 0) {
+                            consulta+=" AND c.FKICEmpresa IN ("+decoded.empresastrafico+") ";
+                        }
                     }
                     consulta+="ORDER BY d.Locked ASC, bitAperturaRespo ASC, bitBackRespo ASC, bitAlejadoRespo ASC, bitDesvioRespo ASC, bitDetencionRespo ASC, bitGpsRespo ASC, bitTiempoRespo ASC, d.LoksysServerTime";
                     console.log(consulta);
