@@ -895,12 +895,10 @@ const filtrarContratos = (contratos, decoded) => {
       : [];
     console.log(empresasTraficoIds.length);
     return contratos.filter(contrato => {
-        // Filtrar primero por FKLokProyecto
-        console.log("sent 1");
+        // Filtrar primero por FKLokProyecto¿
         if (contrato.FKLokProyecto !== decoded.proyecto) {
             return false; // Excluye el contrato si el proyecto no coincide
         }
-        console.log("sent 2");
         // Condición 1: Si el proyecto es 1, se requiere que FKICEmpresa no sea nulo
         if (decoded.proyecto === 1 && contrato.FKICEmpresa === null) {
             return false; // Excluye el contrato si FKICEmpresa es nulo
@@ -917,7 +915,6 @@ const filtrarContratos = (contratos, decoded) => {
                 contrato.Owner === decoded.idempresa
             );
         }*/
-        console.log("sent 3");
         if (decoded.idempresa !== decoded.empresaprincipal && decoded.proyecto === decoded.owner) {
             if (
                 contrato.FKICEmpresa !== decoded.idempresa &&
@@ -926,10 +923,11 @@ const filtrarContratos = (contratos, decoded) => {
                 contrato.FKICEmpresaConsulta3 !== decoded.idempresa &&
                 contrato.Owner !== decoded.idempresa
             ) {
-                console.log("sent 4");
-                console.log(empresasTraficoIds.length +" - "+ contrato.FKICEmpresa);
+                console.log(decoded.empresastrafico +" - "+ contrato.FKICEmpresa);
                 if (empresasTraficoIds.length > 0 && !empresasTraficoIds.includes(contrato.FKICEmpresa)) {
                     return false; // Excluye el contrato si FKICEmpresa no está en EmpresasTrafico
+                }else{
+                    console.log("entro a true");
                 }
             }
         }
