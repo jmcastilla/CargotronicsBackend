@@ -302,7 +302,6 @@ controller.get_contratostrafico = async (req, res) => {
                         " OR c.FKICEmpresaConsulta2 = "+decoded.idempresa+
                         " OR c.FKICEmpresaConsulta3 = "+decoded.idempresa+
                         " OR e.Owner = "+decoded.idempresa+") ";
-                    }else{
                         if (decoded.empresastrafico && decoded.empresastrafico.length > 0) {
                             consulta+=" AND c.FKICEmpresa IN ("+decoded.empresastrafico+") ";
                         }
