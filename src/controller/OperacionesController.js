@@ -305,7 +305,7 @@ controller.get_contratostrafico = async (req, res) => {
                         if (decoded.empresastrafico && decoded.empresastrafico.length > 0) {
                             consulta+=" OR c.FKICEmpresa IN ("+decoded.empresastrafico+")) ";
                         }else{
-                            consulta+=")";
+                            consulta+=") ";
                         }
                     }
                     consulta+="ORDER BY d.Locked ASC, bitAperturaRespo ASC, bitBackRespo ASC, bitAlejadoRespo ASC, bitDesvioRespo ASC, bitDetencionRespo ASC, bitGpsRespo ASC, bitTiempoRespo ASC, d.LoksysServerTime";
