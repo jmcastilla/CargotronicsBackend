@@ -158,6 +158,34 @@ let query2Procedure = function( procedureName, params ) {
     });
 }
 
+async function registerNotification(queryText, callback) {
+    try {
+        const pool = await conn1.connect();
+        const request = pool.request();
+
+        // Configurar la consulta monitoreada
+        request.query(queryText, (err, result) => {
+            if (err) {
+                console.error("Error en la consulta de notificación:", err);
+                return;
+            }
+
+            // Enviar resultado inicial
+            if (callback && typeof callback === 'function') {
+                callback(result.recordset);
+            }
+        });
+
+        // Escuchar evento de notificación
+        pool.on('notification', (message) => {
+            console.log("*** Cambio detectado en la base de datos:", message);
+
+        });
+    } catch (error) {
+        console.error("Error al registrar notificación:", error);
+    }
+}
+
 var server= "Dev";
 if(config1.server == '72.32.44.32'){
     server= "Prod";
@@ -166,6 +194,7 @@ if(config1.server == '72.32.44.32'){
 
 module.exports = {
   "query":query,
+  "registerNotification": registerNotification,
   "query2":query2,
   "query2Procedure":query2Procedure,
   "queryProcedure":queryProcedure,

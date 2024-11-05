@@ -1026,6 +1026,10 @@ wss2.on('connection', (ws, req) => {
 setInterval(checkSolicitudes, 10000);
 setInterval(checkContratos, 10000);
 
+sqlconfig.registerNotification('SELECT IDSolicitudes FROM LokSolicitudes s WHERE (s.FKLokEstados = 2 OR s.FKLokEstados = 7)', (data) => {
+    console.log("se envio data de solicitudes");
+});
+
 
 /*const wss = new WebSocket.Server({ port: 8080 });
 let lastSolicitudId = "2024-10-23 00:00:00"; // Variable para almacenar el último ID procesado
