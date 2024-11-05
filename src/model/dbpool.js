@@ -169,7 +169,7 @@ async function registerNotification(queryText, callback) {
                 console.error("Error en la consulta de notificación:", err);
                 return;
             }
-
+            console.log("***entro a la primera consulta de solicitudes");
             // Enviar resultado inicial
             if (callback && typeof callback === 'function') {
                 callback(result.recordset);
