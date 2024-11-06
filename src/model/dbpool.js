@@ -158,33 +158,37 @@ let query2Procedure = function( procedureName, params ) {
     });
 }
 
-async function registerNotification(queryText, callback) {
-    try {
-        const pool = await conn1.connect();
-        const request = pool.request();
+let registerNotification = function(queryText) {
+    return new Promise((resolve, reject) => {
+        // Crear una nueva conexión de base de datos
+        const conn = new sql.ConnectionPool(config1);
 
-        // Configurar la consulta monitoreada
-        request.query(queryText, (err, result) => {
-            if (err) {
-                console.error("Error en la consulta de notificación:", err);
-                return;
-            }
-            console.log("***entro a la primera consulta de solicitudes");
-            // Enviar resultado inicial
-            if (callback && typeof callback === 'function') {
-                callback(result.recordset);
-            }
+        conn.connect().then(() => {
+            const request = new sql.Request(conn);
+
+            // Configurar el evento de notificación
+            request.on('notification', msg => {
+                console.log("Notificación recibida de SQL Server:", msg);
+                resolve(msg); // Resolver con la notificación recibida
+            });
+
+            // Ejecutar la consulta para activar la notificación
+            request.query(queryText, (err, result) => {
+                if (err) {
+                    console.error("Error en la consulta de notificación:", err);
+                    reject(err); // Rechazar en caso de error
+                    return;
+                }
+
+                // Resolver con el resultado inicial de la consulta si es necesario
+                resolve(result.recordset);
+            });
+        }).catch((err) => {
+            console.error("Error al conectar para notificación:", err);
+            reject(err);
         });
-
-        // Escuchar evento de notificación
-        pool.on('notification', (message) => {
-            console.log("*** Cambio detectado en la base de datos:", message);
-
-        });
-    } catch (error) {
-        console.error("Error al registrar notificación:", error);
-    }
-}
+    });
+};
 
 var server= "Dev";
 if(config1.server == '72.32.44.32'){
