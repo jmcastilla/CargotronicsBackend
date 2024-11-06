@@ -165,11 +165,16 @@ let registerNotification = function(queryText) {
 
         conn.connect().then(() => {
             const request = new sql.Request(conn);
+            request.input("options", sql.NVarChar, "NOTIFY");
+            // Configurar el evento de notificación
+            request.on('recordset', (columns) => {
+                console.log("Notificación configurada en SQL Server.");
+            });
 
             // Configurar el evento de notificación
             request.on('notification', msg => {
                 console.log("Notificación recibida de SQL Server:", msg);
-                resolve(msg); // Resolver con la notificación recibida
+                resolve(msg);
             });
 
             // Ejecutar la consulta para activar la notificación
