@@ -57,7 +57,10 @@ var config1 = {
     trustServerCertificate: true,
     connectionTimeout: 60000,
     requestTimeout:60000,
-    port: 1433
+    port: 1433,
+    options: {
+        enableArithAbort: true
+    }
 }
 
 var config2 = {
@@ -165,11 +168,6 @@ let registerNotification = function(queryText) {
 
         conn.connect().then(() => {
             const request = new sql.Request(conn);
-            request.input("options", sql.NVarChar, "NOTIFY");
-            // Configurar el evento de notificación
-            request.on('recordset', (columns) => {
-                console.log("Notificación configurada en SQL Server.");
-            });
 
             // Configurar el evento de notificación
             request.on('notification', msg => {
