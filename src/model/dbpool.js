@@ -184,6 +184,7 @@ const registerNotification = function(queueName, callback) {
 
             // Ejecuta la consulta para recibir un mensaje
             request.query(queryText, (err, result) => {
+                request.close();
                 if (err) {
                     console.error("Error en la consulta de la cola:", err);
                     // En caso de error, vuelve a intentar escuchar después de un segundo
@@ -194,19 +195,31 @@ const registerNotification = function(queueName, callback) {
                 if (result.recordset.length > 0) {
                     const message = result.recordset[0];
                     if (message.message_type_name === 'http://schemas.microsoft.com/SQL/ServiceBroker/EndDialog') {
-                       console.log('END DIALOG recibido, cerrando la conversación.');
-                       await request.query(`
-                         END CONVERSATION @conversationHandle
-                       `, { conversationHandle: message.conversation_handle });
+                        console.log('END DIALOG recibido, cerrando la conversación.');
+
+                        // Cierra la conversación usando otra consulta sin await
+                        const endRequest = new sql.Request(conn);
+                        endRequest.query(`END CONVERSATION '${message.conversation_handle}'`, (endErr) => {
+                            endRequest.close();
+                            if (endErr) {
+                                console.error("Error al cerrar la conversación:", endErr);
+                            } else {
+                                console.log("Conversación cerrada.");
+                            }
+                            // Continúa escuchando mensajes después de cerrar la conversación
+                            listenToQueue();
+                        });
                     } else {
-                       // Procesar otros tipos de mensajes
-                       const decodedMessage = message.message_body.toString('utf16le');
-                       console.log('Mensaje procesado:', decodedMessage);
-                       // Llama al callback con el mensaje recibido
-                       callback(decodedMessage);
+                        // Procesar otros tipos de mensajes
+                        const decodedMessage = message.message_body.toString('utf16le');
+                        console.log('Mensaje procesado:', decodedMessage);
+
+                        // Llama al callback con el mensaje recibido
+                        callback(decodedMessage);
+
+                        // Sigue escuchando para recibir más mensajes
+                        listenToQueue();
                     }
-                    // Sigue escuchando para recibir más mensajes
-                    listenToQueue();
                 } else {
                     // Si no hay mensajes, vuelve a escuchar
                     listenToQueue();
