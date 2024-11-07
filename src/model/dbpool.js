@@ -161,7 +161,36 @@ let query2Procedure = function( procedureName, params ) {
     });
 }
 
-let registerNotification = function(queryText) {
+const registerNotification = function(queryText) {
+    return new Promise((resolve, reject) => {
+        const conn = new sql.ConnectionPool(config1);
+
+        conn.connect().then(() => {
+            const request = new sql.Request(conn);
+
+            // Configura el evento de notificación
+            request.on('notification', msg => {
+                console.log("Notificación recibida:", msg);
+                resolve(msg);
+            });
+
+            // Ejecutar la consulta para activar la notificación
+            request.query(queryText, (err, result) => {
+                if (err) {
+                    console.error("Error en la consulta:", err);
+                    reject(err);
+                    return;
+                }
+                resolve(result.recordset);
+            });
+        }).catch((err) => {
+            console.error("Error al conectar:", err);
+            reject(err);
+        });
+    });
+};
+
+/*let registerNotification = function(queryText) {
     return new Promise((resolve, reject) => {
         // Crear una nueva conexión de base de datos
         const conn = new sql.ConnectionPool(config1);
@@ -191,7 +220,7 @@ let registerNotification = function(queryText) {
             reject(err);
         });
     });
-};
+};*/
 
 var server= "Dev";
 if(config1.server == '72.32.44.32'){

@@ -1026,14 +1026,18 @@ wss2.on('connection', (ws, req) => {
 setInterval(checkSolicitudes, 10000);
 setInterval(checkContratos, 10000);
 
-sqlconfig.registerNotification('SELECT IDSolicitudes FROM LokSolicitudes WHERE FKLokEstados = 2')
+/*sqlconfig.registerNotification('SELECT IDSolicitudes FROM LokSolicitudes WHERE FKLokEstados = 2')
     .then((data) => {
         console.log("Resultado de la consulta inicial o notificación:", data);
         // Aquí puedes enviar la notificación al cliente WebSocket
     })
     .catch((err) => {
         console.error("Error al registrar notificación:", err);
-    });
+    });*/
+
+    sqlconfig.registerNotification('WAITFOR (RECEIVE CONVERSATION_HANDLE, message_body FROM QueueNotificaciones);')
+    .then(msg => console.log("Mensaje recibido:", msg))
+    .catch(err => console.error("Error:", err));
 
 
 /*const wss = new WebSocket.Server({ port: 8080 });
