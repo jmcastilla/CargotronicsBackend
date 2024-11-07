@@ -161,7 +161,51 @@ let query2Procedure = function( procedureName, params ) {
     });
 }
 
-const registerNotification = function(queryText) {
+const registerNotification = function(queueName) {
+    return new Promise((resolve, reject) => {
+        const conn = new sql.ConnectionPool(config1);
+
+        conn.connect().then(() => {
+            const request = new sql.Request(conn);
+
+            // Ejecuta una consulta para recibir mensajes de la cola
+            const queryText = `
+                WAITFOR (
+                    RECEIVE TOP(1)
+                    message_body
+                    FROM ${queueName}
+                ), TIMEOUT 5000;  -- 5000 ms de tiempo de espera
+            `;
+
+            function listenToQueue() {
+                request.query(queryText, (err, result) => {
+                    if (err) {
+                        console.error("Error en la consulta de la cola:", err);
+                        reject(err);
+                        return;
+                    }
+
+                    if (result.recordset.length > 0) {
+                        const message = result.recordset[0].message_body;
+                        console.log("Mensaje recibido de la cola:", message);
+                        resolve(message);
+                    } else {
+                        // Si no hay mensajes, sigue escuchando
+                        listenToQueue();
+                    }
+                });
+            }
+
+            // Inicia la escucha de la cola
+            listenToQueue();
+        }).catch((err) => {
+            console.error("Error al conectar:", err);
+            reject(err);
+        });
+    });
+};
+
+/*const registerNotification = function(queryText) {
     return new Promise((resolve, reject) => {
         const conn = new sql.ConnectionPool(config1);
 
@@ -190,7 +234,7 @@ const registerNotification = function(queryText) {
     });
 };
 
-/*let registerNotification = function(queryText) {
+let registerNotification = function(queryText) {
     return new Promise((resolve, reject) => {
         // Crear una nueva conexión de base de datos
         const conn = new sql.ConnectionPool(config1);

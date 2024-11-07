@@ -1035,9 +1035,13 @@ setInterval(checkContratos, 10000);
         console.error("Error al registrar notificación:", err);
     });*/
 
-    sqlconfig.registerNotification('WAITFOR (RECEIVE CONVERSATION_HANDLE, message_body FROM QueueNotificaciones);')
-    .then(msg => console.log("Mensaje recibido:", msg))
-    .catch(err => console.error("Error:", err));
+    sqlconfig.registerNotification('Sol_Queue')
+    .then((message) => {
+        console.log("Mensaje procesado:", message);
+    })
+    .catch((error) => {
+        console.error("Error al recibir el mensaje:", error);
+    });
 
 
 /*const wss = new WebSocket.Server({ port: 8080 });
