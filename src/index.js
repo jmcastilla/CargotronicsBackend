@@ -752,7 +752,7 @@ app.post('/uploadvideo', upload.array('files'), async (req, res) => {
 
 const wss = new WebSocket.Server({ port: 8080 });
 const wss2 = new WebSocket.Server({ port: 8081 });
-let lastSolicitudId = "2024-10-23 00:00:00"; // Variable para almacenar el último ID procesado
+//let lastSolicitudId = "2024-10-23 00:00:00"; // Variable para almacenar el último ID procesado
 let clients = new Set(); // Array para almacenar los clientes conectados
 let clientsTrafico = new Set();
 // Función para realizar una consulta global sin el filtro de empresa
@@ -822,64 +822,44 @@ const getTraficoGlobal = async () => {
 // Función para consultar la base de datos
 const checkSolicitudes = async () => {
     try {
-        var consulta = "SELECT count(1) as total, CONVERT(VARCHAR(19), MAX(FechaHoraSolicitud), 120) AS maxId FROM LokSolicitudes WHERE FechaHoraSolicitud > '" + lastSolicitudId + "'";
-        let resultado = await sqlconfig.query(consulta);
+      const globalSolicitudesData = await getSolicitudesGlobal();
 
-        if (resultado.recordset.length > 0) {
-            const newSolicitudId = resultado.recordset[0].maxId;
-            const count = resultado.recordset[0].total;
+      if (globalSolicitudesData.success) {
+          // Filtrar los datos para cada cliente según su idempresa
+          clients.forEach((client) => {
+              if (client.readyState === WebSocket.OPEN && client.decoded) {
+                  let dataToSend;
+                  // Verificar si la idempresa del cliente es diferente de 2
+                  if (client.decoded.idempresa !== 2) {
+                      // Filtrar los datos para el cliente con idempresa diferente de 2
+                      dataToSend = globalSolicitudesData.data.filter(solicitud => solicitud.FKICEmpresa === client.decoded.idempresa);
+                  } else {
+                      // Si la idempresa es 2, enviar todos los datos sin filtrar
+                      dataToSend = globalSolicitudesData.data;
+                  }
 
-            if (count > 0) {
-                console.log(lastSolicitudId + " - " + newSolicitudId);
-                lastSolicitudId = newSolicitudId + ".999";
-
-                // Consumir la consulta global sin filtro por empresa
-                const globalSolicitudesData = await getSolicitudesGlobal();
-
-                if (globalSolicitudesData.success) {
-                    // Filtrar los datos para cada cliente según su idempresa
-                    clients.forEach((client) => {
-                        if (client.readyState === WebSocket.OPEN && client.decoded) {
-                            let dataToSend;
-                            // Verificar si la idempresa del cliente es diferente de 2
-                            if (client.decoded.idempresa !== 2) {
-                                // Filtrar los datos para el cliente con idempresa diferente de 2
-                                dataToSend = globalSolicitudesData.data.filter(solicitud => solicitud.FKICEmpresa === client.decoded.idempresa);
-                            } else {
-                                // Si la idempresa es 2, enviar todos los datos sin filtrar
-                                dataToSend = globalSolicitudesData.data;
-                            }
-
-                            // Enviar los datos filtrados al cliente
-                            if (dataToSend.length > 0) {
-                                client.send(JSON.stringify({
-                                    event: true,
-                                    message: 'Nueva solicitud',
-                                    data: dataToSend
-                                }));
-                            } else {
-                                client.send(JSON.stringify({
-                                    event: false,
-                                    message: 'No hay solicitudes para tu empresa'
-                                }));
-                            }
-                        }
-                    });
-                } else {
-                    // Enviar mensaje a todos los usuarios en caso de error en la consulta
-                    broadcast({
-                        event: false,
-                        message: 'Error al obtener datos de solicitudes'
-                    });
-                }
-            } else {
-                // Si no hay solicitudes nuevas, enviar un mensaje de broadcast
-                broadcast({
-                    event: false,
-                    message: 'No hay solicitud'
-                });
-            }
-        }
+                  // Enviar los datos filtrados al cliente
+                  if (dataToSend.length > 0) {
+                      client.send(JSON.stringify({
+                          event: true,
+                          message: 'Nueva solicitud',
+                          data: dataToSend
+                      }));
+                  } else {
+                      client.send(JSON.stringify({
+                          event: false,
+                          message: 'No hay solicitudes para tu empresa'
+                      }));
+                  }
+              }
+          });
+      } else {
+          // Enviar mensaje a todos los usuarios en caso de error en la consulta
+          broadcast({
+              event: false,
+              message: 'Error al obtener datos de solicitudes'
+          });
+      }
     } catch (err) {
         console.error('Error al consultar la base de datos:', err);
         broadcast({
@@ -1023,7 +1003,7 @@ wss2.on('connection', (ws, req) => {
 });
 
 // Ejecutar la consulta cada 10 segundos
-setInterval(checkSolicitudes, 10000);
+//setInterval(checkSolicitudes, 10000);
 setInterval(checkContratos, 10000);
 
 /*sqlconfig.registerNotification('SELECT IDSolicitudes FROM LokSolicitudes WHERE FKLokEstados = 2')
@@ -1037,6 +1017,7 @@ setInterval(checkContratos, 10000);
 
 sqlconfig.registerNotification('Sol_Queue', (message) => {
     console.log("Mensaje procesado:", message);
+    checkSolicitudes();
 });
 
 
