@@ -172,9 +172,11 @@ const registerNotification = function(queueName, callback) {
         const queryText = `
             WAITFOR (
                 RECEIVE TOP(1)
+                conversation_handle,
+                message_type_name,
                 message_body
                 FROM ${queueName}
-            ), TIMEOUT 5000;  -- 5000 ms de tiempo de espera
+            ), TIMEOUT 10000;  -- 5000 ms de tiempo de espera
         `;
 
         function listenToQueue() {
@@ -190,13 +192,19 @@ const registerNotification = function(queueName, callback) {
                 }
 
                 if (result.recordset.length > 0) {
-                    const messageBuffer = result.recordset[0].message_body;
-                    const decodedMessage = messageBuffer.toString('utf16le');
-                    console.log("Mensaje recibido de la cola:", decodedMessage);
-
-                    // Llama al callback con el mensaje recibido
-                    callback(decodedMessage);
-
+                    const message = result.recordset[0];
+                    if (message.message_type_name === 'http://schemas.microsoft.com/SQL/ServiceBroker/EndDialog') {
+                       console.log('END DIALOG recibido, cerrando la conversación.');
+                       await sql.query(`
+                         END CONVERSATION @conversationHandle
+                       `, { conversationHandle: message.conversation_handle });
+                    } else {
+                       // Procesar otros tipos de mensajes
+                       const decodedMessage = message.message_body.toString('utf16le');
+                       console.log('Mensaje procesado:', decodedMessage);
+                       // Llama al callback con el mensaje recibido
+                       callback(decodedMessage);
+                    }
                     // Sigue escuchando para recibir más mensajes
                     listenToQueue();
                 } else {
