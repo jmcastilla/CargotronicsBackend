@@ -1035,14 +1035,9 @@ setInterval(checkContratos, 10000);
         console.error("Error al registrar notificación:", err);
     });*/
 
-    sqlconfig.registerNotification('Sol_Queue')
-    .then((message) => {
-        const decodedMessage = message.toString('utf16le');
-        console.log("Mensaje procesado:", decodedMessage);
-    })
-    .catch((error) => {
-        console.error("Error al recibir el mensaje:", error);
-    });
+sqlconfig.registerNotification('ColaNotificaciones', (message) => {
+    console.log("Mensaje procesado:", message);
+});
 
 
 /*const wss = new WebSocket.Server({ port: 8080 });
