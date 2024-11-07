@@ -1035,7 +1035,7 @@ setInterval(checkContratos, 10000);
         console.error("Error al registrar notificación:", err);
     });*/
 
-sqlconfig.registerNotification('ColaNotificaciones', (message) => {
+sqlconfig.registerNotification('Sol_Queue', (message) => {
     console.log("Mensaje procesado:", message);
 });
 
