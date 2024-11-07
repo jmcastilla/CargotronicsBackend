@@ -195,7 +195,7 @@ const registerNotification = function(queueName, callback) {
                     const message = result.recordset[0];
                     if (message.message_type_name === 'http://schemas.microsoft.com/SQL/ServiceBroker/EndDialog') {
                        console.log('END DIALOG recibido, cerrando la conversación.');
-                       await sql.query(`
+                       await request.query(`
                          END CONVERSATION @conversationHandle
                        `, { conversationHandle: message.conversation_handle });
                     } else {
