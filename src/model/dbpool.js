@@ -184,7 +184,7 @@ const registerNotification = function(queueName, callback) {
 
             // Ejecuta la consulta para recibir un mensaje
             request.query(queryText, (err, result) => {
-                request.close();
+                
                 if (err) {
                     console.error("Error en la consulta de la cola:", err);
                     // En caso de error, vuelve a intentar escuchar después de un segundo
@@ -200,7 +200,7 @@ const registerNotification = function(queueName, callback) {
                         // Cierra la conversación usando otra consulta sin await
                         const endRequest = new sql.Request(conn);
                         endRequest.query(`END CONVERSATION '${message.conversation_handle}'`, (endErr) => {
-                            endRequest.close();
+
                             if (endErr) {
                                 console.error("Error al cerrar la conversación:", endErr);
                             } else {
