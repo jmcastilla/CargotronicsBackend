@@ -178,6 +178,7 @@ const registerNotification = function(queueName) {
             `;
 
             function listenToQueue() {
+                console.log("entro a listen");
                 request.query(queryText, (err, result) => {
                     if (err) {
                         console.error("Error en la consulta de la cola:", err);

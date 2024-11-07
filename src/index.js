@@ -1037,7 +1037,8 @@ setInterval(checkContratos, 10000);
 
     sqlconfig.registerNotification('Sol_Queue')
     .then((message) => {
-        console.log("Mensaje procesado:", message);
+        const decodedMessage = message.toString('utf16le');
+        console.log("Mensaje procesado:", decodedMessage);
     })
     .catch((error) => {
         console.error("Error al recibir el mensaje:", error);
