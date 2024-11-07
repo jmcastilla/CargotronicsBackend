@@ -914,6 +914,13 @@ const filtrarContratos = (contratos, decoded) => {
     });
 };
 
+const solicitudesHB = async () => {
+  broadcast({
+      event: false,
+      message: 'No hay solicitudes'
+  });
+};
+
 const checkContratos = async () => {
     try {
         const globalContratosData = await getTraficoGlobal();
@@ -1003,7 +1010,7 @@ wss2.on('connection', (ws, req) => {
 });
 
 // Ejecutar la consulta cada 10 segundos
-//setInterval(checkSolicitudes, 10000);
+setInterval(solicitudesHB, 60000);
 setInterval(checkContratos, 10000);
 
 /*sqlconfig.registerNotification('SELECT IDSolicitudes FROM LokSolicitudes WHERE FKLokEstados = 2')
