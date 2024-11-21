@@ -808,8 +808,8 @@ const getTraficoGlobal = async () => {
     "LEFT JOIN ICTipoReporte as tr ON c.LastICTipoReporte =  tr.IdTipoReporte "+
     "LEFT JOIN ICTransportadora as tp ON tp.IdTransportadora = c.FKICTransportadora "+
     "LEFT JOIN QR_Maestro as qr ON c.FKQrMaestro = qr.ID_QRMaestro "+
-    "OUTER APPLY dbo.IconosContract(c.ContractID, c.FKLokDeviceID) AS iconos WHERE c.Active=1 "+
-    "ORDER BY d.Locked ASC, bitAperturaRespo ASC, bitBackRespo ASC, bitAlejadoRespo ASC, bitDesvioRespo ASC, bitDetencionRespo ASC, bitGpsRespo ASC, bitTiempoRespo ASC, d.LoksysServerTime";
+    "OUTER APPLY dbo.IconosContract(c.ContractID, c.FKLokDeviceID) AS iconos WHERE c.Active=1 ";
+    //"ORDER BY d.Locked ASC, bitAperturaRespo ASC, bitBackRespo ASC, bitAlejadoRespo ASC, bitDesvioRespo ASC, bitDetencionRespo ASC, bitGpsRespo ASC, bitTiempoRespo ASC, d.LoksysServerTime";
     try {
         let resultado = await sqlconfig.query(consulta);
         return { success: true, data: resultado.recordsets[0] };
