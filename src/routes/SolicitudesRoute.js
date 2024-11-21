@@ -1386,7 +1386,6 @@ router.post('/setinsertSolicitud', SolicitudesController.set_insertSolicitud);
  *                         type: integer
  *                         description: ID de la solicitud.
  *                         example: 123
- *                       incluir otros campos necesarios aquí
  *       400:
  *         description: Error en la solicitud.
  *         content:
