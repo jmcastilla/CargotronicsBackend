@@ -306,13 +306,12 @@ controller.insert_usuario = async (req, res) => {
                     var fKIp = req.body.FKIp;
                     var correoUsers = req.body.CorreoUsers;
                     var empresaInventario = req.body.EmpresaInventario;
-                    var empresasTrafico = req.body.EmpresasTrafico;
                     const consulta = `
                     INSERT INTO ICUsers (IdUser, Pwd, FKICEmpresa, tipoUser, FKProyecto, Salt, Inventario, Geocerca, CreacionRutas, Trafico,
-                    ipfija, RolTrafico, comando, NombreCompleto, FKIp, CorreoUsers, EmpresaInventario, EmpresasTrafico)
+                    ipfija, RolTrafico, comando, NombreCompleto, FKIp, CorreoUsers, EmpresaInventario)
                     VALUES ('${idUser}', '${password}', '${fKICEmpresa}', '${tipouser}', '${fkproyecto}', '${salt}', '${inventario}',
                     '${geocerca}', '${creacionRutas}', '${trafico}', '${ipfija}', '${rolTrafico}', '${comando}',
-                    '${nombreCompleto}', '${fKIp}', '${correoUsers}', '${empresaInventario}', '${empresasTrafico}')`;
+                    '${nombreCompleto}', '${fKIp}', '${correoUsers}', '${empresaInventario}')`;
                     console.log(consulta);
 
                     res.json({success : true, data : await sqlconfig.query(consulta)});
@@ -353,20 +352,19 @@ controller.update_usuario = async (req, res) => {
                     var correoUsers = req.body.CorreoUsers;
                     var empresaInventario = req.body.EmpresaInventario;
                     var cambiar = req.body.cambiar;
-                    var empresasTrafico = req.body.EmpresasTrafico;
 
                     var consulta = `
                     UPDATE ICUsers SET FKICEmpresa ='${fKICEmpresa}', tipoUser ='${tipouser}', FKProyecto ='${fkproyecto}',
                     Inventario ='${inventario}', Geocerca ='${geocerca}', CreacionRutas ='${creacionRutas}', Trafico ='${trafico}',
                     ipfija ='${ipfija}', RolTrafico ='${rolTrafico}', comando ='${comando}', NombreCompleto ='${nombreCompleto}',
-                    FKIp ='${fKIp}', CorreoUsers ='${correoUsers}', EmpresaInventario ='${empresaInventario}', EmpresasTrafico ='${empresasTrafico}' WHERE IdUser ='${idUser}'`;
+                    FKIp ='${fKIp}', CorreoUsers ='${correoUsers}', EmpresaInventario ='${empresaInventario}' WHERE IdUser ='${idUser}'`;
 
                     if(cambiar){
                       consulta = `
                       UPDATE ICUsers SET Pwd ='${password}', Salt ='${salt}', FKICEmpresa ='${fKICEmpresa}', tipoUser ='${tipouser}', FKProyecto ='${fkproyecto}',
                       Inventario ='${inventario}', Geocerca ='${geocerca}', CreacionRutas ='${creacionRutas}', Trafico ='${trafico}',
                       ipfija ='${ipfija}', RolTrafico ='${rolTrafico}', comando ='${comando}', NombreCompleto ='${nombreCompleto}',
-                      FKIp ='${fKIp}', CorreoUsers ='${correoUsers}', EmpresaInventario ='${empresaInventario}', EmpresasTrafico ='${empresasTrafico}' WHERE IdUser ='${idUser}'`;
+                      FKIp ='${fKIp}', CorreoUsers ='${correoUsers}', EmpresaInventario ='${empresaInventario}' WHERE IdUser ='${idUser}'`;
                     }
 
                     res.json({success : true, data : await sqlconfig.query(consulta)});
