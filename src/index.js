@@ -785,13 +785,13 @@ const getTraficoGlobal = async () => {
     "ISNULL(c.FKTrayecto, 0) as trayecto, r.DescripcionRuta, t.DescripcionTrayecto, c.NombreConductor, "+
     "CASE WHEN c.ContainerNum IS NULL OR c.ContainerNum = 'ND' THEN (LEFT(c.Documento, 35) + CASE WHEN LEN(c.Documento) > 35 THEN '...' ELSE '' END) ELSE c.ContainerNum END as ContainerNum, "+
     "c.Ref, tp.NombreTranspo, c.MovilConductor, c.PlacaTrailer, CONVERT(varchar,DATEADD(minute,0,c.FechaHoraInicio),20) as fechainicio, "+
-    "ISNULL(CONVERT(varchar,DATEADD(minute,0,c.FechaHoraFin),20), CONVERT(varchar,DATEADD(minute,0,GETDATE()),20)) as fechafin, c.LastMsgLat, c.LastMsgLong, "+
+    "ISNULL(CONVERT(varchar,DATEADD(minute,0,c.FechaHoraFin),20), CONVERT(varchar,DATEADD(minute,120,GETDATE()),20)) as fechafin, c.LastMsgLat, c.LastMsgLong, "+
     "d.Locked, c.Active, ISNULL(t.DistanciaReal,0) as DistanciaCompleta, t.Origen, d.FKLokTipoEquipo, "+
     "dbo.Tiempo(DATEDIFF(SECOND, LoksysServerTime, GETUTCDATE())) as Tiempo, DATEDIFF(SECOND, '1970-01-01 00:00:00', LoksysServerTime) as tiempoUnix, "+
     "dbo.iconbateria2(ISNULL(ROUND(BatteryVoltage, 2),3), d.FKLokTipoEquipo, c.FKLokDeviceID) as icon_bat, ROUND(BatteryVoltage, 2) as bateria, "+
-    "c.LastReportNota, tr.TipoReporte, c.LastReportUbica+ ' ('+CONVERT(NVARCHAR(20), DATEDIFF(MINUTE, LastReportTime, DATEADD(MINUTE,0, GETDATE())))+' min)' as LastReportUbica, "+
+    "c.LastReportNota, tr.TipoReporte, c.LastReportUbica+ ' ('+CONVERT(NVARCHAR(20), DATEDIFF(MINUTE, LastReportTime, DATEADD(MINUTE,120, GETDATE())))+' min)' as LastReportUbica, "+
     "d.Ciudad+': '+d.Location+ CASE WHEN ContadorGps <> 0 THEN ' ('+CONVERT(NVARCHAR(20), ContadorGps)+')' ELSE '' END as Ciudad, "+
-    "DATEADD(MINUTE, DATEDIFF(MINUTE, GETUTCDATE(), GETDATE()) + 0, LoksysServerTime) as LoksysServerTime, "+"SUBSTRING(iconos.IconMoving, 2, CHARINDEX('|', iconos.IconMoving) - 2) AS IconMoving, "+
+    "DATEADD(MINUTE, DATEDIFF(MINUTE, GETUTCDATE(), GETDATE()) + 120, LoksysServerTime) as LoksysServerTime, "+"SUBSTRING(iconos.IconMoving, 2, CHARINDEX('|', iconos.IconMoving) - 2) AS IconMoving, "+
     "SUBSTRING(iconos.IconLocked, 2, CHARINDEX('|', iconos.IconLocked) - 2) AS IconLocked, "+
     "SUBSTRING(iconos.IconDesvio, 2, CHARINDEX('|', iconos.IconDesvio) - 2) AS IconDesvio, "+
     "SUBSTRING(iconos.IconSeguro, 2, CHARINDEX('|', iconos.IconSeguro) - 2) AS IconSeguro, "+
@@ -808,8 +808,8 @@ const getTraficoGlobal = async () => {
     "LEFT JOIN ICTipoReporte as tr ON c.LastICTipoReporte =  tr.IdTipoReporte "+
     "LEFT JOIN ICTransportadora as tp ON tp.IdTransportadora = c.FKICTransportadora "+
     "LEFT JOIN QR_Maestro as qr ON c.FKQrMaestro = qr.ID_QRMaestro "+
-    "OUTER APPLY dbo.IconosContract(c.ContractID, c.FKLokDeviceID) AS iconos WHERE c.Active=1";
-
+    "OUTER APPLY dbo.IconosContract(c.ContractID, c.FKLokDeviceID) AS iconos WHERE c.Active=1 "+
+    "ORDER BY d.Locked ASC, bitAperturaRespo ASC, bitBackRespo ASC, bitAlejadoRespo ASC, bitDesvioRespo ASC, bitDetencionRespo ASC, bitGpsRespo ASC, bitTiempoRespo ASC, d.LoksysServerTime";
     try {
         let resultado = await sqlconfig.query(consulta);
         return { success: true, data: resultado.recordsets[0] };
@@ -1010,7 +1010,7 @@ wss2.on('connection', (ws, req) => {
 });
 
 // Ejecutar la consulta cada 10 segundos
-setInterval(solicitudesHB, 60000);
+setInterval(checkSolicitudes, 60000);
 setInterval(checkContratos, 10000);
 
 /*sqlconfig.registerNotification('SELECT IDSolicitudes FROM LokSolicitudes WHERE FKLokEstados = 2')
@@ -1022,10 +1022,10 @@ setInterval(checkContratos, 10000);
         console.error("Error al registrar notificación:", err);
     });*/
 
-sqlconfig.registerNotification('Sol_Queue', (message) => {
+/*sqlconfig.registerNotification('Sol_Queue', (message) => {
     console.log("Mensaje procesado:", message);
     checkSolicitudes();
-});
+});*/
 
 
 /*const wss = new WebSocket.Server({ port: 8080 });

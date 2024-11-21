@@ -50,9 +50,13 @@ controller.list_historicos = async (req, res) => {
                       consulta+=" AND e.IdEmpresa="+empresa;
                     }
                     let resultado=await sqlconfig.query(consulta);
-                    res.json({success : true, data : resultado.recordsets[0]});
+                    if (resultado.recordsets && resultado.recordsets[0]) {
+  			               res.json({ success: true, data: resultado.recordsets[0] });
+                    } else {
+			                 res.json({ success: false, message: 'No data found' });
+                    }
                 }
-            });
+            });ss
         }
     }catch(err){
         res.json({success : false});
@@ -60,7 +64,7 @@ controller.list_historicos = async (req, res) => {
 
 }
 
-controller.get_contratounico = async (req, res) => {
+controller.get_contratounicso = async (req, res) => {
     try{
         var token = req.headers.authorization;
         if (!token) {
@@ -514,7 +518,7 @@ controller.get_reportestrafico = async (req, res) => {
                     var consulta= "SELECT r.IdReport, r.XTime, ta.TipoAccion, tr.TipoReporte, r.Ubicacion, r.Nota, r.XUser from LokReport as r "+
                     "INNER JOIN LokTipoAccion as ta ON ta.IdTipoAccion = r.FKLokTipoAccion "+
                     "INNER JOIN ICTipoReporte as tr ON tr.idTipoReporte = r.FKICTipoReporte "+
-                    "WHERE r.FKLokContractID='"+contrato+"'";
+                    "WHERE r.FKLokContractID='"+contrato+"' ORDER BY r.XTime";
                     let resultado=await sqlconfig.query(consulta);
                     res.json({success : true, data : resultado.recordsets[0]});
                 }

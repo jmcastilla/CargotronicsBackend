@@ -84,6 +84,7 @@ let query = function( sqlv, values ) {
         conn1.connect(config1).then(() => {
             var request = new sql.Request(conn1);
             request.query(sqlv, function (err, recordset) {
+                conn1.close();
                 if (err){
                     resolve(err);
                 }else{
@@ -91,6 +92,7 @@ let query = function( sqlv, values ) {
                 }
             });
         }).catch(err => {
+            conn1.close();
             resolve(err);
         });
     });
@@ -126,6 +128,7 @@ let query2 = function( sqlv, values ) {
         conn2.connect(config2).then(() => {
             var request = new sql.Request(conn2);
             request.query(sqlv, function (err, recordset) {
+                conn2.close();
                 if (err){
                     resolve(err);
                 }else{
@@ -133,6 +136,7 @@ let query2 = function( sqlv, values ) {
                 }
             });
         }).catch(err => {
+            conn2.close();
             resolve(err);
         });
     });
@@ -184,7 +188,7 @@ const registerNotification = function(queueName, callback) {
 
             // Ejecuta la consulta para recibir un mensaje
             request.query(queryText, (err, result) => {
-                
+
                 if (err) {
                     console.error("Error en la consulta de la cola:", err);
                     // En caso de error, vuelve a intentar escuchar después de un segundo
