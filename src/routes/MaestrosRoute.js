@@ -37,7 +37,7 @@ const MaestrosController = require('../controller/MaestrosController.js');
  *                         type: string
  *                         description: Descripción de la ruta.
  *                         example: "Ruta A"
- *                       // incluir otros campos necesarios aquí
+ *                       incluir otros campos necesarios aquí
  *       400:
  *         description: Error en la solicitud.
  *         content:
