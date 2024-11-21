@@ -64,7 +64,7 @@ controller.list_historicos = async (req, res) => {
 
 }
 
-controller.get_contratounicso = async (req, res) => {
+controller.get_contratounico = async (req, res) => {
     try{
         var token = req.headers.authorization;
         if (!token) {
