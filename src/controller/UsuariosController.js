@@ -243,7 +243,7 @@ controller.get_obtenerusuario = async (req, res) => {
                 } else {
                     var nick= req.body.username;
                     var consulta= "SELECT IdUser, FKICEmpresa, RolTrafico, tipoUser, FKProyecto , Inventario,  GeoCerca, CreacionRutas, "+
-                    "Trafico, ModificarDisp, ipfija, comando, id_direccion, NombreCompleto, CorreoUsers, EmpresaInventario FROM ICUsers "+
+                    "Trafico, ModificarDisp, ipfija, comando, id_direccion, NombreCompleto, CorreoUsers, EmpresaInventario, EmpresasTrafico FROM ICUsers "+
                     "LEFT JOIN LokDireccionesIp ON id_direccion = FKIp WHERE IdUser = '" + nick + "'";
                     let resultado=await sqlconfig.query(consulta);
                     res.json({success : true, data : resultado.recordset});
