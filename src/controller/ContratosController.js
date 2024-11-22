@@ -570,7 +570,7 @@ controller.insert_filtro = async (req, res) => {
                 } else {
                     if(req.body.IdFiltro == -1){
                         var consulta = "INSERT INTO CtFiltrosTrafico (DescripcionFiltro, FiltroJson, FkIdUser) VALUES ("+
-                        "'"+req.body.DescripcionFiltro+"','"+req.body.FiltroJson+"','"+req.body.FkIdUser+"'")";
+                        "'"+req.body.DescripcionFiltro+"','"+req.body.FiltroJson+"','"+req.body.FkIdUser+"')";
 
                         res.json({success : true, data : await sqlconfig.query(consulta)});
                     }else{
