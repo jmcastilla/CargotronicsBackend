@@ -1941,5 +1941,81 @@ router.post('/insertreportetrafico', ContratosController.insert_reportetrafico);
  */
 
 router.post('/updatereportetrafico', ContratosController.update_reportetrafico);
+/**
+ * @swagger
+ * /insertfiltro:
+ *   post:
+ *     summary: Inserta o actualiza un filtro de tráfico.
+ *     description: Permite insertar un nuevo filtro o actualizar uno existente, dependiendo del valor de `IdFiltro`.
+ *     tags:
+ *       - Contratos
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - IdFiltro
+ *               - DescripcionFiltro
+ *               - FiltroJson
+ *               - FkIdUser
+ *             properties:
+ *               IdFiltro:
+ *                 type: integer
+ *                 description: ID del filtro. Use -1 para insertar un nuevo filtro.
+ *                 example: -1
+ *               DescripcionFiltro:
+ *                 type: string
+ *                 description: Descripción del filtro.
+ *                 example: "Filtro de tráfico importante"
+ *               FiltroJson:
+ *                 type: string
+ *                 description: Contenido del filtro en formato JSON.
+ *                 example: "{\"key\": \"value\"}"
+ *               FkIdUser:
+ *                 type: integer
+ *                 description: ID del usuario que crea o actualiza el filtro.
+ *                 example: 123
+ *     responses:
+ *       200:
+ *         description: Operación realizada con éxito.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la operación fue exitosa.
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   description: Resultados de la consulta en caso de éxito.
+ *       400:
+ *         description: Error en la solicitud, falta el token.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Token is missing
+ *       401:
+ *         description: Error de autenticación, token inválido o expirado.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Failed to authenticate token
+ *       500:
+ *         description: Error interno del servidor.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ */
+
+router.post('/insertfiltro', ContratosController.insert_filtro);
 
 module.exports = router;

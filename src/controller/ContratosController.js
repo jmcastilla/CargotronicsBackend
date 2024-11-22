@@ -557,4 +557,37 @@ controller.update_reportetrafico = async (req, res) => {
     }
 }
 
+controller.insert_filtro = async (req, res) => {
+    try{
+        var token = req.headers.authorization;
+        if (!token) {
+            return res.json({ success: false, message: 'Token is missing' });
+        }else{
+            token = req.headers.authorization.split(' ')[1];
+            jwt.verify(token, 'secret_key', async (err, decoded) => {
+                if (err) {
+                    res.json({ success: false, message: 'Failed to authenticate token' });
+                } else {
+                    if(req.body.IdFiltro == -1){
+                        var consulta = "INSERT INTO CtFiltrosTrafico (DescripcionFiltro, FiltroJson, FkIdUser) VALUES ("+
+                        "'"+req.body.DescripcionFiltro+"','"+req.body.FiltroJson+"','"+req.body.FkIdUser+"'")";
+
+                        res.json({success : true, data : await sqlconfig.query(consulta)});
+                    }else{
+                        try{
+                            var consulta = "UPDATE CtFiltrosTrafico SET DescripcionFiltro='"+req.body.DescripcionFiltro+"', FiltroJson='"+req.body.FiltroJson+"', FkIdUser='"+req.body.FkIdUser+"' WHERE IdFiltro="+req.body.IdFiltro;
+                            res.json({success : await sqlconfig.query(consulta)});
+                        }catch(error){
+                            res.json({success : false});
+                        }
+                    }
+                }
+            });
+        }
+    }catch(err){
+        res.json({success : false});
+    }
+
+}
+
 module.exports = controller;
