@@ -2079,6 +2079,6 @@ router.post('/insertfiltro', ContratosController.insert_filtro);
  *               success: false
  */
 
-router.get('/getfiltro', ContratosController.get_filtro);
+router.get('/getfiltros', ContratosController.get_filtros);
 
 module.exports = router;
