@@ -576,6 +576,7 @@ controller.insert_filtro = async (req, res) => {
                     }else{
                         try{
                             var consulta = "UPDATE CtFiltrosTrafico SET DescripcionFiltro='"+req.body.DescripcionFiltro+"', FiltroJson='"+req.body.FiltroJson+"', FkIdUser='"+req.body.FkIdUser+"' WHERE IdFiltro="+req.body.IdFiltro;
+                            console.log(consulta);
                             res.json({success : await sqlconfig.query(consulta)});
                         }catch(error){
                             res.json({success : false});
