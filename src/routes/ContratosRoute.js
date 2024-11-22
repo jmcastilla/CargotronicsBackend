@@ -2019,7 +2019,7 @@ router.post('/updatereportetrafico', ContratosController.update_reportetrafico);
 router.post('/insertfiltro', ContratosController.insert_filtro);
 /**
  * @swagger
- * /contratos/getfiltro:
+ * /contratos/getfiltros:
  *   get:
  *     summary: Obtiene los filtros de tráfico del usuario autenticado.
  *     description: Recupera la lista de filtros de tráfico asociados al usuario autenticado.
