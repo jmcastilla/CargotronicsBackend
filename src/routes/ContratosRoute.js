@@ -1943,7 +1943,7 @@ router.post('/insertreportetrafico', ContratosController.insert_reportetrafico);
 router.post('/updatereportetrafico', ContratosController.update_reportetrafico);
 /**
  * @swagger
- * /insertfiltro:
+ * /contratos/insertfiltro:
  *   post:
  *     summary: Inserta o actualiza un filtro de tráfico.
  *     description: Permite insertar un nuevo filtro o actualizar uno existente, dependiendo del valor de `IdFiltro`.
@@ -1976,9 +1976,9 @@ router.post('/updatereportetrafico', ContratosController.update_reportetrafico);
  *                 description: Contenido del filtro en formato JSON.
  *                 example: "{\"key\": \"value\"}"
  *               FkIdUser:
- *                 type: integer
+ *                 type: string
  *                 description: ID del usuario que crea o actualiza el filtro.
- *                 example: 123
+ *                 example: "username"
  *     responses:
  *       200:
  *         description: Operación realizada con éxito.
