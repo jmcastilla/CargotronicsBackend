@@ -590,4 +590,26 @@ controller.insert_filtro = async (req, res) => {
 
 }
 
+controller.get_filtros = async (req, res) => {
+    try{
+        var token = req.headers.authorization;
+        if (!token) {
+            return res.json({ success: false, message: 'Token is missing' });
+        }else{
+            token = req.headers.authorization.split(' ')[1];
+            jwt.verify(token, 'secret_key', async (err, decoded) => {
+                if (err) {
+                    res.json({ success: false, message: 'Failed to authenticate token' });
+                } else {
+                    consulta = "SELECT IdFiltro, DescripcionFiltro, FiltroJson FROM CtFiltrosTrafico where FkIdUser='"+decoded.username+"'";
+                    let resultado=await sqlconfig.query(consulta);
+                    res.json({success : true, data : resultado.recordsets[0]});
+                }
+            });
+        }
+    }catch(err){
+        res.json({success : false});
+    }
+}
+
 module.exports = controller;
