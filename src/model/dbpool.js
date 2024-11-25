@@ -51,8 +51,8 @@ var config2 = {
 var config1 = {
     user: 'juan',
     password: 'Logiset.1',
-    server: '50.57.222.231',
-    database: 'infocargatest',
+    server: '10.0.5.2', //10.0.5.2
+    database: 'infocarga',
     synchronize: true,
     trustServerCertificate: true,
     connectionTimeout: 60000,
@@ -66,7 +66,7 @@ var config1 = {
 var config2 = {
     user: 'juan',
     password: 'Logiset.1',
-    server: '50.57.222.231',
+    server: '10.0.5.2', //10.0.5.2 50.57.222.231
     database: 'reportes2',
     synchronize: true,
     trustServerCertificate: true,
