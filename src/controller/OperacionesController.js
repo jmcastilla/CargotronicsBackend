@@ -52,7 +52,7 @@ controller.list_historicos = async (req, res) => {
                     let resultado=await sqlconfig.query(consulta);
                     res.json({ success: true, data: resultado.recordsets[0] });
                 }
-            });ss
+            });
         }
     }catch(err){
         res.json({success : false});
