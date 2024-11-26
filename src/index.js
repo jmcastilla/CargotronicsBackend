@@ -1010,7 +1010,7 @@ wss2.on('connection', (ws, req) => {
 });
 
 // Ejecutar la consulta cada 10 segundos
-setInterval(checkSolicitudes, 60000);
+setInterval(solicitudesHB, 60000);
 setInterval(checkContratos, 10000);
 
 /*sqlconfig.registerNotification('SELECT IDSolicitudes FROM LokSolicitudes WHERE FKLokEstados = 2')
@@ -1022,10 +1022,10 @@ setInterval(checkContratos, 10000);
         console.error("Error al registrar notificación:", err);
     });*/
 
-/*sqlconfig.registerNotification('Sol_Queue', (message) => {
+sqlconfig.registerNotification('Sol_Queue', (message) => {
     console.log("Mensaje procesado:", message);
     checkSolicitudes();
-});*/
+});
 
 
 /*const wss = new WebSocket.Server({ port: 8080 });
