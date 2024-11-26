@@ -27,7 +27,7 @@ controller.list_historicos = async (req, res) => {
             token = req.headers.authorization.split(' ')[1];
             jwt.verify(token, 'secret_key', async (err, decoded) => {
                 if (err) {
-                    return res.json({ success: false, message: 'Failed to authenticate token' });
+                    res.json({ success: false, message: 'Failed to authenticate token' });
                 } else {
                     var desde=req.body.desde;
                     var hasta=req.body.hasta;
@@ -50,7 +50,11 @@ controller.list_historicos = async (req, res) => {
                       consulta+=" AND e.IdEmpresa="+empresa;
                     }
                     let resultado=await sqlconfig.query(consulta);
-                    res.json({ success: true, data: resultado.recordsets[0] });
+                    if (resultado.recordsets && resultado.recordsets[0]) {
+  			               res.json({ success: true, data: resultado.recordsets[0] });
+                    } else {
+			                 res.json({ success: false, message: 'No data found' });
+                    }
                 }
             });
         }
