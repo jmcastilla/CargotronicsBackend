@@ -51,7 +51,7 @@ var config2 = {
 var config1 = {
     user: 'juan',
     password: 'Logiset.1',
-    server: '10.0.5.2', //10.0.5.2
+    server: '10.0.5.2',
     database: 'infocarga',
     synchronize: true,
     trustServerCertificate: true,
@@ -62,11 +62,11 @@ var config1 = {
         enableArithAbort: true
     }
 }
-
+//10.0.5.2 50.57.222.231
 var config2 = {
     user: 'juan',
     password: 'Logiset.1',
-    server: '10.0.5.2', //10.0.5.2 50.57.222.231
+    server: '10.0.5.2',
     database: 'reportes2',
     synchronize: true,
     trustServerCertificate: true,
@@ -84,7 +84,7 @@ let query = function( sqlv, values ) {
         conn1.connect(config1).then(() => {
             var request = new sql.Request(conn1);
             request.query(sqlv, function (err, recordset) {
-                conn1.close();
+                //conn1.close();
                 if (err){
                     resolve(err);
                 }else{
@@ -92,7 +92,7 @@ let query = function( sqlv, values ) {
                 }
             });
         }).catch(err => {
-            conn1.close();
+            //conn1.close();
             resolve(err);
         });
     });
@@ -128,7 +128,7 @@ let query2 = function( sqlv, values ) {
         conn2.connect(config2).then(() => {
             var request = new sql.Request(conn2);
             request.query(sqlv, function (err, recordset) {
-                conn2.close();
+                //conn2.close();
                 if (err){
                     resolve(err);
                 }else{
@@ -136,7 +136,7 @@ let query2 = function( sqlv, values ) {
                 }
             });
         }).catch(err => {
-            conn2.close();
+            //conn2.close();
             resolve(err);
         });
     });
