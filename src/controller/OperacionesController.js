@@ -50,11 +50,11 @@ controller.list_historicos = async (req, res) => {
                       consulta+=" AND e.IdEmpresa="+empresa;
                     }
                     let resultado=await sqlconfig.query(consulta);
-                    if (resultado.recordsets && resultado.recordsets[0]) {
-  			               return res.json({ success: true, data: resultado.recordsets[0] });
-                    } else {
-			                 return res.json({ success: false, message: 'No data found' });
+                    if (!resultado.recordsets || !resultado.recordsets[0]) {
+                        return res.json({ success: false, message: 'No data found' }); // IMPORTANTE: "return"
                     }
+
+                    return res.json({ success: true, data: resultado.recordsets[0] });
                 }
             });ss
         }
