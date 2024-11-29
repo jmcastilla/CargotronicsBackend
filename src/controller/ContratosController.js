@@ -591,6 +591,31 @@ controller.insert_filtro = async (req, res) => {
 
 }
 
+controller.delete_filtro = async (req, res) => {
+    try{
+        var token = req.headers.authorization;
+        if (!token) {
+            return res.json({ success: false, message: 'Token is missing' });
+        }else{
+            token = req.headers.authorization.split(' ')[1];
+            jwt.verify(token, 'secret_key', async (err, decoded) => {
+                if (err) {
+                    res.json({ success: false, message: 'Failed to authenticate token' });
+                } else {
+                    if(req.body.IdFiltro != -1){
+                        var consulta = "DELETE FROM CtFiltrosTrafico WHERE IdFiltro="+req.body.IdFiltro+" AND FkIdUser='"+decoded.username+"'";
+                        console.log(consulta);
+                        res.json({success : true, data : await sqlconfig.query(consulta)});
+                    }
+                }
+            });
+        }
+    }catch(err){
+        res.json({success : false});
+    }
+
+}
+
 controller.get_filtros = async (req, res) => {
     try{
         var token = req.headers.authorization;

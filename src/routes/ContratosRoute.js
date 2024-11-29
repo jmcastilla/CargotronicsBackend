@@ -2080,5 +2080,66 @@ router.post('/insertfiltro', ContratosController.insert_filtro);
  */
 
 router.get('/getfiltros', ContratosController.get_filtros);
+/**
+ * @swagger
+ * /contratos//deletefiltro:
+ *   post:
+ *     summary: Elimina un filtro de tráfico.
+ *     description: Permite eliminar un filtro de tráfico específico identificado por su `IdFiltro`.
+ *     tags:
+ *       - Contratos
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - IdFiltro
+ *             properties:
+ *               IdFiltro:
+ *                 type: integer
+ *                 description: ID del filtro que se desea eliminar.
+ *                 example: 1
+ *     responses:
+ *       200:
+ *         description: Filtro eliminado exitosamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Indica si la operación fue exitosa.
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   description: Resultado de la consulta de eliminación.
+ *       400:
+ *         description: Error en la solicitud, falta el token.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Token is missing
+ *       401:
+ *         description: Error de autenticación, token inválido o expirado.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Failed to authenticate token
+ *       500:
+ *         description: Error interno del servidor.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ */
+
+router.post('/deletefiltro', ContratosController.delete_filtro);
 
 module.exports = router;
