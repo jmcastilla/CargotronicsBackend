@@ -53,7 +53,7 @@ var config1 = {
     user: 'juan',
     password: 'Logiset.1',
     server: Configuracion.IP_BD,
-    database: 'infocarga',
+    database: Configuracion.NAME_BD,
     synchronize: true,
     trustServerCertificate: true,
     connectionTimeout: 60000,
