@@ -750,7 +750,7 @@ let clients = new Set(); // Array para almacenar los clientes conectados
 let clientsTrafico = new Set();
 // Función para realizar una consulta global sin el filtro de empresa
 const getSolicitudesGlobal = async () => {
-    var consulta = "SELECT IDSolicitudes, PlacaTruck, NombreInstalador, NombreEmpresa, CASE when FechaHoraCita < '2012-01-01 00:00:00.000'"
+    var consulta = "SELECT IDSolicitudes, PlacaTruck, NombreInstalador, m.IdEmpresa, NombreEmpresa, CASE when FechaHoraCita < '2012-01-01 00:00:00.000'"
         + " THEN 'Hora-Nula Fecha-Nula' else CONVERT(nvarchar(30), FechaHoraCita, 120) end AS Hora, s.FKLokEstados , DescripcionRuta + '' + CASE WHEN n.FKLokClienteExt = 0 THEN '' ELSE '( ' + x.Descripcion + ' )' END AS Ruta, u.FKLokCiudadOrigen, "
         + " ContainerNum + CASE WHEN DigitoVerificacion IS NOT NULL THEN '-' + CAST(DigitoVerificacion AS nvarchar(2)) ELSE '' END AS Contenedor,Contacto, DATEDIFF(MINUTE, GETUTCDATE(), DATEADD(hh, 5, FechaHoraCita)) AS Tiempo, r.NotaReporte as nota, e.Descripcion as estado, HoraReporte as hora_e"
         + " FROM LokSolicitudes s INNER JOIN ICEmpresa m ON s.FKICEmpresa = m.IdEmpresa"
@@ -827,7 +827,7 @@ const checkSolicitudes = async () => {
                   // Verificar si la idempresa del cliente es diferente de 2
                   if (client.decoded.idempresa !== 2) {
                       // Filtrar los datos para el cliente con idempresa diferente de 2
-                      dataToSend = globalSolicitudesData.data.filter(solicitud => solicitud.FKICEmpresa === client.decoded.idempresa);
+                      dataToSend = globalSolicitudesData.data.filter(solicitud => solicitud.IdEmpresa === client.decoded.idempresa);
                   } else {
                       // Si la idempresa es 2, enviar todos los datos sin filtrar
                       dataToSend = globalSolicitudesData.data;
