@@ -190,7 +190,6 @@ controller.get_trayectos = async (req, res) => {
                 if (err) {
                     res.json({ success: false, message: 'Failed to authenticate token' });
                 } else {
-                    console.log(decoded);
                     var consulta= "SELECT * FROM Trayectos WHERE FKLokProyecto="+decoded.proyecto+" ORDER BY DescripcionTrayecto;";
                     let resultado=await sqlconfig.query(consulta);
                     res.json({success : true, data : resultado.recordset});
@@ -313,7 +312,6 @@ controller.get_contratostrafico = async (req, res) => {
                         }
                     }
                     //consulta+="ORDER BY d.Locked ASC, bitAperturaRespo ASC, bitBackRespo ASC, bitAlejadoRespo ASC, bitDesvioRespo ASC, bitDetencionRespo ASC, bitGpsRespo ASC, bitTiempoRespo ASC, d.LoksysServerTime";
-                    console.log(consulta);
                     let resultado=await sqlconfig.query(consulta);
                     res.json({success : true, data : resultado.recordsets[0]});
                 }
@@ -385,7 +383,6 @@ controller.get_contratostraficocritico = async (req, res) => {
                         " OR e.Owner = "+decoded.idempresa+") ";
                     }
                     consulta+="ORDER BY d.Locked ASC, bitAperturaRespo ASC, bitBackRespo ASC, bitAlejadoRespo ASC, bitDesvioRespo ASC, bitDetencionRespo ASC, bitGpsRespo ASC, bitTiempoRespo ASC, d.LoksysServerTime";
-                    console.log(consulta);
                     let resultado=await sqlconfig.query(consulta);
                     res.json({success : true, data : resultado.recordsets[0]});
                 }
@@ -467,7 +464,6 @@ controller.get_fotoscontrato = async (req, res) => {
                     tipo = (tipo === "vid") ? ".mp4" : ".jpg";
                     var consulta= "SELECT * from dbo.Photos('"+contrato+"')";
                     let resultado=await sqlconfig.query(consulta);
-                    console.log(resultado.recordsets[0]);
                     let archivos = resultado.recordsets[0].filter(item => item.photo.includes(tipo));
                     return res.json({success : true, data : archivos});
                 }
@@ -677,7 +673,6 @@ controller.get_reportescontroldevice = async (req, res) => {
                     }else if(orden2 == 7){
                         consulta += " ORDER BY DATEDIFF(SECOND, DATEADD(MINUTE,-"+utcServidor+", PositionTime), UltActualizacionDevice) DESC ";
                     }
-                    console.log(consulta);
                     let resultado=await sqlconfig.query(consulta);
                     res.json({success : true, data : resultado.recordsets[0]});
                 }
@@ -981,9 +976,7 @@ controller.get_fotoscontractvisuallogistic = async (req, res) => {
                     res.json({ success: false, message: 'Failed to authenticate token' });
                 } else {
                     var contrato=req.body.contrato;
-                    console.log(contrato);
                     const varEndpoint= `https://visuallogisticsapp.azurewebsites.net/get-contract-summary/${contrato}`;
-                    console.log(varEndpoint);
                     try {
                         const response = await axios.get(varEndpoint, {
                             headers: {

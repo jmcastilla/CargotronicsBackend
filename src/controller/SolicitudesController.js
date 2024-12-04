@@ -29,8 +29,6 @@ controller.get_Solicitudes = async (req, res) => {
                         consulta += " AND s.FKICEmpresa = " + decoded.idempresa;
                     }
                     consulta += " ORDER BY FechaHoraCita";
-                    console.log(decoded.idempresa);
-                    console.log(consulta);
                     let resultado=await sqlconfig.query(consulta);
                     res.json({success : true, data : resultado.recordsets[0]});
                 }
@@ -86,7 +84,6 @@ controller.get_numerosolicitudnuevo = async (req, res) => {
                     let ultimoIDSolicitud=array[0].IDSolicitudes;
                     let numero = parseInt(ultimoIDSolicitud.slice(4)) + 1;
                     let nuevoIDSolicitud = `SOL-${numero.toString().padStart(8, '0')}`;
-                    console.log(nuevoIDSolicitud);
                     res.json({success : true, data : nuevoIDSolicitud});
                 }
             });
@@ -156,7 +153,7 @@ controller.get_listaempresas = async (req, res) => {
                 } else {
                     var formulario="completo";
                     var consulta= "SELECT DISTINCT IdEmpresa, NombreEmpresa FROM ICEmpresa WHERE FKLokProyectoEmpresa ="+decoded.proyecto+" ORDER BY NombreEmpresa";
-                    console.log("empresa seleccionada: "+decoded.idempresa);
+                    //console.log("empresa seleccionada: "+decoded.idempresa);
                     if(decoded.idempresa !== 2){
                         consulta= "SELECT DISTINCT IdEmpresa, NombreEmpresa FROM ICEmpresa WHERE IdEmpresa="+decoded.idempresa;
                         formulario="reducido";
@@ -450,9 +447,7 @@ controller.set_insertSolicitud = async (req, res) => {
                         "NotasDatosEntrega": req.body.NotasDatosEntrega,
                         "FechaHoraCitaDescargue": req.body.FechaHoraCitaDescargue
                     };
-                    console.log(data);
                     let resultado=await sqlconfig.queryProcedure('InsertSolicitud2', data);
-                    console.log(resultado);
                     res.json({success : true, data : resultado.recordsets[0]});
                 }
             });
@@ -510,9 +505,7 @@ controller.set_updateSolicitud = async (req, res) => {
                         "NotasDatosEntrega": req.body.NotasDatosEntrega,
                         "FechaHoraCitaDescargue": req.body.FechaHoraCitaDescargue
                     };
-                    console.log(data);
                     let resultado=await sqlconfig.queryProcedure('UpdateSolicitud', data);
-                    console.log(resultado);
                     res.json({success : true, data : resultado.recordsets[0]});
                 }
             });
@@ -618,9 +611,7 @@ controller.set_insertReporteSolicitud = async (req, res) => {
                         "XUser": req.body.XUser,
                         "FKLokSolicitudID": req.body.FKLokSolicitudID
                     };
-                    console.log(data);
                     let resultado=await sqlconfig.queryProcedure('LokInsertSolReport', data);
-                    console.log(resultado);
                     res.json({success : true, data : resultado.recordsets[0]});
                 }
             });
@@ -648,9 +639,7 @@ controller.set_updateReporteSolicitud = async (req, res) => {
                         "XUser": req.body.XUser,
                         "FKLokSolicitudID": req.body.FKLokSolicitudID
                     };
-                    console.log(data);
                     let resultado=await sqlconfig.queryProcedure('LokUpdateReportSol', data);
-                    console.log(resultado);
                     res.json({success : true, data : resultado.recordsets[0]});
                 }
             });
@@ -676,9 +665,7 @@ controller.set_deleteReporteSolicitud = async (req, res) => {
                         "XUser": req.body.XUser,
                         "FKLokSolicitudID": req.body.FKLokSolicitudID
                     };
-                    console.log(data);
                     let resultado=await sqlconfig.queryProcedure('LokDeleteReportSol', data);
-                    console.log(resultado);
                     res.json({success : true, data : resultado.recordsets[0]});
                 }
             });

@@ -155,7 +155,6 @@ controller.get_infocontrato = async (req, res) => {
                     res.json({ success: false, message: 'Failed to authenticate token' });
                 } else {
                     var contrato= req.body.contrato;
-                    console.log(contrato);
                     var vissolicitud = await isSolicitud(contrato);
                     var consulta = "SELECT LokContractID.ContractID, LokContractID.LightBit, LokContractID.FKICEmpresa, LokContractID.FKICEmpresaConsulta, LokContractID.FKICEmpresaConsulta2, LokContractID.FKICEmpresaConsulta3,";
                     consulta += "LokContractID.FKICRutas, LokContractID.FKLokBarsSLM, LokContractID.Active, LokContractID.FKLokDeviceID, LokContractID.Ref, ";
@@ -201,7 +200,6 @@ controller.get_infocontratoproyecto = async (req, res) => {
                     res.json({ success: false, message: 'Failed to authenticate token' });
                 } else {
                     var contrato= req.body.contrato;
-                    console.log(contrato);
                     consulta = "SELECT l.ContractID, l.FKICEmpresa, SlavesAsignados, AlertasActivas, LightBit, l.FKICEmpresaConsulta, l.FKICEmpresaConsulta2, l.FKICEmpresaConsulta3, l.FKICRutas, l.Active, l.FKLokDeviceID, l.Ref, l.PlacaTruck, l.ColorTruck, l.PlacaTrailer, l.NombreConductor, l.NitConductor, l.FechaHoraCita, ";
                     consulta +="l.MovilConductor, l.ContainerNum, l.Notas, l.NombreEscolta, l.FKCercaAutorizada, l.FKLokSolicitud, l.FKICEmpresaConsulta, l.MovilEscolta, l.NotasTI, l.FKLokCategoriaServ, l.OtrosDatosTruck, l.FKICTransportadora, l.FKLokInstalador, l.FKLokDesistaladores, l.NotaDesisntalaciones, l.Contacto, l.LokTipoServicios, l.FKICTransportadora, ";
                     consulta +="(SELECT TOP 1 id_chequeo FROM ValitronicsChequeo WHERE Fk_ContractID = l.ContractID) as chequeo_ident ";
@@ -221,7 +219,6 @@ async function isSolicitud(contrato) {
     try{
         var consulta= "SELECT FKLokSolicitud FROM LokContractID WHERE ContractID = '" + contrato + "'";
         let resultado=await sqlconfig.query(consulta);
-        console.log(resultado);
         if(resultado.recordsets[0] && resultado.recordsets[0].length > 0){
             return true;
         }else{
@@ -344,7 +341,6 @@ controller.set_updatecontrato = async (req, res) => {
                         "NotasDatosEntrega": req.body.NotasDatosEntrega,
                         "critico": req.body.critico,
                     };
-                    console.log(data);
                     let resultado=await sqlconfig.queryProcedure('LokUpdateContractIDwhenEdit', data);
                     res.json({success : true, data : resultado.recordsets[0]});
                 }
@@ -571,12 +567,10 @@ controller.insert_filtro = async (req, res) => {
                     if(req.body.IdFiltro == -1){
                         var consulta = "INSERT INTO CtFiltrosTrafico (DescripcionFiltro, FiltroJson, FkIdUser) VALUES ("+
                         "'"+req.body.DescripcionFiltro+"','"+req.body.FiltroJson+"','"+req.body.FkIdUser+"')";
-                        console.log(consulta);
                         res.json({success : true, data : await sqlconfig.query(consulta)});
                     }else{
                         try{
                             var consulta = "UPDATE CtFiltrosTrafico SET DescripcionFiltro='"+req.body.DescripcionFiltro+"', FiltroJson='"+req.body.FiltroJson+"', FkIdUser='"+req.body.FkIdUser+"' WHERE IdFiltro="+req.body.IdFiltro;
-                            console.log(consulta);
                             res.json({success : await sqlconfig.query(consulta)});
                         }catch(error){
                             res.json({success : false});
@@ -604,7 +598,6 @@ controller.delete_filtro = async (req, res) => {
                 } else {
                     if(req.body.IdFiltro != -1){
                         var consulta = "DELETE FROM CtFiltrosTrafico WHERE IdFiltro="+req.body.IdFiltro+" AND FkIdUser='"+decoded.username+"'";
-                        console.log(consulta);
                         res.json({success : true, data : await sqlconfig.query(consulta)});
                     }
                 }

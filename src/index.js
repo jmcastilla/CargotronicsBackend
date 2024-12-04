@@ -107,7 +107,6 @@ app.post('/editar-excel', async (req, res) => {
     datos.forEach((objeto, indice) => {
       // Obtener la fila correspondiente a este objeto (por ejemplo, A3+indice)
       const row = startCell.row(indice);
-      console.log(row);
       row.cell(1).value(objeto.ContractID);
       row.cell(2).value(objeto.FKLokDeviceID);
       row.cell(3).value(objeto.NombreEmpresa);
@@ -190,9 +189,7 @@ app.post('/login', async (req, res) =>{
         "INNER JOIN LokProyectos as p on p.IDProyecto = u.FKProyecto "+
         "INNER JOIN LokRoles as r on r.IDRol = u.tipoUser "+
         "WHERE u.IdUser='"+user+"' and u.Activo=1";
-        console.log(consulta);
         let resultado=await sqlconfig.query(consulta);
-        console.log(resultado);
         if(resultado.recordset.length > 0){
             const hashresult = crypto.createHash('sha256')
             .update(pass+'|'+resultado.recordset[0].Salt)
@@ -215,7 +212,6 @@ app.post('/login', async (req, res) =>{
                     empresastrafico: resultado.recordset[0].EmpresasTrafico,
                     server: sqlconfig.server
                 };
-                console.log("empresastrafico="+resultado.recordset[0].EmpresasTrafico);
                 const token = jwt.sign(tokenPayload, 'secret_key', { expiresIn: '1h' });
                 res.json({success : true, entorno: sqlconfig.server, timereload:resultado.recordset[0].TimeReload, proyecto:resultado.recordset[0].FKProyecto, token});
             }else{
@@ -225,7 +221,6 @@ app.post('/login', async (req, res) =>{
             res.json({success : false});
         }
     }catch(err){
-        console.log(err);
         res.json({success : false});
     }
 });
@@ -234,12 +229,10 @@ app.post('/falabella', async (req, res) =>{
     try{
         let contenedor=req.body.contenedor;
         let token=req.body.token;
-        console.log(contenedor+" - "+token);
         if(token == "7WK5T79u5mIzjIXXi2oI9Fglmgivv7RAJ7izyj9tUyQ"){
             var consulta= "SELECT c.LastReportUbica as Ubicacion, r.TipoReporte as Estado, c.ContainerNum as Contenedor FROM LokContractID as c " +
   					"INNER JOIN ICTipoReporte AS r on r.IdTipoReporte = c.LastICTipoReporte WHERE " +
   					"c.Active=1 AND c.FKICEmpresa=243 AND c.ContainerNum='"+contenedor+"'";
-            console.log(consulta);
             let resultado=await sqlconfig.query(consulta);
             res.json({success : true, data : resultado.recordsets[0]});
         }else{
@@ -247,7 +240,6 @@ app.post('/falabella', async (req, res) =>{
         }
 
     }catch(err){
-        console.log(err);
         res.json({success : false});
     }
 });
@@ -497,7 +489,7 @@ app.post('/upload2', upload.array('files'), (req, res) => {
   });
 
   client.on('data', (data) => {
-    console.log(`Received data from server: ${data.toString('utf8')}`);
+    //console.log(`Received data from server: ${data.toString('utf8')}`);
     enviados++;
     if (enviados === files.length && !responseSent) {
       res.json({ success: true });
@@ -566,18 +558,18 @@ app.post('/upload', upload.array('files'), async (req, res) => {
   let responseSent = false;
   try {
     const files = req.files;
-    console.log(files);
+    //console.log(files);
     var enviados = 0;
 
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
-      console.log(file.buffer);
-      console.log(file.mimetype);
+      //console.log(file.buffer);
+      //console.log(file.mimetype);
       try {
         if (file.mimetype.startsWith('image/')) {
           // Process image file using sharp
           const metadata = await sharp(file.buffer).metadata();
-          console.log(metadata);
+          //console.log(metadata);
 
           const dataFoto = await sharp(file.buffer)
             .resize({ width: 800, height: 600, fit: sharp.fit.inside, withoutEnlargement: true })
@@ -597,7 +589,7 @@ app.post('/upload', upload.array('files'), async (req, res) => {
           });
 
           client.on('data', (data) => {
-            console.log(`Received data from server: ${data.toString('utf8')}`);
+            //console.log(`Received data from server: ${data.toString('utf8')}`);
             enviados++;
             if (enviados == files.length) {
               res.json({ success: true });
@@ -686,13 +678,13 @@ app.post('/uploadvideo', upload.array('files'), async (req, res) => {
   let responseSent = false;
   try {
     const files = req.files;
-    console.log(files);
+    //console.log(files);
     var enviados = 0;
 
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
-      console.log(file.buffer);
-      console.log(file.mimetype);
+      //console.log(file.buffer);
+      //console.log(file.mimetype);
       try {
         if (file.mimetype.startsWith('video/')) {
           // Process video file
@@ -876,7 +868,6 @@ const filtrarContratos = (contratos, decoded) => {
     const empresasTraficoIds = decoded.empresastrafico
       ? decoded.empresastrafico.split(',').map(id => parseInt(id.trim(), 10))
       : [];
-    console.log(empresasTraficoIds.length);
     return contratos.filter(contrato => {
         // Filtrar primero por FKLokProyecto¿
         if (contrato.FKLokProyecto !== decoded.proyecto) {
@@ -964,7 +955,6 @@ const broadcast = (data) => {
 
 // Evento cuando un cliente se conecta
 wss.on('connection', (ws, req) => {
-    console.log('Client connected via WebSocket solicitudes');
     const token = req.headers['sec-websocket-protocol'];
     if (!token || token === 'undefined') {
         ws.send(JSON.stringify({ success: false, message: 'Token is missing' }));
@@ -992,7 +982,6 @@ wss.on('connection', (ws, req) => {
 
 
 wss2.on('connection', (ws, req) => {
-  console.log('Client connected via WebSocket trafico');
     const token = req.headers['sec-websocket-protocol'];
     if (!token || token === 'undefined') {
         ws.send(JSON.stringify({ success: false, message: 'Token is missing' }));
