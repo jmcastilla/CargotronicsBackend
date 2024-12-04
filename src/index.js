@@ -823,7 +823,7 @@ const checkSolicitudes = async () => {
               if (client.readyState === WebSocket.OPEN && client.decoded) {
                   let dataToSend;
                   console.log("idempresa="+client.decoded.idempresa);
-                  console.log("globalSolicitudesData.data="+globalSolicitudesData.data);
+                  console.log("globalSolicitudesData.data=",JSON.stringify(globalSolicitudesData.data, null, 2));
                   // Verificar si la idempresa del cliente es diferente de 2
                   if (client.decoded.idempresa !== 2) {
                       // Filtrar los datos para el cliente con idempresa diferente de 2
