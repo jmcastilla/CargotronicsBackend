@@ -7,6 +7,7 @@ const jwt = require('jsonwebtoken');
 var app = express();
 var crypto = require('crypto');
 var hash = crypto.createHash('sha1');
+const Configuracion = require("./config");
 var sqlconfig = require("./model/dbpool");
 const sharp = require('sharp');
 const ffmpeg = require('fluent-ffmpeg');
@@ -18,7 +19,7 @@ const fs = require('fs');
 const { Readable } = require('stream');
 const {swaggerDocs} = require('./swagger');
 const WebSocket = require('ws');
-const PORT = 3002;
+const PORT = Configuracion.PUERTO;
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage, limits: {fileSize: 100 * 1024 * 1024} });
 
@@ -1012,8 +1013,8 @@ wss2.on('connection', (ws, req) => {
 });
 
 // Ejecutar la consulta cada 10 segundos
-setInterval(solicitudesHB, 60000);
-setInterval(checkContratos, 10000);
+setInterval(solicitudesHB, Configuracion.HB_SOLICITUDES);
+setInterval(checkContratos, Configuracion.TIME_TRAFICO);
 
 /*sqlconfig.registerNotification('SELECT IDSolicitudes FROM LokSolicitudes WHERE FKLokEstados = 2')
     .then((data) => {
@@ -1077,6 +1078,7 @@ wss.on('connection', (ws) => {
 
 
 app.listen(PORT, () =>{
-    console.log("Inicio Server");
+    console.log("Inicio Server = "+Configuracion.IP_BD+" - "+Configuracion.PUERTO);
+
     swaggerDocs(app,PORT);
 });

@@ -1,4 +1,5 @@
 var sql = require("mssql");
+const Configuracion = require("../config");
 
 // DATOS DE CONFIGURACIÓN DE LA BASE DE DATOS
 /*var config1 = {
@@ -51,7 +52,7 @@ var config2 = {
 var config1 = {
     user: 'juan',
     password: 'Logiset.1',
-    server: '10.0.5.2',
+    server: Configuracion.IP_BD,
     database: 'infocarga',
     synchronize: true,
     trustServerCertificate: true,
@@ -66,7 +67,7 @@ var config1 = {
 var config2 = {
     user: 'juan',
     password: 'Logiset.1',
-    server: '10.0.5.2',
+    server: Configuracion.IP_BD,
     database: 'reportes2',
     synchronize: true,
     trustServerCertificate: true,
