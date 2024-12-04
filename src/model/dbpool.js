@@ -1,6 +1,6 @@
 var sql = require("mssql");
 const Configuracion = require("../config");
-
+console.log("base de datos: ",Configuracion.IP_BD);
 // DATOS DE CONFIGURACIÓN DE LA BASE DE DATOS
 /*var config1 = {
     user: 'juan',
