@@ -1,4 +1,4 @@
-﻿var express = require('express');
+ha﻿var express = require('express');
 const multer  = require('multer');
 const path = require('path');
 var mssql = require("mssql");
@@ -829,6 +829,8 @@ const checkSolicitudes = async () => {
           clients.forEach((client) => {
               if (client.readyState === WebSocket.OPEN && client.decoded) {
                   let dataToSend;
+                  console.log("idempresa="+client.decoded.idempresa);
+                  console.log("globalSolicitudesData.data="+globalSolicitudesData.data);
                   // Verificar si la idempresa del cliente es diferente de 2
                   if (client.decoded.idempresa !== 2) {
                       // Filtrar los datos para el cliente con idempresa diferente de 2
