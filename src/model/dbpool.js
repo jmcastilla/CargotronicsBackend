@@ -68,15 +68,29 @@ var config2 = {
     user: 'juan',
     password: 'Logiset.1',
     server: Configuracion.IP_BD,
-    database: 'reportes2',
+    database: Configuracion.NAME_BD_REPORTES,
     synchronize: true,
     trustServerCertificate: true,
     connectionTimeout: 60000,
     requestTimeout:60000,
     port: 1433
 }
+
+var config3 = {
+    user: 'juan',
+    password: 'Logiset.1',
+    server: Configuracion.IP_BD,
+    database: Configuracion.NAME_BD_FOTOS,
+    synchronize: true,
+    trustServerCertificate: true,
+    connectionTimeout: 60000,
+    requestTimeout:60000,
+    port: 1433
+}
+
 var conn1 = new sql.ConnectionPool(config1);
 var conn2 = new sql.ConnectionPool(config2);
+var conn3 = new sql.ConnectionPool(config3);
 
 // FUNCION PARA REALIZAR CONSULTAS SQL
 let query = function( sqlv, values ) {
@@ -128,6 +142,26 @@ let query2 = function( sqlv, values ) {
     return new Promise(( resolve, reject ) => {
         conn2.connect(config2).then(() => {
             var request = new sql.Request(conn2);
+            request.query(sqlv, function (err, recordset) {
+                //conn2.close();
+                if (err){
+                    resolve(err);
+                }else{
+                    resolve(recordset);
+                }
+            });
+        }).catch(err => {
+            //conn2.close();
+            resolve(err);
+        });
+    });
+}
+
+let query3 = function( sqlv, values ) {
+    // devolver una promesa
+    return new Promise(( resolve, reject ) => {
+        conn3.connect(config3).then(() => {
+            var request = new sql.Request(conn3);
             request.query(sqlv, function (err, recordset) {
                 //conn2.close();
                 if (err){
@@ -311,6 +345,7 @@ module.exports = {
   "query":query,
   "registerNotification": registerNotification,
   "query2":query2,
+  "query3":query3,
   "query2Procedure":query2Procedure,
   "queryProcedure":queryProcedure,
   "server":server

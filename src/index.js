@@ -743,8 +743,8 @@ app.post('/uploadvideo', upload.array('files'), async (req, res) => {
   }
 });
 
-const wss = new WebSocket.Server({ port: 8080 });
-const wss2 = new WebSocket.Server({ port: 8081 });
+const wss = new WebSocket.Server({ port: Configuracion.PORT_WS_SOLICITUDES });
+const wss2 = new WebSocket.Server({ port: Configuracion.PORT_WS_TRAFICO });
 //let lastSolicitudId = "2024-10-23 00:00:00"; // Variable para almacenar el último ID procesado
 let clients = new Set(); // Array para almacenar los clientes conectados
 let clientsTrafico = new Set();
