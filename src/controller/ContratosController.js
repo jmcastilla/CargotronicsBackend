@@ -275,7 +275,7 @@ controller.crear_contrato = async (req, res) => {
                         "InicioContrato": req.body.fechahora,
                         "error": { type: sql.Int, dir: sql.Output }
                     };
-                    let resultado=await sqlconfig.queryProcedure('LokCrearContractGeneral', data);
+                    let resultado=await sqlconfig.queryProcedureconoutput('LokCrearContractGeneral', data);
                     console.log(resultado);
                     res.json({success : true, data : resultado.recordsets[0]});
                 }
@@ -307,7 +307,7 @@ controller.crear_contratov = async (req, res) => {
                         "InicioContrato": req.body.fechahora,
                         "error": { type: sql.Int, dir: sql.Output }
                     };
-                    let resultado=await sqlconfig.queryProcedure('LokCrearContractGeneral', data);
+                    let resultado=await sqlconfig.queryProcedureconoutput('LokCrearContractGeneral', data);
                     console.log(resultado);
                     res.json({success : true, data : resultado.recordsets[0]});
                 }

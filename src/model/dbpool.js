@@ -136,6 +136,30 @@ let queryProcedure = function( procedureName, params ) {
     });
 }
 
+let queryProcedureconoutput = function( procedureName, params ) {
+    // devolver una promesa
+    return new Promise(( resolve, reject ) => {
+        conn1.connect(config1).then(() => {
+            var request = new sql.Request(conn1);
+            // Configura los parámetros del stored procedure
+            for (var key in params) {
+              console.log(key+" - "+params[key]);
+              request.input(key, params[key]);
+            }
+            // Ejecuta el stored procedure
+            request.execute(procedureName, function (err, recordset) {
+                if (err){
+                    resolve(err);
+                }else{
+                    resolve(recordset);
+                }
+            });
+        }).catch(err => {
+            resolve(err);
+        });
+    });
+}
+
 // FUNCION PARA REALIZAR CONSULTAS SQL
 let query2 = function( sqlv, values ) {
     // devolver una promesa
@@ -347,6 +371,7 @@ module.exports = {
   "query2":query2,
   "query3":query3,
   "query2Procedure":query2Procedure,
-  "queryProcedure":queryProcedure,
+  "queryProcedure":queryProcedure
+  "queryProcedureconoutput": queryProcedureconoutput,
   "server":server
 }
