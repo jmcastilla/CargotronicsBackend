@@ -2082,7 +2082,7 @@ router.post('/insertfiltro', ContratosController.insert_filtro);
 router.get('/getfiltros', ContratosController.get_filtros);
 /**
  * @swagger
- * /contratos//deletefiltro:
+ * /contratos/deletefiltro:
  *   post:
  *     summary: Elimina un filtro de tráfico.
  *     description: Permite eliminar un filtro de tráfico específico identificado por su `IdFiltro`.
@@ -2141,5 +2141,282 @@ router.get('/getfiltros', ContratosController.get_filtros);
  */
 
 router.post('/deletefiltro', ContratosController.delete_filtro);
+/**
+ * @swagger
+ * /contratos/getlistatiposequipo:
+ *   get:
+ *     summary: Obtener lista de tipos de equipo
+ *     description: Retorna una lista de tipos de equipo donde CrearContrato = 1, ordenada por la descripción.
+ *     tags:
+ *       - Contratos
+ *     security:
+ *       - BearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Lista de tipos de equipo obtenida exitosamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       IDTipoServicios:
+ *                         type: integer
+ *                         example: 1
+ *                       Descripcion:
+ *                         type: string
+ *                         example: "Equipo Básico"
+ *       401:
+ *         description: Token no válido o ausente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Token is missing"
+ *       500:
+ *         description: Error interno del servidor.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ */
+
+router.get('/getlistatiposequipo', ContratosController.get_listatiposequipo);
+/**
+ * @swagger
+ * /contratos/getlistadispositivosdisponibles:
+ *   post:
+ *     summary: Obtener lista de dispositivos disponibles
+ *     description: Retorna una lista de dispositivos disponibles según el tipo de equipo y proyecto del usuario autenticado.
+ *     tags:
+ *       - Contratos
+ *     security:
+ *       - BearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               tipoequipo:
+ *                 type: integer
+ *                 description: ID del tipo de equipo.
+ *                 example: 1
+ *     responses:
+ *       200:
+ *         description: Lista de dispositivos disponibles obtenida exitosamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       DeviceID:
+ *                         type: string
+ *                         example: "ABC123"
+ *       401:
+ *         description: Token no válido o ausente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Token is missing"
+ *       500:
+ *         description: Error interno del servidor.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ */
+
+router.post('/getlistadispositivosdisponibles', ContratosController.get_listadispositivosdisponibles);
+/**
+ * @swagger
+ * /contratos/crearcontrato:
+ *   post:
+ *     summary: Crear un nuevo contrato
+ *     description: Endpoint para crear un contrato en la base de datos utilizando un procedimiento almacenado.
+ *     tags:
+ *       - Contratos
+ *     security:
+ *       - BearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               tipoequipo:
+ *                 type: integer
+ *                 description: ID del tipo de equipo.
+ *                 example: 1
+ *               ubicacion:
+ *                 type: string
+ *                 description: Ubicación donde se asignará el contrato.
+ *                 example: "Planta 1"
+ *               listaequipo:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                 description: Lista de IDs de los equipos asignados.
+ *                 example: ["ABC123", "DEF456"]
+ *               fechahora:
+ *                 type: string
+ *                 format: date-time
+ *                 description: Fecha y hora de inicio del contrato.
+ *                 example: "2024-12-16T10:00:00Z"
+ *     responses:
+ *       200:
+ *         description: Contrato creado exitosamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     description: Resultados del procedimiento almacenado.
+ *       401:
+ *         description: Token no válido o ausente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Token is missing"
+ *       500:
+ *         description: Error interno del servidor.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ */
+
+router.post('/crearcontrato', ContratosController.crear_contrato);
+/**
+ * @swagger
+ * /contratos/crearcontratov:
+ *   post:
+ *     summary: Crear un nuevo contrato (versión V)
+ *     description: Endpoint para crear un contrato en la base de datos utilizando un procedimiento almacenado con un tipo de servicio fijo (LokTipoServicios = 8).
+ *     tags:
+ *       - Contratos
+ *     security:
+ *       - BearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               ubicacion:
+ *                 type: string
+ *                 description: Ubicación donde se asignará el contrato.
+ *                 example: "Planta 1"
+ *               listaequipo:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                 description: Lista de IDs de los equipos asignados.
+ *                 example: ["XYZ789", "LMN456"]
+ *               fechahora:
+ *                 type: string
+ *                 format: date-time
+ *                 description: Fecha y hora de inicio del contrato.
+ *                 example: "2024-12-16T15:00:00Z"
+ *     responses:
+ *       200:
+ *         description: Contrato creado exitosamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     description: Resultados del procedimiento almacenado.
+ *       401:
+ *         description: Token no válido o ausente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Token is missing"
+ *       500:
+ *         description: Error interno del servidor.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ */
+
+router.post('/crearcontratov', ContratosController.crear_contratov);
+
 
 module.exports = router;

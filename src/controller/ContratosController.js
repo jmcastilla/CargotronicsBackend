@@ -254,6 +254,138 @@ controller.limpiar_contrato = async (req, res) => {
     }
 }
 
+controller.crear_contrato = async (req, res) => {
+    try{
+        var token = req.headers.authorization;
+        if (!token) {
+            return res.json({ success: false, message: 'Token is missing' });
+        }else{
+            token = req.headers.authorization.split(' ')[1];
+            jwt.verify(token, 'secret_key', async (err, decoded) => {
+                if (err) {
+                    res.json({ success: false, message: 'Failed to authenticate token' });
+                } else {
+                    let data = {
+                        "LokTipoServicios": req.body.tipoequipo,
+                        "ubicacion": req.body.ubicacion,
+                        "UserCreacion": decoded.username,
+                        "DeviceID": req.body.listaequipo,
+                        "PositionTimestamp": toUnixTime(),
+                        "Proyecto": decoded.proyecto,
+                        "InicioContrato": req.body.fechahora
+                    };
+                    let resultado=await sqlconfig.queryProcedure('LokCrearContractGeneral', data);
+                    console.log(resultado);
+                    res.json({success : true, data : resultado.recordsets[0]});
+                }
+            });
+        }
+    }catch(err){
+        res.json({success : false});
+    }
+}
+
+controller.crear_contratov = async (req, res) => {
+    try{
+        var token = req.headers.authorization;
+        if (!token) {
+            return res.json({ success: false, message: 'Token is missing' });
+        }else{
+            token = req.headers.authorization.split(' ')[1];
+            jwt.verify(token, 'secret_key', async (err, decoded) => {
+                if (err) {
+                    res.json({ success: false, message: 'Failed to authenticate token' });
+                } else {
+                    let data = {
+                        "LokTipoServicios": 8,
+                        "ubicacion": req.body.ubicacion,
+                        "UserCreacion": decoded.username,
+                        "DeviceID": req.body.listaequipo,
+                        "PositionTimestamp": toUnixTime(),
+                        "Proyecto": decoded.proyecto,
+                        "InicioContrato": req.body.fechahora
+                    };
+                    let resultado=await sqlconfig.queryProcedure('LokCrearContractGeneral', data);
+                    console.log(resultado);
+                    res.json({success : true, data : resultado.recordsets[0]});
+                }
+            });
+        }
+    }catch(err){
+        res.json({success : false});
+    }
+}
+
+controller.get_listadispositivosdisponibles = async (req, res) => {
+    try{
+        var token = req.headers.authorization;
+        if (!token) {
+            return res.json({ success: false, message: 'Token is missing' });
+        }else{
+            token = req.headers.authorization.split(' ')[1];
+            jwt.verify(token, 'secret_key', async (err, decoded) => {
+                if (err) {
+                    res.json({ success: false, message: 'Failed to authenticate token' });
+                } else {
+                    var consulta= "SELECT DeviceID ";
+                    consulta += "FROM LokDeviceID LEFT JOIN LokContractID ON LokDeviceID.LastContractID = LokContractID.ContractID ";
+                    consulta += "WHERE (LokContractID.Active = 0 OR LokDeviceID.LastContractID = 'none') AND Estado = 1 AND ";
+                    consulta += " LokDeviceID.FKLokTipoEquipo =" + req.body.tipoequipo + " AND LokDeviceID.FKLokProyecto = " + decoded.proyecto;
+                    let resultado=await sqlconfig.query(consulta);
+                    res.json({success : true, data : resultado.recordsets[0]});
+                }
+            });
+        }
+    }catch(err){
+        res.json({success : false});
+    }
+}
+
+controller.get_listatiposequipo = async (req, res) => {
+    try{
+        var token = req.headers.authorization;
+        if (!token) {
+            return res.json({ success: false, message: 'Token is missing' });
+        }else{
+            token = req.headers.authorization.split(' ')[1];
+            jwt.verify(token, 'secret_key', async (err, decoded) => {
+                if (err) {
+                    res.json({ success: false, message: 'Failed to authenticate token' });
+                } else {
+                    var consulta= "SELECT IDTipoServicios, Descripcion FROM LokTipoServicios WHERE CrearContrato = 1 order by Descripcion";
+                    let resultado=await sqlconfig.query(consulta);
+                    res.json({success : true, data : resultado.recordsets[0]});
+                }
+            });
+        }
+    }catch(err){
+        res.json({success : false});
+    }
+}
+
+function toUnixTime() {
+    const ONE_TICK = 100; // 1 tick = 100 nanoseconds
+    const SEC_IN_NANOSEC = 1e9; // 1 second = 1,000,000,000 nanoseconds
+    const ANIO_BASE = 1970; // Base year for Unix time
+
+    // Get the current date and time
+    const currentDate = new Date();
+
+    // Add 1 day to the current date
+    currentDate.setDate(currentDate.getDate() + 1);
+
+    // Subtract base year from the date
+    const baseYear = new Date(ANIO_BASE, 0, 1);
+    const timeDifference = currentDate.getTime() - baseYear.getTime();
+
+    // Convert milliseconds to Unix timestamp using the tick and nanosecond constants
+    const ticks = timeDifference * ONE_TICK;
+    const unixTime = Math.floor(ticks / (SEC_IN_NANOSEC / 1e3));
+
+    return unixTime;
+}
+
+
 controller.limpiar_contratoSalvoInfo = async (req, res) => {
     try{
         var token = req.headers.authorization;
