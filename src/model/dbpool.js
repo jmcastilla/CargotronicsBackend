@@ -122,13 +122,6 @@ let queryProcedure = function( procedureName, params ) {
             for (var key in params) {
               request.input(key, params[key]);
             }
-            for (var key in params) {
-                if (params[key].dir === sql.Output) {
-                    request.output(key, params[key].type); // Parámetros de salida
-                } else {
-                    request.input(key, params[key]); // Parámetros de entrada
-                }
-            }
             // Ejecuta el stored procedure
             request.execute(procedureName, function (err, recordset) {
                 if (err){
