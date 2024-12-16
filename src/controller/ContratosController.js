@@ -1,6 +1,7 @@
 const controller = {}
 const jwt = require('jsonwebtoken');
 const axios = require('axios');
+const sql = require("mssql");
 var sqlconfig = require("../model/dbpool");
 
 controller.get_listadispositivos = async (req, res) => {
