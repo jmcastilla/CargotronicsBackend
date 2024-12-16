@@ -371,7 +371,7 @@ module.exports = {
   "query2":query2,
   "query3":query3,
   "query2Procedure":query2Procedure,
-  "queryProcedure":queryProcedure
+  "queryProcedure":queryProcedure,
   "queryProcedureconoutput": queryProcedureconoutput,
   "server":server
 }
