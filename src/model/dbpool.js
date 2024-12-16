@@ -120,7 +120,11 @@ let queryProcedure = function( procedureName, params ) {
             var request = new sql.Request(conn1);
             // Configura los parámetros del stored procedure
             for (var key in params) {
-              request.input(key, params[key]);
+                if (params[key].dir === sql.Output) {
+                    request.output(key, params[key].type); // Parámetros de salida
+                } else {
+                    request.input(key, params[key]); // Parámetros de entrada
+                }
             }
             // Ejecuta el stored procedure
             request.execute(procedureName, function (err, recordset) {

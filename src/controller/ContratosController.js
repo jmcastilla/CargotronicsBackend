@@ -272,7 +272,8 @@ controller.crear_contrato = async (req, res) => {
                         "DeviceID": req.body.listaequipo,
                         "PositionTimestamp": toUnixTime(),
                         "Proyecto": decoded.proyecto,
-                        "InicioContrato": req.body.fechahora
+                        "InicioContrato": req.body.fechahora,
+                        "error": { type: sql.Int, dir: sql.Output }
                     };
                     let resultado=await sqlconfig.queryProcedure('LokCrearContractGeneral', data);
                     console.log(resultado);
@@ -303,7 +304,8 @@ controller.crear_contratov = async (req, res) => {
                         "DeviceID": req.body.listaequipo,
                         "PositionTimestamp": toUnixTime(),
                         "Proyecto": decoded.proyecto,
-                        "InicioContrato": req.body.fechahora
+                        "InicioContrato": req.body.fechahora,
+                        "error": { type: sql.Int, dir: sql.Output }
                     };
                     let resultado=await sqlconfig.queryProcedure('LokCrearContractGeneral', data);
                     console.log(resultado);
