@@ -144,7 +144,12 @@ let queryProcedureconoutput = function( procedureName, params ) {
             // Configura los parámetros del stored procedure
             for (var key in params) {
               console.log(key+" - "+params[key]);
-              request.input(key, params[key]);
+              if(key === "error"){
+                request.output(key, params[key].type);
+              }else{
+                request.input(key, params[key]);
+              }
+
             }
             // Ejecuta el stored procedure
             request.execute(procedureName, function (err, recordset) {
