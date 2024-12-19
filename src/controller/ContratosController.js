@@ -202,7 +202,7 @@ controller.get_infocontratoproyecto = async (req, res) => {
                 } else {
                     var contrato= req.body.contrato;
                     consulta = "SELECT l.ContractID, l.FKICEmpresa, SlavesAsignados, AlertasActivas, LightBit, l.FKICEmpresaConsulta, l.FKICEmpresaConsulta2, l.FKICEmpresaConsulta3, l.FKICRutas, l.Active, l.FKLokDeviceID, l.Ref, l.PlacaTruck, l.ColorTruck, l.PlacaTrailer, l.NombreConductor, l.NitConductor, l.FechaHoraCita, ";
-                    consulta +="l.MovilConductor, l.ContainerNum, l.Notas, l.NombreEscolta, l.FKCercaAutorizada, l.FKLokSolicitud, l.FKICEmpresaConsulta, l.MovilEscolta, l.NotasTI, l.FKLokCategoriaServ, l.OtrosDatosTruck, l.FKICTransportadora, l.FKLokInstalador, l.FKLokDesistaladores, l.NotaDesisntalaciones, l.Contacto, l.LokTipoServicios, l.FKICTransportadora, ";
+                    consulta +="l.MovilConductor, l.ContainerNum, l.DigitoVerificacion, l.Notas, l.NombreEscolta, l.FKCercaAutorizada, l.FKLokSolicitud, l.FKICEmpresaConsulta, l.MovilEscolta, l.NotasTI, l.FKLokCategoriaServ, l.OtrosDatosTruck, l.FKICTransportadora, l.FKLokInstalador, l.FKLokDesistaladores, l.NotaDesisntalaciones, l.Contacto, l.LokTipoServicios, l.FKICTransportadora, ";
                     consulta +="(SELECT TOP 1 id_chequeo FROM ValitronicsChequeo WHERE Fk_ContractID = l.ContractID) as chequeo_ident ";
                     consulta +="FROM LokContractID l WHERE l.ContractID = '" + contrato + "'";
 
