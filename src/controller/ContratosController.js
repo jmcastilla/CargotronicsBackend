@@ -477,8 +477,19 @@ controller.set_updatecontrato = async (req, res) => {
                         "critico": req.body.critico,
                     };
                     console.log(data);
-                    let resultado=await sqlconfig.queryProcedure('LokUpdateContractIDwhenEdit', data);
-                    res.json({success : true, data : resultado.recordsets[0]});
+                    let missingFields = [];
+                    for (let [key, value] of Object.entries(data)) {
+                        if (value === undefined) {
+                            missingFields.push(key);
+                        }
+                    }
+                    if (missingFields.length > 0) {
+                        res.json({success : false, message : "faltan campos requeridos"});
+                    }else{
+                        let resultado=await sqlconfig.queryProcedure('LokUpdateContractIDwhenEdit', data);
+                        res.json({success : true, data : resultado.recordsets[0]});
+                    }
+
                 }
             });
         }
