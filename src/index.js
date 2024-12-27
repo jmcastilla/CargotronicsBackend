@@ -213,7 +213,7 @@ app.post('/login', async (req, res) =>{
                     server: sqlconfig.server
                 };
                 const token = jwt.sign(tokenPayload, 'secret_key', { expiresIn: '1h' });
-                res.json({success : true, entorno: sqlconfig.server, timereload:resultado.recordset[0].TimeReload, proyecto:resultado.recordset[0].FKProyecto, token});
+                res.json({success : true, entorno: sqlconfig.server, timereload:resultado.recordset[0].TimeReload, proyecto:resultado.recordset[0].FKProyecto, token, empresa: resultado.recordset[0].IdEmpresa});
             }else{
                 res.json({success : false});
             }
@@ -420,7 +420,7 @@ app.get('/actualizartoken', async (req, res) => {
  */
 
 //METODO PARA OBTENER EL TOKEN DE AZURE PARA POWERBI
-app.get('/token', async (req, res) => {
+/*app.get('/token', async (req, res) => {
     try {
         var token = req.headers.authorization;
         if (!token) {
@@ -457,7 +457,46 @@ app.get('/token', async (req, res) => {
                     res.json({ success: true, token: response.data.access_token });
                 }
             });
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        res.json({ success: false });
+    }
+});*/
 
+app.get('/token', async (req, res) => {
+    try {
+        var token = req.headers.authorization;
+        if (!token) {
+          	return res.json({ success: false, message: 'Token is missing' });
+      	}else{
+            token = req.headers.authorization.split(' ')[1];
+            jwt.verify(token, 'secret_key', async (err, decoded) => {
+                if (err) {
+                    // Si hay un error en la verificación del token, devolvemos un mensaje de error
+                    res.json({ success: false, message: 'Failed to authenticate token' });
+                } else {
+                    // Si el token es válido, podemos continuar con la lógica de la función
+                    const tokenEndpoint = 'https://login.microsoftonline.com/ac2b1bbb-747e-4208-918a-3fb2f83ceaa0/oauth2/v2.0/token';
+                    const clientId = 'e8e44489-91c0-47ab-bc9f-365bade9e1ff';
+                    const clientSecret = '5Il8Q~fJNxM-YvWoxoDgfuN_v.qSF4dOtk5a-a5V';
+
+                    const requestData = {
+                        grant_type: 'client_credentials',
+                        client_id: clientId,
+                        client_secret: clientSecret,
+                        scope: 'https://analysis.windows.net/powerbi/api/.default',
+                    };
+
+                    const response = await axios.post(tokenEndpoint, requestData, {
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                    });
+
+                    res.json({ success: true, token: response.data.access_token });
+                }
+            });
         }
     } catch (error) {
         console.error('Error:', error);
@@ -773,7 +812,7 @@ const getSolicitudesGlobal = async () => {
 };
 
 const getTraficoGlobal = async () => {
-    var consulta = "SELECT c.ContractID, c.FKLokDeviceID, e.NombreEmpresa, c.PlacaTruck, '' as username, "+
+    var consulta = "SELECT c.ContractID, c.FKLokDeviceID, e.IdEmpresa, e.NombreEmpresa, c.PlacaTruck, '' as username, "+
     "CONVERT(varchar,DATEADD(MINUTE,0,c.FechaHoraInicio),20) as fecha, CONCAT(c.LastMsgLat,',',c.LastMsgLong) as pos, "+
     "ISNULL(c.FKTrayecto, 0) as trayecto, r.DescripcionRuta, t.DescripcionTrayecto, c.NombreConductor, "+
     "CASE WHEN c.ContainerNum IS NULL OR c.ContainerNum = 'ND' THEN (LEFT(c.Documento, 35) + CASE WHEN LEN(c.Documento) > 35 THEN '...' ELSE '' END) ELSE c.ContainerNum END as ContainerNum, "+
