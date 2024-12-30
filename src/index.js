@@ -494,7 +494,7 @@ app.get('/reportLooker', async (req, res) => {
 
 app.get('/proxy-reporte', async (req, res) => {
     try {
-        var token = req.query.token;
+        var token = `Bearer ${req.query.token}`;
         if (!token) {
           	return res.json({ success: false, message: 'Token is missing' });
       	}else{
