@@ -505,7 +505,7 @@ app.get('/proxy-reporte', async (req, res) => {
                     res.json({ success: false, message: 'Failed to authenticate token' });
                 } else {
                     // Si el token es válido, podemos continuar con la lógica de la función
-                    res.redirect('https://lookerstudio.google.com/embed/reporting/7c77d324-03ea-4f3c-8081-d8c805cf5bdd/page/Pq0aE');
+                    res.redirect('https://lookerstudio.google.com/embed/reporting/7c77d324-03ea-4f3c-8081-d8c805cf5bdd/page/Pq0aE?ciudad=Barranquilla');
                 }
             });
         }
