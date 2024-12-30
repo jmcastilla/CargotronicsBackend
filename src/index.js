@@ -480,7 +480,7 @@ app.get('/reportLooker', async (req, res) => {
                     res.json({ success: false, message: 'Failed to authenticate token' });
                 } else {
                     // Si el token es válido, podemos continuar con la lógica de la función
-                    const iframeHTML = `<iframe src="/proxy-reporte" width="100%" height="800px"></iframe>`;
+                    const iframeHTML = `<iframe src="/proxy-reporte?token=${token}" width="100%" height="800px"></iframe>`;
 
                     res.json({ success: true, data: iframeHTML });
                 }
@@ -494,7 +494,7 @@ app.get('/reportLooker', async (req, res) => {
 
 app.get('/proxy-reporte', async (req, res) => {
     try {
-        var token = req.headers.authorization;
+        var token = req.query.token;
         if (!token) {
           	return res.json({ success: false, message: 'Token is missing' });
       	}else{
