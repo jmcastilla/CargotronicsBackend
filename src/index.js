@@ -498,7 +498,7 @@ app.get('/proxy-reporte', async (req, res) => {
         if (!token) {
           	return res.json({ success: false, message: 'Token is missing' });
       	}else{
-            token = req.headers.authorization.split(' ')[1];
+            token = req.query.token;
             jwt.verify(token, 'secret_key', async (err, decoded) => {
                 if (err) {
                     // Si hay un error en la verificación del token, devolvemos un mensaje de error
