@@ -464,6 +464,57 @@ app.get('/actualizartoken', async (req, res) => {
     }
 });*/
 
+// https://lookerstudio.google.com/embed/reporting/7c77d324-03ea-4f3c-8081-d8c805cf5bdd/page/Pq0aE
+
+
+app.get('/reportLooker', async (req, res) => {
+    try {
+        var token = req.headers.authorization;
+        if (!token) {
+          	return res.json({ success: false, message: 'Token is missing' });
+      	}else{
+            token = req.headers.authorization.split(' ')[1];
+            jwt.verify(token, 'secret_key', async (err, decoded) => {
+                if (err) {
+                    // Si hay un error en la verificación del token, devolvemos un mensaje de error
+                    res.json({ success: false, message: 'Failed to authenticate token' });
+                } else {
+                    // Si el token es válido, podemos continuar con la lógica de la función
+                    const iframeHTML = `<iframe src="/proxy-reporte" width="100%" height="800px"></iframe>`;
+
+                    res.json({ success: true, data: iframeHTML });
+                }
+            });
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        res.json({ success: false });
+    }
+});
+
+app.get('/proxy-reporte', async (req, res) => {
+    try {
+        var token = req.headers.authorization;
+        if (!token) {
+          	return res.json({ success: false, message: 'Token is missing' });
+      	}else{
+            token = req.headers.authorization.split(' ')[1];
+            jwt.verify(token, 'secret_key', async (err, decoded) => {
+                if (err) {
+                    // Si hay un error en la verificación del token, devolvemos un mensaje de error
+                    res.json({ success: false, message: 'Failed to authenticate token' });
+                } else {
+                    // Si el token es válido, podemos continuar con la lógica de la función
+                    res.redirect('https://lookerstudio.google.com/embed/reporting/7c77d324-03ea-4f3c-8081-d8c805cf5bdd/page/Pq0aE');
+                }
+            });
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        res.json({ success: false });
+    }
+});
+
 app.get('/token', async (req, res) => {
     try {
         var token = req.headers.authorization;

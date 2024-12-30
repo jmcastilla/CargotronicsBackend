@@ -901,7 +901,6 @@ controller.get_reportesBI = async (req, res) => {
     }catch(err){
         res.json({success : false});
     }
-
 }
 
 //FUNCION QUE RETORNA EL JSON DE VISUALLOGISTIC
