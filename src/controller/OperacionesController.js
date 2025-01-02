@@ -64,6 +64,42 @@ controller.list_historicos = async (req, res) => {
 
 }
 
+controller.list_historicos_sinauth = async (req, res) => {
+    try{
+
+        var desde=req.body.desde;
+        var hasta=req.body.hasta;
+        var placa=req.body.placa;
+        var empresa=req.body.empresa;
+        var proyecto=req.body.proyecto
+
+        var consulta= "SELECT ContractID, FKLokDeviceID, e.NombreEmpresa, c.PlacaTruck, "+
+        "CONVERT(varchar,DATEADD(MINUTE,0,c.FechaHoraInicio),20) as fecha, CONCAT(c.LastMsgLat,',',c.LastMsgLong) as pos, "+
+        "ISNULL(c.FKTrayecto, 0) as trayecto, r.DescripcionRuta, t.DescripcionTrayecto, c.ContainerNum, c.NombreConductor, "+
+        "c.Ref, tp.NombreTranspo, c.MovilConductor, c.PlacaTrailer, CONVERT(varchar,DATEADD(minute,0,c.FechaHoraInicio),20) as fechainicio, "+
+        "ISNULL(CONVERT(varchar,DATEADD(minute,0,c.FechaHoraFin),20), CONVERT(varchar,DATEADD(minute,120,GETDATE()),20)) as fechafin, c.LastMsgLat, c.LastMsgLong, c.Active, d.Locked, ISNULL(t.DistanciaReal,0) as DistanciaCompleta, t.Origen, d.FKLokTipoEquipo, "+
+        "c.LastReportNota, c.LastReportUbica, c.LastReportTime, dbo.Tiempo3(DATEDIFF(MI, CASE WHEN primer_cierre IS NULL THEN InicioServicio ELSE primer_cierre END, CASE WHEN Active = 1 THEN DATEADD(HH, 2, GETDATE()) ELSE CASE WHEN ult_apertura IS NULL THEN FechaHoraFin ELSE ult_apertura END END)) AS TiempoServ,  c.FKLokProyecto, c.FKICEmpresa FROM LokcontractID as c "+
+        "INNER JOIN LokDeviceID as d ON d.DeviceID = c.FKLokDeviceID "+
+        "LEFT JOIN ICEmpresa as e ON e.IdEmpresa = c.FKICEmpresa "+
+        "LEFT JOIN ICRutas as r ON r.IdRuta = c.FKICRutas "+
+        "LEFT JOIN Trayectos as t ON c.FKTrayecto =  t.IDTrayecto "+
+        "LEFT JOIN ICTransportadora as tp ON tp.IdTransportadora = c.FKICTransportadora "+
+        "WHERE c.FKLokProyecto="+proyecto +" AND c.FechaHoraFin BETWEEN '"+desde+"' AND '"+hasta+"' AND c.PlacaTruck LIKE'%"+placa+"%'";
+        if(empresa != 0){
+          consulta+=" AND e.IdEmpresa="+empresa;
+        }
+        let resultado=await sqlconfig.query(consulta);
+        if (resultado.recordsets && resultado.recordsets[0]) {
+           res.json({ success: true, data: resultado.recordsets[0] });
+        } else {
+           res.json({ success: false, message: 'No data found' });
+        }
+    }catch(err){
+        res.json({success : false});
+    }
+
+}
+
 controller.get_contratounico = async (req, res) => {
     try{
         var token = req.headers.authorization;

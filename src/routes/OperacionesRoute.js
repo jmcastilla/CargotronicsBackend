@@ -588,6 +588,7 @@ router.get('/getreportesbi', OperacionesController.get_reportesBI);
  *               success: false
  */
 router.post('/gethistoricos', OperacionesController.list_historicos);
+router.post('/gethistoricossinauth', OperacionesController.list_historicos_sinauth);
 /**
  * @swagger
  * /operaciones/getcontratounico:
