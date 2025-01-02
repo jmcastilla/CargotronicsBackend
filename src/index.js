@@ -61,6 +61,11 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 
+app.use((req, res, next) => {
+  res.setHeader('Content-Security-Policy', "default-src 'self'; frame-ancestors 'self' https://lookerstudio.google.com;");
+  res.setHeader('X-Frame-Options', 'ALLOW-FROM https://lookerstudio.google.com');
+  next();
+});
 
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', req.headers.origin); // Permitir cualquier origen
@@ -69,11 +74,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use((req, res, next) => {
-  res.setHeader('Content-Security-Policy', "default-src 'self'; frame-ancestors 'self' https://lookerstudio.google.com;");
-  res.setHeader('X-Frame-Options', 'ALLOW-FROM https://lookerstudio.google.com');
-  next();
-});
+
 
 const contratosRouters = require('./routes/ContratosRoute');
 const maestrosRouters = require('./routes/MaestrosRoute');
