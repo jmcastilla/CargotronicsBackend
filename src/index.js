@@ -505,7 +505,9 @@ app.get('/proxy-reporte', async (req, res) => {
                     res.json({ success: false, message: 'Failed to authenticate token' });
                 } else {
                     // Si el token es válido, podemos continuar con la lógica de la función
-                    res.redirect(`https://lookerstudio.google.com/u/1/reporting/01781db7-2608-48c7-8f86-c13fcb023a6e/page/2sLbE?params=${req.query.filtro}`);
+                    var url = `https://lookerstudio.google.com/u/1/reporting/01781db7-2608-48c7-8f86-c13fcb023a6e/page/2sLbE?params=${req.query.filtro}`;
+                    console.log(url);
+                    res.redirect(url);
                 }
             });
         }
