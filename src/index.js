@@ -513,7 +513,7 @@ app.get('/proxy-reporte', async (req, res) => {
                     res.json({ success: false, message: 'Failed to authenticate token' });
                 } else {
                     // Si el token es válido, podemos continuar con la lógica de la función
-                    var txtfiltro = `{"ds0.param_empresa:${decoded.idempresa}"}`;
+                    var txtfiltro = {`"ds0.param_empresa:${decoded.idempresa}"`};
                     var filtro = encodeURIComponent(txtfiltro);
                     var url = `https://lookerstudio.google.com/embed/reporting/01781db7-2608-48c7-8f86-c13fcb023a6e/page/2sLbE?params=${filtro}`;
                     console.log(url);
