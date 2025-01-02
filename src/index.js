@@ -70,9 +70,11 @@ app.use((req, res, next) => {
 });
 
 app.use((req, res, next) => {
-  res.setHeader('Content-Security-Policy', "frame-ancestors 'self' https://lookerstudio.google.com");
+  res.setHeader('Content-Security-Policy', "default-src 'self'; frame-ancestors 'self' https://lookerstudio.google.com;");
+  res.setHeader('X-Frame-Options', 'ALLOW-FROM https://lookerstudio.google.com');
   next();
 });
+
 const contratosRouters = require('./routes/ContratosRoute');
 const maestrosRouters = require('./routes/MaestrosRoute');
 const solicitudesRouters = require('./routes/SolicitudesRoute');
