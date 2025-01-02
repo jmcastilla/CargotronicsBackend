@@ -68,6 +68,11 @@ app.use((req, res, next) => {
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
   next();
 });
+
+app.use((req, res, next) => {
+  res.setHeader('Content-Security-Policy', "frame-ancestors 'self' https://lookerstudio.google.com");
+  next();
+});
 const contratosRouters = require('./routes/ContratosRoute');
 const maestrosRouters = require('./routes/MaestrosRoute');
 const solicitudesRouters = require('./routes/SolicitudesRoute');
