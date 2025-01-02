@@ -90,7 +90,7 @@ controller.list_historicos_sinauth = async (req, res) => {
         }
         let resultado=await sqlconfig.query(consulta);
         if (resultado.recordsets && resultado.recordsets[0]) {
-           res.json({ data: resultado.recordsets[0] });
+           res.json({resultado.recordsets[0] });
         } else {
            res.json({ success: false, message: 'No data found' });
         }
