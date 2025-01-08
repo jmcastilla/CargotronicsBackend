@@ -505,6 +505,7 @@ app.get('/proxy-reporte', async (req, res) => {
         var token = `Bearer ${req.query.token}`;
         var reporte = req.query.reporte;
         var txtfiltro = req.query.filtro;
+        console.log(txtfiltro);
         if (!token) {
           	return res.json({ success: false, message: 'Token is missing' });
       	}else{
