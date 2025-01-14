@@ -928,7 +928,7 @@ controller.get_reportesBI = async (req, res) => {
                 if (err) {
                     res.json({ success: false, message: 'Failed to authenticate token' });
                 } else {
-                    var consulta= "SELECT i.Id_Reporte, i.NombreReporte, i.Id_PowerBI, i.BitFiltroProyecto, i.BitFiltroEmpresa, c.ReportCategoria FROM LokReportesPBI as r inner join LokReportCategorias as c on c.Id_ReportCategoria = i.Fk_ReportCategoria WHERE i.Fk_LokProyecto="+decoded.proyecto;
+                    var consulta= "SELECT r.Id_Reporte, r.NombreReporte, r.Id_PowerBI, r.BitFiltroProyecto, r.BitFiltroEmpresa, c.ReportCategoria FROM LokReportesPBI as r inner join LokReportCategorias as c on c.Id_ReportCategoria = r.Fk_ReportCategoria WHERE r.Fk_LokProyecto="+decoded.proyecto;
                     let resultado=await sqlconfig.query(consulta);
                     res.json({success : true, data : resultado.recordsets[0]});
                 }
