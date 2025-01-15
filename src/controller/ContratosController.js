@@ -277,7 +277,7 @@ controller.crear_contrato = async (req, res) => {
                         "error": { type: sql.Int, dir: sql.Output }
                     };
                     if(req.body.listaequipo === '' || req.body.listaequipo === null){
-                        res.json({success : false, data : null, mensaje: "falta el campo de devices"});
+                        res.json({success : false, data : null, mensaje: "DEBE SELECCIONAR UN DISPOSITIVO."});
                     }else{
                         console.log(data);
                         let resultado=await sqlconfig.queryProcedureconoutput('LokCrearContractGeneral', data);
