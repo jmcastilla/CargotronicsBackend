@@ -279,9 +279,25 @@ controller.crear_contrato = async (req, res) => {
                     let resultado=await sqlconfig.queryProcedureconoutput('LokCrearContractGeneral', data);
                     console.log(resultado);
                     console.log(resultado.returnValue);
-                    //var resbool = true;
-                    //if()  
-                    res.json({success : true, data : resultado.recordsets[0]});
+                    var resbool = true;
+                    var mensaje = "";
+                    if(resultado.returnValue === 1){
+                        resbool = true;
+                        mensaje = "SE AGREGO CONTRATO CORRECTAMENTE.";
+                    }else{
+                        resbool = false;
+                        if(resultado.returnValue === 2){
+                            mensaje="LA FECHA SE SUPERPONE CON EL CONTRATO ANTERIOR DEL EQUIPO.";
+                        }else if(resultado.returnValue === 3){
+                            mensaje="EL EQUIPO NO TIENE EL ESTADO CORRECTO.";
+                        }
+                        else if(resultado.returnValue === 3){
+                            mensaje="NO HAY EQUIPOS DISPONIBLES EN EL MOMENTO, COM. CON SU ADMIN.";
+                        }else{
+                            mensaje="ERROR INDEFINIDO, COM. CON SU ADMIN.";
+                        }
+                    }
+                    res.json({success : resbool, data : resultado.recordsets[0], mensaje: mensaje});
                 }
             });
         }
