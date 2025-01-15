@@ -297,6 +297,7 @@ controller.crear_contrato = async (req, res) => {
                             mensaje="ERROR INDEFINIDO, COM. CON SU ADMIN.";
                         }
                     }
+                    console.log(resbool+" - "+mensaje);
                     res.json({success : resbool, data : resultado.recordsets[0], mensaje: mensaje});
                 }
             });
