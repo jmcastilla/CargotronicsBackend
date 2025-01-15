@@ -276,6 +276,7 @@ controller.crear_contrato = async (req, res) => {
                         "InicioContrato": req.body.fechahora,
                         "error": { type: sql.Int, dir: sql.Output }
                     };
+                    console.log(data);
                     let resultado=await sqlconfig.queryProcedureconoutput('LokCrearContractGeneral', data);
                     console.log(resultado);
                     console.log(resultado.returnValue);
