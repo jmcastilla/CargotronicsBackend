@@ -295,10 +295,10 @@ controller.crear_contrato = async (req, res) => {
                             }else if(resultado.returnValue === 3){
                                 mensaje="EL EQUIPO NO TIENE EL ESTADO CORRECTO.";
                             }
-                            else if(resultado.returnValue === 3){
-                                mensaje="NO HAY EQUIPOS DISPONIBLES EN EL MOMENTO, COM. CON SU ADMIN.";
+                            else if(resultado.returnValue === 4){
+                                mensaje="NO HAY EQUIPOS DISPONIBLES EN EL MOMENTO, CONSULTE CON SU ADMIN.";
                             }else{
-                                mensaje="ERROR INDEFINIDO, COM. CON SU ADMIN.";
+                                mensaje="ERROR INDEFINIDO, CONSULTE CON SU ADMIN.";
                             }
                         }
                         console.log(resbool+" - "+mensaje);
@@ -354,10 +354,10 @@ controller.crear_contratov = async (req, res) => {
                             }else if(resultado.returnValue === 3){
                                 mensaje="EL EQUIPO NO TIENE EL ESTADO CORRECTO.";
                             }
-                            else if(resultado.returnValue === 3){
-                                mensaje="NO HAY EQUIPOS DISPONIBLES EN EL MOMENTO, COM. CON SU ADMIN.";
+                            else if(resultado.returnValue === 4){
+                                mensaje="NO HAY EQUIPOS DISPONIBLES EN EL MOMENTO, CONSULTE CON SU ADMIN.";
                             }else{
-                                mensaje="ERROR INDEFINIDO, COM. CON SU ADMIN.";
+                                mensaje="ERROR INDEFINIDO, CONSULTE CON SU ADMIN.";
                             }
                         }
                         console.log(resbool+" - "+mensaje);
