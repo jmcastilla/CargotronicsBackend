@@ -276,30 +276,35 @@ controller.crear_contrato = async (req, res) => {
                         "InicioContrato": req.body.fechahora,
                         "error": { type: sql.Int, dir: sql.Output }
                     };
-                    console.log(data);
-                    let resultado=await sqlconfig.queryProcedureconoutput('LokCrearContractGeneral', data);
-                    console.log(resultado);
-                    console.log(resultado.returnValue);
-                    var resbool = true;
-                    var mensaje = "";
-                    if(resultado.returnValue === 1){
-                        resbool = true;
-                        mensaje = "SE AGREGO CONTRATO CORRECTAMENTE.";
+                    if(req.body.listaequipo === '' || req.body.listaequipo === null){
+                        res.json({success : false, data : null, mensaje: "falta el campo de devices"});
                     }else{
-                        resbool = false;
-                        if(resultado.returnValue === 2){
-                            mensaje="LA FECHA SE SUPERPONE CON EL CONTRATO ANTERIOR DEL EQUIPO.";
-                        }else if(resultado.returnValue === 3){
-                            mensaje="EL EQUIPO NO TIENE EL ESTADO CORRECTO.";
-                        }
-                        else if(resultado.returnValue === 3){
-                            mensaje="NO HAY EQUIPOS DISPONIBLES EN EL MOMENTO, COM. CON SU ADMIN.";
+                        console.log(data);
+                        let resultado=await sqlconfig.queryProcedureconoutput('LokCrearContractGeneral', data);
+                        console.log(resultado);
+                        console.log(resultado.returnValue);
+                        var resbool = true;
+                        var mensaje = "";
+                        if(resultado.returnValue === 1){
+                            resbool = true;
+                            mensaje = "SE AGREGO CONTRATO CORRECTAMENTE.";
                         }else{
-                            mensaje="ERROR INDEFINIDO, COM. CON SU ADMIN.";
+                            resbool = false;
+                            if(resultado.returnValue === 2){
+                                mensaje="LA FECHA SE SUPERPONE CON EL CONTRATO ANTERIOR DEL EQUIPO.";
+                            }else if(resultado.returnValue === 3){
+                                mensaje="EL EQUIPO NO TIENE EL ESTADO CORRECTO.";
+                            }
+                            else if(resultado.returnValue === 3){
+                                mensaje="NO HAY EQUIPOS DISPONIBLES EN EL MOMENTO, COM. CON SU ADMIN.";
+                            }else{
+                                mensaje="ERROR INDEFINIDO, COM. CON SU ADMIN.";
+                            }
                         }
+                        console.log(resbool+" - "+mensaje);
+                        res.json({success : resbool, data : resultado.recordsets[0], mensaje: mensaje});
                     }
-                    console.log(resbool+" - "+mensaje);
-                    res.json({success : resbool, data : resultado.recordsets[0], mensaje: mensaje});
+
                 }
             });
         }
