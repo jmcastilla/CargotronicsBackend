@@ -334,9 +334,35 @@ controller.crear_contratov = async (req, res) => {
                         "InicioContrato": req.body.fechahora,
                         "error": { type: sql.Int, dir: sql.Output }
                     };
-                    let resultado=await sqlconfig.queryProcedureconoutput('LokCrearContractGeneral', data);
-                    console.log(resultado);
-                    res.json({success : true, data : resultado.recordsets[0]});
+
+                    if(req.body.listaequipo === '' || req.body.listaequipo === null){
+                        res.json({success : false, data : null, mensaje: "DEBE SELECCIONAR UN DISPOSITIVO."});
+                    }else{
+                        console.log(data);
+                        let resultado=await sqlconfig.queryProcedureconoutput('LokCrearContractGeneral', data);
+                        console.log(resultado);
+                        console.log(resultado.returnValue);
+                        var resbool = true;
+                        var mensaje = "";
+                        if(resultado.returnValue === 1){
+                            resbool = true;
+                            mensaje = "SE AGREGO CONTRATO CORRECTAMENTE.";
+                        }else{
+                            resbool = false;
+                            if(resultado.returnValue === 2){
+                                mensaje="LA FECHA SE SUPERPONE CON EL CONTRATO ANTERIOR DEL EQUIPO.";
+                            }else if(resultado.returnValue === 3){
+                                mensaje="EL EQUIPO NO TIENE EL ESTADO CORRECTO.";
+                            }
+                            else if(resultado.returnValue === 3){
+                                mensaje="NO HAY EQUIPOS DISPONIBLES EN EL MOMENTO, COM. CON SU ADMIN.";
+                            }else{
+                                mensaje="ERROR INDEFINIDO, COM. CON SU ADMIN.";
+                            }
+                        }
+                        console.log(resbool+" - "+mensaje);
+                        res.json({success : resbool, data : resultado.recordsets[0], mensaje: mensaje});
+                    }
                 }
             });
         }
