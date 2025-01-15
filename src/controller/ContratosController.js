@@ -278,6 +278,9 @@ controller.crear_contrato = async (req, res) => {
                     };
                     let resultado=await sqlconfig.queryProcedureconoutput('LokCrearContractGeneral', data);
                     console.log(resultado);
+                    console.log(resultado.returnValue);
+                    //var resbool = true;
+                    //if()  
                     res.json({success : true, data : resultado.recordsets[0]});
                 }
             });
