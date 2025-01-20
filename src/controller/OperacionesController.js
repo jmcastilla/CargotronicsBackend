@@ -306,6 +306,7 @@ controller.get_contratostrafico = async (req, res) => {
                     "c.LastReportNota, tr.TipoReporte, c.LastReportUbica+ ' ('+CONVERT(NVARCHAR(20), DATEDIFF(MINUTE, LastReportTime, DATEADD(MINUTE,"+decoded.diffhorario+", GETDATE())))+' min)' as LastReportUbica, "+
                     "d.Ciudad+': '+d.Location+ CASE WHEN ContadorGps <> 0 THEN ' ('+CONVERT(NVARCHAR(20), ContadorGps)+')' ELSE '' END as Ciudad, "+
                     "DATEADD(MINUTE, DATEDIFF(MINUTE, GETUTCDATE(), GETDATE()) + "+decoded.diffhorario+", LoksysServerTime) as LoksysServerTime, "+
+                    "ISNULL(geo.Nombre, 'ND') as geocerca, CASE WHEN ISNULL(d.DatetimeUltGeo, '2024-01-01 00:00:00') > c.FechaHoraInicio THEN 1 ELSE 0 as mostrargeocerca, DATEDIFF(MINUTE, ISNULL(d.DatetimeUltGeo, '2024-01-01 00:00:00'), DATEADD(MINUTE,"+decoded.diffhorario+", GETDATE())))+' min)' as LastReportgeocerca, "+
                     //"c.LastReportNota, tr.TipoReporte, (CASE d.Moving WHEN 1 THEN '/images/moving.png' ELSE '/images/stop.png' END) as IconMoving, "+
                     //"(CASE d.Locked WHEN 1 THEN '/images/closedpadlock.png' ELSE '/images/openedpadlock.png' END) as IconLocked2, "+
                     "SUBSTRING(iconos.IconMoving, 2, CHARINDEX('|', iconos.IconMoving) - 2) AS IconMoving, "+
@@ -325,6 +326,7 @@ controller.get_contratostrafico = async (req, res) => {
                     "LEFT JOIN ICTipoReporte as tr ON c.LastICTipoReporte =  tr.IdTipoReporte "+
                     "LEFT JOIN ICTransportadora as tp ON tp.IdTransportadora = c.FKICTransportadora "+
                     "LEFT JOIN QR_Maestro as qr ON c.FKQrMaestro = qr.ID_QRMaestro "+
+                    "LEFT JOIN GeoCercas as geo ON geo.ID = d.UltimaGeoCerca "+
                     "OUTER APPLY dbo.IconosContract(c.ContractID, c.FKLokDeviceID) AS iconos ";
                     /*if(decoded.roltrafico != 0){
                         consulta+="INNER JOIN (SELECT * FROM LokEmpresaRol WHERE id_roltrafico_ = "+decoded.roltrafico+") as Rol ON Rol.id_empresa = c.FKICEmpresa ";
