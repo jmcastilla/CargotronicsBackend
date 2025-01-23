@@ -1021,6 +1021,7 @@ const solicitudesHB = async () => {
 
 const checkContratos = async () => {
     try {
+        console.log("entro a chk contratos");
         const globalContratosData = await getTraficoGlobal();
         const contratos = globalContratosData.data;
         clientsTrafico.forEach((client) => {
