@@ -1025,7 +1025,6 @@ const checkContratos = async () => {
     try {
         const globalContratosData = await getTraficoGlobal();
         const contratos = globalContratosData.data;
-        console.log(contratos);
         clientsTrafico.forEach((client) => {
             if (client.readyState === WebSocket.OPEN && client.decoded) {
                 let dataToSend= filtrarContratos(contratos, client.decoded);
@@ -1089,6 +1088,7 @@ wss.on('connection', (ws, req) => {
 
 
 wss2.on('connection', (ws, req) => {
+    console.log("entro  a ws");
     const token = req.headers['sec-websocket-protocol'];
     if (!token || token === 'undefined') {
         ws.send(JSON.stringify({ success: false, message: 'Token is missing' }));
