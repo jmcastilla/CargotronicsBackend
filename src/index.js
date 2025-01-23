@@ -1024,6 +1024,8 @@ const checkContratos = async () => {
         console.log("entro a chk contratos");
         const globalContratosData = await getTraficoGlobal();
         const contratos = globalContratosData.data;
+        console.log(contratos);
+        console.log(clientsTrafico);
         clientsTrafico.forEach((client) => {
             if (client.readyState === WebSocket.OPEN && client.decoded) {
                 let dataToSend= filtrarContratos(contratos, client.decoded);
