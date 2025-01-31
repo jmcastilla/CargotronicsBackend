@@ -348,6 +348,7 @@ controller.get_contratostrafico = async (req, res) => {
                             consulta+=") ";
                         }
                     }
+                    consulta +=" ORDER BY bitAperturaRespo ASC, d.Locked ASC";
                     //consulta+="ORDER BY d.Locked ASC, bitAperturaRespo ASC, bitBackRespo ASC, bitAlejadoRespo ASC, bitDesvioRespo ASC, bitDetencionRespo ASC, bitGpsRespo ASC, bitTiempoRespo ASC, d.LoksysServerTime";
                     let resultado=await sqlconfig.query(consulta);
                     res.json({success : true, data : resultado.recordsets[0]});
@@ -712,6 +713,87 @@ controller.get_reportescontroldevice = async (req, res) => {
                     }
                     let resultado=await sqlconfig.query(consulta);
                     res.json({success : true, data : resultado.recordsets[0]});
+                }
+            });
+        }
+    }catch(err){
+        res.json({success : false});
+    }
+
+}
+
+controller.get_contratoscontroldevice = async (req, res) => {
+    try{
+        var token = req.headers.authorization;
+        if (!token) {
+            res.json({ success: false, message: 'Token is missing' });
+        }else{
+            token = req.headers.authorization.split(' ')[1];
+            jwt.verify(token, 'secret_key', async (err, decoded) => {
+                if (err) {
+                    res.json({ success: false, message: 'Failed to authenticate token' });
+                } else {
+                    var device=req.body.device;
+                    var idcliente=decoded.empresaprincipal;
+                    var proyecto=decoded.proyecto;
+                    var consulta = "SELECT ContractID, NombreEmpresa, DescripcionRuta, InicioServicio, ISNULL(FechaHoraFin, DATEADD(hh, 2, GETDATE())) AS FechaHoraFin, Ciudad + ', ' + Departamento AS Position ";
+                    consulta += " FROM LokContractID INNER JOIN LokDeviceID ON FKLokDeviceID = DeviceID ";
+                    consulta += " LEFT JOIN ICEmpresa ON FKICEmpresa = IdEmpresa ";
+                    consulta += " LEFT JOIN ICRutas ON FKICRutas = IdRuta ";
+                    consulta += " WHERE FKLokDeviceID = '" + device + "' AND LokContractID.FKLokProyecto = " + proyecto;
+
+                    if (idcliente != 2 && proyecto == 1){
+                        consulta += " AND ICEmpresa.IdEmpresa = " + idcliente;
+                    }
+                    consulta += " ORDER BY InicioServicio DESC";
+                    let resultado=await sqlconfig.query(consulta);
+                    res.json({success : true, data : resultado.recordsets[0]});
+                }
+            });
+        }
+    }catch(err){
+        res.json({success : false});
+    }
+
+}
+
+controller.get_infofechascontrato = async (req, res) => {
+    try{
+        var token = req.headers.authorization;
+        if (!token) {
+            res.json({ success: false, message: 'Token is missing' });
+        }else{
+            token = req.headers.authorization.split(' ')[1];
+            jwt.verify(token, 'secret_key', async (err, decoded) => {
+                if (err) {
+                    res.json({ success: false, message: 'Failed to authenticate token' });
+                } else {
+                    var contrato=req.body.contrato;
+                    var consulta = "SELECT ContractID, FKLokDeviceID, InicioServicio, FechaHoraInicio, FechaHoraFin FROM LokContractID WHERE ContractID = '" + contrato + "'";
+                    let resultado=await sqlconfig.query(consulta);
+                    res.json({success : true, data : resultado.recordsets[0]});
+                }
+            });
+        }
+    }catch(err){
+        res.json({success : false});
+    }
+
+}
+
+controller.set_fechascontrato = async (req, res) => {
+    try{
+        var token = req.headers.authorization;
+        if (!token) {
+            return res.json({ success: false, message: 'Token is missing' });
+        }else{
+            token = req.headers.authorization.split(' ')[1];
+            jwt.verify(token, 'secret_key', async (err, decoded) => {
+                if (err) {
+                    res.json({ success: false, message: 'Failed to authenticate token' });
+                } else {
+                    var consulta = "UPDATE LokcontractID SET InicioServicio='"+req.body.instalacion+"', FechaHoraInicio='"+req.body.inicio+"', FechaHoraFin='"+req.body.fin+"' WHERE ContractID='"+req.body.contrato+"'";
+                    res.json({success : await sqlconfig.query(consulta)});
                 }
             });
         }

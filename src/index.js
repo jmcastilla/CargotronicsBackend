@@ -907,7 +907,8 @@ const getTraficoGlobal = async () => {
     "LEFT JOIN ICTransportadora as tp ON tp.IdTransportadora = c.FKICTransportadora "+
     "LEFT JOIN QR_Maestro as qr ON c.FKQrMaestro = qr.ID_QRMaestro "+
     "LEFT JOIN GeoCercas as geo ON geo.ID = d.UltimaGeoCerca "+
-    "OUTER APPLY dbo.IconosContract(c.ContractID, c.FKLokDeviceID) AS iconos WHERE c.Active=1 ";
+    "OUTER APPLY dbo.IconosContract(c.ContractID, c.FKLokDeviceID) AS iconos WHERE c.Active=1 "+
+    "ORDER BY bitAperturaRespo ASC, d.Locked ASC";
     //"ORDER BY d.Locked ASC, bitAperturaRespo ASC, bitBackRespo ASC, bitAlejadoRespo ASC, bitDesvioRespo ASC, bitDetencionRespo ASC, bitGpsRespo ASC, bitTiempoRespo ASC, d.LoksysServerTime";
     try {
         let resultado = await sqlconfig.query(consulta);
