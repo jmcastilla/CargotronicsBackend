@@ -513,6 +513,254 @@ router.post('/getcomprobantevalitronics', OperacionesController.get_comprobantev
 router.get('/getreportesbi', OperacionesController.get_reportesBI);
 /**
  * @swagger
+ * /operaciones/getcontratoscontroldevice:
+ *   post:
+ *     summary: Obtener contratos de control de un dispositivo
+ *     description: Recupera la lista de contratos asociados a un dispositivo específico dentro de un proyecto.
+ *     tags:
+ *       - Operaciones
+ *     security:
+ *       - BearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               device:
+ *                 type: string
+ *                 description: ID del dispositivo para buscar contratos asociados.
+ *                 example: "ABC123"
+ *     responses:
+ *       200:
+ *         description: Lista de contratos obtenida exitosamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       ContractID:
+ *                         type: integer
+ *                         description: ID del contrato.
+ *                         example: 101
+ *                       NombreEmpresa:
+ *                         type: string
+ *                         description: Nombre de la empresa asociada.
+ *                         example: "Empresa X"
+ *                       DescripcionRuta:
+ *                         type: string
+ *                         description: Descripción de la ruta asignada.
+ *                         example: "Ruta 5 Norte"
+ *                       InicioServicio:
+ *                         type: string
+ *                         format: date-time
+ *                         description: Fecha y hora de inicio del contrato.
+ *                         example: "2024-09-25T08:00:00Z"
+ *                       FechaHoraFin:
+ *                         type: string
+ *                         format: date-time
+ *                         description: Fecha y hora de finalización del contrato.
+ *                         example: "2024-09-25T10:00:00Z"
+ *                       Position:
+ *                         type: string
+ *                         description: Ubicación asociada al contrato.
+ *                         example: "Ciudad X, Departamento Y"
+ *       401:
+ *         description: Token no válido o ausente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Token is missing"
+ *       500:
+ *         description: Error interno del servidor.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ */
+
+router.post('/getcontratoscontroldevice', OperacionesController.get_contratoscontroldevice);
+/**
+ * @swagger
+ * /operaciones/getinfofechascontrato:
+ *   post:
+ *     summary: Obtener información de fechas de un contrato
+ *     description: Recupera las fechas de inicio y fin de un contrato específico.
+ *     tags:
+ *       - Operaciones
+ *     security:
+ *       - BearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               contrato:
+ *                 type: string
+ *                 description: ID del contrato a consultar.
+ *                 example: "12345"
+ *     responses:
+ *       200:
+ *         description: Información del contrato obtenida exitosamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       ContractID:
+ *                         type: integer
+ *                         description: ID del contrato.
+ *                         example: 12345
+ *                       FKLokDeviceID:
+ *                         type: string
+ *                         description: ID del dispositivo asociado al contrato.
+ *                         example: "ABC123"
+ *                       InicioServicio:
+ *                         type: string
+ *                         format: date-time
+ *                         description: Fecha y hora de inicio del contrato.
+ *                         example: "2024-09-25T08:00:00Z"
+ *                       FechaHoraInicio:
+ *                         type: string
+ *                         format: date-time
+ *                         description: Fecha y hora real de inicio.
+ *                         example: "2024-09-25T08:15:00Z"
+ *                       FechaHoraFin:
+ *                         type: string
+ *                         format: date-time
+ *                         description: Fecha y hora real de finalización.
+ *                         example: "2024-09-25T10:00:00Z"
+ *       401:
+ *         description: Token no válido o ausente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Token is missing"
+ *       500:
+ *         description: Error interno del servidor.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ */
+
+router.post('/getinfofechascontrato', OperacionesController.get_infofechascontrato);
+/**
+ * @swagger
+ * /operaciones/setfechascontrato:
+ *   post:
+ *     summary: Actualizar fechas de un contrato
+ *     description: Modifica las fechas de instalación, inicio y fin de un contrato específico.
+ *     tags:
+ *       - Operaciones
+ *     security:
+ *       - BearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               contrato:
+ *                 type: string
+ *                 description: ID del contrato a modificar.
+ *                 example: "12345"
+ *               instalacion:
+ *                 type: string
+ *                 format: date-time
+ *                 description: Nueva fecha de instalación.
+ *                 example: "2024-09-25T08:00:00Z"
+ *               inicio:
+ *                 type: string
+ *                 format: date-time
+ *                 description: Nueva fecha de inicio del servicio.
+ *                 example: "2024-09-25T08:15:00Z"
+ *               fin:
+ *                 type: string
+ *                 format: date-time
+ *                 description: Nueva fecha de finalización del servicio.
+ *                 example: "2024-09-25T10:00:00Z"
+ *     responses:
+ *       200:
+ *         description: Fechas del contrato actualizadas exitosamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *       401:
+ *         description: Token no válido o ausente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Token is missing"
+ *       500:
+ *         description: Error interno del servidor.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ */
+
+router.post('/setfechascontrato', OperacionesController.set_fechascontrato);
+/**
+ * @swagger
  * /operaciones/gethistoricos:
  *   post:
  *     summary: Obtener historicos de contratos
