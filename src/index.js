@@ -897,7 +897,10 @@ const getTraficoGlobal = async () => {
     "CAST(CASE WHEN c.Active=1 THEN 0 ELSE 1 END AS BIT) AS expanded, "+
     "CASE WHEN qr.Verificado_global=1 AND c.FKQrMaestro IS NOT NULL THEN '/images/valitronics.png' "+
     "WHEN qr.Verificado_global=0 AND c.FKQrMaestro IS NOT NULL THEN '/images/valitronics_gris.png' "+
-    "ELSE '/images/transparent.png' END as IconValitronics, d.Speed, Convert(nvarchar(10),DATEDIFF(MINUTE, isnull(d.DateDetencion, DATEADD(hh,2,getdate())), DATEADD(hh,2,getdate()))) as tiempodetencion, c.FKLokProyecto, c.FKICEmpresa "+
+    "ELSE '/images/transparent.png' END as IconValitronics, d.Speed, Convert(nvarchar(10),DATEDIFF(MINUTE, isnull(d.DateDetencion, DATEADD(hh,2,getdate())), DATEADD(hh,2,getdate()))) as tiempodetencion, c.FKLokProyecto, c.FKICEmpresa, "+
+    "CASE WHEN c.FKLokProyecto = 1 THEN CASE WHEN d.FKLokTipoEquipo IN (SELECT IDTipoEquipo FROM LokTipoEquipo WHERE Critico = 1) AND e.bitCritico = 1 AND (bitAperturaRespo = 0 OR bitBackRespo = 0 OR bitAlejadoRespo = 0 OR bitDesvioRespo = 0 OR bitDetencionRespo = 0 "+
+    "OR Locked = 0 OR Desautorizado = 1 OR ContadorGps > 3 OR dbo.TiemposDetencion(ContractID) = 1 OR DATEDIFF(SECOND, LoksysServerTime, GETUTCDATE()) > 960 OR ROUND(d.BatteryVoltage,2) <= 3.65) "+
+    "THEN 1 ELSE 0 END ELSE CASE WHEN d.FKLokTipoEquipo IN (SELECT IDTipoEquipo FROM LokTipoEquipo WHERE Critico = 1) THEN 1 ELSE 0 END END AS EsCritico "+
     "FROM LokcontractID as c "+
     "INNER JOIN LokDeviceID as d ON d.DeviceID = c.FKLokDeviceID "+
     "LEFT JOIN ICEmpresa as e ON e.IdEmpresa = c.FKICEmpresa "+
