@@ -27,4 +27,17 @@
     URL_VISUALLOGISTIC: "visuallogisticsapp",
   }
 
-  module.exports = configuracionTest;
+  const configuracionMix = {
+    IP_BD: "50.57.222.231",
+    NAME_BD: "infocarga",
+    NAME_BD_REPORTES: "reportes2",
+    NAME_BD_FOTOS: "reportes2",
+    PUERTO: 3002,
+    TIME_TRAFICO: 30000,
+    HB_SOLICITUDES: 60000,
+    PORT_WS_TRAFICO: 8081,
+    PORT_WS_SOLICITUDES: 8080,
+    URL_VISUALLOGISTIC: "visuallogisticstest",
+  }
+
+  module.exports = configuracionMix;
