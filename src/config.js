@@ -9,7 +9,10 @@
     HB_SOLICITUDES: 60000,
     PORT_WS_TRAFICO: 8081,
     PORT_WS_SOLICITUDES: 8080,
+    URL_VISUALLOGISTIC: "visuallogisticstest"
   }
+
+  //visuallogisticstest
 
   const configuracionProd = {
     IP_BD: "10.0.5.2",
@@ -21,5 +24,6 @@
     HB_SOLICITUDES: 60000,
     PORT_WS_TRAFICO: 8081,
     PORT_WS_SOLICITUDES: 8082,
+    URL_VISUALLOGISTIC: "visuallogisticsapp";
   }
   module.exports = configuracionTest;

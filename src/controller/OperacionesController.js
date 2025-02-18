@@ -4,6 +4,7 @@ const axios = require('axios');
 var sqlconfig = require("../model/dbpool");
 ﻿var Poly = require("node-geometry-library");
 var GoogleMapsAPI = require('../lib/index');
+const Configuracion = require("../config");
 const API_KEY = 'AIzaSyAF-lo1H_DaXWarJqU1sF1l0cil68y0ANQ';
 const decodePolyline = require('decode-google-map-polyline');
 const moment = require('moment');
@@ -892,12 +893,12 @@ controller.get_reportescontroldevicexequipo = async (req, res) => {
                     var utcServidor=decoded.diffhorario;
                     var consulta= "";
                     if(tipo == 2){
-                        consulta = "SELECT WLMsg.ID, latitude, longitude, '' AS DiffTime, DATEADD(MINUTE, -" + utcServidor + ",datetime_utc) AS eventDateTime, 0 AS csq, CASE WHEN lock = 1 THEN 'Cerrado' ELSE 'Abierto' END AS event, unit AS device, DATEADD(MINUTE, -300,datetime_utc) AS UltActualizacion, 'GPRS' as source, ";
+                        consulta = "SELECT TOP 10000 WLMsg.ID, latitude, longitude, '' AS DiffTime, DATEADD(MINUTE, -" + utcServidor + ",datetime_utc) AS eventDateTime, 0 AS csq, CASE WHEN lock = 1 THEN 'Cerrado' ELSE 'Abierto' END AS event, unit AS device, DATEADD(MINUTE, -300,datetime_utc) AS UltActualizacion, 'GPRS' as source, ";
                         consulta += " satellites AS gpsStatus, lock, ISNULL(ROUND(main_voltage, 2),3) AS voltages, velocity AS speed, WLMsg.Ciudad + ', ' + Departamento AS position, Nombre, 'NO INFO' AS Compania, 'NO INFO' AS servername ";
                         consulta += " FROM WLMsg LEFT JOIN GeoCercas ON WLMsg.GeoCerca = GeoCercas.ID WHERE unit = '" + device + "' AND DATEADD(hh,-5,datetime_utc) ";
                         consulta += " BETWEEN '" + inicio + "' AND '" + fin + "' ORDER BY eventDateTime DESC";
                     }else if(tipo == 3){
-                        consulta = " SELECT WSEnvotechMsg.ID, latitude, longitude, DATEADD(MINUTE, -" + utcServidor + ",eventDateTime) AS eventDateTime, event, device, UltActualizacion, source, ";
+                        consulta = " SELECT TOP 10000 WSEnvotechMsg.ID, latitude, longitude, DATEADD(MINUTE, -" + utcServidor + ",eventDateTime) AS eventDateTime, event, device, UltActualizacion, source, ";
                         consulta += " DATEDIFF(MINUTE, DATEADD(MINUTE, -" + utcServidor + ",eventDateTime), UltActualizacion) AS DiffTime, ";
                         consulta += " gpsStatus, ISNULL(ROUND(voltage, 2),3) AS voltages, speed, WSEnvotechMsg.Ciudad + ', ' + Departamento AS position, csq, ";
                         consulta += " 'NO INFO' AS Compania, ISNULL(servername, 'NO INFO') AS servername, nombreUltGeo as Nombre, lock  ";
@@ -905,27 +906,27 @@ controller.get_reportescontroldevicexequipo = async (req, res) => {
                         consulta += " WHERE masterID = '" + device + "' AND DATEADD(hh,-5,eventDateTime) BETWEEN '" + inicio + "' AND '" + fin + "' ";
                         consulta += " ORDER BY eventDateTime DESC ";
                     }else if(tipo == 6){
-                        consulta = "SELECT WSCelltrackMsg.ID, latitud as latitude , longitud as longitude, '' AS DiffTime,  DATEADD(MINUTE, -" + utcServidor + ",datetimenormal) AS eventDateTime, 0 AS csq, ISNULL(evento,'') as event, fklokdeviceid AS device, ";
+                        consulta = "SELECT TOP 10000 WSCelltrackMsg.ID, latitud as latitude , longitud as longitude, '' AS DiffTime,  DATEADD(MINUTE, -" + utcServidor + ",datetimenormal) AS eventDateTime, 0 AS csq, ISNULL(evento,'') as event, fklokdeviceid AS device, ";
                         consulta += " DateTimeActualizacion AS UltActualizacion, 'GPRS' as source, '2' AS gpsStatus, ISNULL(ROUND(voltage, 2),3) AS voltages, velocidad AS speed, WSCelltrackMsg.Ciudad + ', ' + Departamento AS position, nombreUltGeo as Nombre, ";
                         consulta += " 'Pendiente' AS Compania, lock, ISNULL(servername,'') AS servername FROM WSCelltrackMsg ";
                         consulta += " WHERE FKLokDeviceID = '" + device + "' AND DATEADD(MINUTE, -" + utcServidor + ",datetimenormal) BETWEEN '" + inicio + "' AND '" + fin + "' ORDER BY eventDateTime DESC";
                     }else if(tipo == 7){
-                        consulta = "SELECT WSNuevo.ID, latitud as latitude , longitud as longitude, '' AS DiffTime,  DATEADD(MINUTE, -" + utcServidor + ",fecha) AS eventDateTime, 0 AS csq, '' as event, device AS device, ";
+                        consulta = "SELECT TOP 10000 WSNuevo.ID, latitud as latitude , longitud as longitude, '' AS DiffTime,  DATEADD(MINUTE, -" + utcServidor + ",fecha) AS eventDateTime, 0 AS csq, '' as event, device AS device, ";
                         consulta += " guardado AS UltActualizacion, lock, 'GPRS' as source, satelites AS gpsStatus, 4 AS voltages, velocidad AS speed, WSNuevo.Ciudad + ', ' + Departamento AS position, nombreUltGeo as Nombre, ";
                         consulta += " '' AS Compania, '' AS servername FROM WSNuevo";
                         consulta += " WHERE device = '" + device + "' AND DATEADD(MINUTE, -" + utcServidor + ",fecha) BETWEEN '" + inicio + "' AND '" + fin + "' ORDER BY fecha DESC";
                     }else if(tipo == 9){
-                        consulta = "SELECT WSJ701trackMsg.ID, latitud as latitude , longitud as longitude, '' AS DiffTime,  DATEADD(MINUTE, -" + utcServidor + ",datetimenormal) AS eventDateTime, 0 AS csq, ISNULL(evento,'') as event, fklokdeviceid AS device, ";
+                        consulta = "SELECT TOP 10000 WSJ701trackMsg.ID, latitud as latitude , longitud as longitude, '' AS DiffTime,  DATEADD(MINUTE, -" + utcServidor + ",datetimenormal) AS eventDateTime, 0 AS csq, ISNULL(evento,'') as event, fklokdeviceid AS device, ";
                         consulta += " DateTimeActualizacion AS UltActualizacion, 'GPRS' as source, '2' AS gpsStatus, ISNULL(ROUND(voltage, 2),3) AS voltages, velocidad AS speed, WSJ701trackMsg.Ciudad + ', ' + Departamento AS position, nombreUltGeo as Nombre, ";
                         consulta += " 'Pendiente' AS Compania, lock, ISNULL(servername,'') AS servername FROM WSJ701trackMsg ";
                         consulta += " WHERE FKLokDeviceID = '" + device + "' AND DATEADD(MINUTE, -" + utcServidor + ",datetimenormal) BETWEEN '" + inicio + "' AND '" + fin + "' ORDER BY eventDateTime DESC";
                     }else if(tipo == 10){
-                        consulta = "SELECT WSJT707trackMsg.ID, latitud as latitude , longitud as longitude, '' AS DiffTime,  DATEADD(MINUTE, -" + utcServidor + ",datetimenormal) AS eventDateTime, 0 AS csq, ISNULL(evento,'') as event, fklokdeviceid AS device, ";
+                        consulta = "SELECT TOP 10000 WSJT707trackMsg.ID, latitud as latitude , longitud as longitude, '' AS DiffTime,  DATEADD(MINUTE, -" + utcServidor + ",datetimenormal) AS eventDateTime, 0 AS csq, ISNULL(evento,'') as event, fklokdeviceid AS device, ";
                         consulta += " DateTimeActualizacion AS UltActualizacion, 'GPRS' as source, '2' AS gpsStatus, ISNULL(ROUND(voltage, 2),3) AS voltages, velocidad AS speed, WSJT707trackMsg.Ciudad + ', ' + Departamento AS position, nombreUltGeo as Nombre, ";
                         consulta += " 'Pendiente' AS Compania, lock, ISNULL(servername,'') AS servername FROM WSJT707trackMsg ";
                         consulta += " WHERE FKLokDeviceID = '" + device + "' AND DATEADD(MINUTE, -" + utcServidor + ",datetimenormal) BETWEEN '" + inicio + "' AND '" + fin + "' ORDER BY eventDateTime DESC";
                     }else if(tipo == 11){
-                        consulta = "SELECT WSJT301trackMsg.ID, latitud as latitude , longitud as longitude, '' AS DiffTime,  DATEADD(MINUTE, -" + utcServidor + ",datetimenormal) AS eventDateTime, 0 AS csq, ISNULL(evento,'') as event, fklokdeviceid AS device, ";
+                        consulta = "SELECT TOP 10000 WSJT301trackMsg.ID, latitud as latitude , longitud as longitude, '' AS DiffTime,  DATEADD(MINUTE, -" + utcServidor + ",datetimenormal) AS eventDateTime, 0 AS csq, ISNULL(evento,'') as event, fklokdeviceid AS device, ";
                         consulta += " DateTimeActualizacion AS UltActualizacion, 'GPRS' as source, '2' AS gpsStatus, ISNULL(ROUND(voltage, 2),3) AS voltages, velocidad AS speed, WSJT707trackMsg.Ciudad + ', ' + Departamento AS position, nombreUltGeo as Nombre, ";
                         consulta += " 'Pendiente' AS Compania, lock, ISNULL(servername,'') AS servername FROM WSJT301trackMsg ";
                         consulta += " WHERE FKLokDeviceID = '" + device + "' AND DATEADD(MINUTE, -" + utcServidor + ",datetimenormal) BETWEEN '" + inicio + "' AND '" + fin + "' ORDER BY eventDateTime DESC";
@@ -1036,7 +1037,7 @@ controller.get_jsonvisuallogistic = async (req, res) => {
                     res.json({ success: false, message: 'Failed to authenticate token' });
                 } else {
                     var nombreimagen=req.body.nombreimagen;
-                    const varEndpoint= `https://visuallogisticsapp.azurewebsites.net/getimages/${nombreimagen}`;
+                    const varEndpoint= `https://${Configuracion.URL_VISUALLOGISTIC}.azurewebsites.net/getimages/${nombreimagen}`;
                     const response = await axios.get(varEndpoint, null, {
                         headers: {
                             'Content-Type': 'application/x-www-form-urlencoded',
@@ -1066,7 +1067,7 @@ controller.get_contractvisuallogistic = async (req, res) => {
                     res.json({ success: false, message: 'Failed to authenticate token' });
                 } else {
                     var contrato=req.body.contrato;
-                    const varEndpoint= `https://visuallogisticsapp.azurewebsites.net/get-contract-comparisons/${contrato}`;
+                    const varEndpoint= `https://${Configuracion.URL_VISUALLOGISTIC}.azurewebsites.net/get-contract-comparisons/${contrato}`;
                     const response = await axios.get(varEndpoint, null, {
                         headers: {
                             'Content-Type': 'application/x-www-form-urlencoded',
@@ -1094,7 +1095,7 @@ controller.get_fotoscontractvisuallogistic = async (req, res) => {
                     res.json({ success: false, message: 'Failed to authenticate token' });
                 } else {
                     var contrato=req.body.contrato;
-                    const varEndpoint= `https://visuallogisticsapp.azurewebsites.net/get-contract-summary/${contrato}`;
+                    const varEndpoint= `https://${Configuracion.URL_VISUALLOGISTIC}.azurewebsites.net/get-contract-summary/${contrato}`;
                     try {
                         const response = await axios.get(varEndpoint, {
                             headers: {
