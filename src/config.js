@@ -9,7 +9,7 @@
     HB_SOLICITUDES: 60000,
     PORT_WS_TRAFICO: 8081,
     PORT_WS_SOLICITUDES: 8080,
-    URL_VISUALLOGISTIC: "visuallogisticstest"
+    URL_VISUALLOGISTIC: "visuallogisticstest",
   }
 
   //visuallogisticstest
@@ -24,6 +24,7 @@
     HB_SOLICITUDES: 60000,
     PORT_WS_TRAFICO: 8081,
     PORT_WS_SOLICITUDES: 8082,
-    URL_VISUALLOGISTIC: "visuallogisticsapp";
+    URL_VISUALLOGISTIC: "visuallogisticsapp",
   }
+
   module.exports = configuracionTest;
