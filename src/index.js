@@ -360,6 +360,9 @@ app.get('/actualizartoken', async (req, res) => {
                         empresaprincipal: decoded.empresaprincipal,
                         idempresa: decoded.idempresa,
                         idcliente: decoded.idcliente,
+                        tipouser: decoded.tipouser,
+                        jerarquia: decoded.jerarquia,
+                        empresastrafico: decoded.empresastrafico,
                         server: decoded.server
                     };
                     const nuevotoken = jwt.sign(tokenPayload, 'secret_key', { expiresIn: '1h' });
