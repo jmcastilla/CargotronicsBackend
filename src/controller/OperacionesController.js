@@ -737,13 +737,13 @@ controller.get_contratoscontroldevice = async (req, res) => {
                     var device=req.body.device;
                     var idcliente=decoded.empresaprincipal;
                     var proyecto=decoded.proyecto;
-                    var consulta = "SELECT ContractID, NombreEmpresa, DescripcionRuta, InicioServicio, ISNULL(FechaHoraFin, DATEADD(hh, 2, GETDATE())) AS FechaHoraFin, Ciudad + ', ' + Departamento AS Position ";
+                    /*var consulta = "SELECT ContractID, NombreEmpresa, DescripcionRuta, InicioServicio, ISNULL(FechaHoraFin, DATEADD(hh, 2, GETDATE())) AS FechaHoraFin, Ciudad + ', ' + Departamento AS Position ";
                     consulta += " FROM LokContractID INNER JOIN LokDeviceID ON FKLokDeviceID = DeviceID ";
                     consulta += " LEFT JOIN ICEmpresa ON FKICEmpresa = IdEmpresa ";
                     consulta += " LEFT JOIN ICRutas ON FKICRutas = IdRuta ";
-                    consulta += " WHERE FKLokDeviceID = '" + device + "' AND LokContractID.FKLokProyecto = " + proyecto;
+                    consulta += " WHERE FKLokDeviceID = '" + device + "' AND LokContractID.FKLokProyecto = " + proyecto;*/
 
-                    /*var consulta= "SELECT ContractID, FKLokDeviceID, e.NombreEmpresa, c.PlacaTruck, '"+decoded.username+"' as username, Ciudad + ', ' + Departamento AS Position, "+
+                    var consulta= "SELECT ContractID, FKLokDeviceID, e.NombreEmpresa, c.PlacaTruck, '"+decoded.username+"' as username, Ciudad + ', ' + Departamento AS Position, "+
                     "CONVERT(varchar,DATEADD(MINUTE,0,c.FechaHoraInicio),20) as fecha, CONCAT(c.LastMsgLat,',',c.LastMsgLong) as pos, "+
                     "ISNULL(c.FKTrayecto, 0) as trayecto, r.DescripcionRuta, t.DescripcionTrayecto, c.ContainerNum, c.NombreConductor, "+
                     "c.Ref, tp.NombreTranspo, c.MovilConductor, c.PlacaTrailer, CONVERT(varchar,DATEADD(minute,0,c.FechaHoraInicio),20) as fechainicio, "+
@@ -754,7 +754,7 @@ controller.get_contratoscontroldevice = async (req, res) => {
                     "LEFT JOIN ICRutas as r ON r.IdRuta = c.FKICRutas "+
                     "LEFT JOIN Trayectos as t ON c.FKTrayecto =  t.IDTrayecto "+
                     "LEFT JOIN ICTransportadora as tp ON tp.IdTransportadora = c.FKICTransportadora "+
-                    consulta += " WHERE FKLokDeviceID = '" + device + "' AND LokContractID.FKLokProyecto = " + proyecto;*/
+                    consulta += " WHERE FKLokDeviceID = '" + device + "' AND LokContractID.FKLokProyecto = " + proyecto;
 
                     if (idcliente != 2 && proyecto == 1){
                         consulta += " AND ICEmpresa.IdEmpresa = " + idcliente;
