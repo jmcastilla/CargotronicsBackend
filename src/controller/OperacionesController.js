@@ -760,6 +760,7 @@ controller.get_contratoscontroldevice = async (req, res) => {
                         consulta += " AND ICEmpresa.IdEmpresa = " + idcliente;
                     }
                     consulta += " ORDER BY InicioServicio DESC";
+                    console.log(consulta);
                     let resultado=await sqlconfig.query(consulta);
                     res.json({success : true, data : resultado.recordsets[0]});
                 }
