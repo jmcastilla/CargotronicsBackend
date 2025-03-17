@@ -754,7 +754,7 @@ controller.get_contratoscontroldevice = async (req, res) => {
                     "LEFT JOIN ICRutas as r ON r.IdRuta = c.FKICRutas "+
                     "LEFT JOIN Trayectos as t ON c.FKTrayecto =  t.IDTrayecto "+
                     "LEFT JOIN ICTransportadora as tp ON tp.IdTransportadora = c.FKICTransportadora ";
-                    consulta += " WHERE FKLokDeviceID = '" + device + "' AND LokContractID.FKLokProyecto = " + proyecto;
+                    consulta += " WHERE FKLokDeviceID = '" + device + "' AND c.FKLokProyecto = " + proyecto;
 
                     if (idcliente != 2 && proyecto == 1){
                         consulta += " AND ICEmpresa.IdEmpresa = " + idcliente;
