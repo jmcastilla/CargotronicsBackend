@@ -743,7 +743,7 @@ controller.get_contratoscontroldevice = async (req, res) => {
                     consulta += " LEFT JOIN ICRutas ON FKICRutas = IdRuta ";
                     consulta += " WHERE FKLokDeviceID = '" + device + "' AND LokContractID.FKLokProyecto = " + proyecto;*/
 
-                    var consulta= "SELECT ContractID, FKLokDeviceID, e.NombreEmpresa, c.PlacaTruck, '"+decoded.username+"' as username, Ciudad + ', ' + Departamento AS Position, "+
+                    var consulta= "SELECT ContractID, FKLokDeviceID, e.NombreEmpresa, c.PlacaTruck, '"+decoded.username+"' as username, "+
                     "CONVERT(varchar,DATEADD(MINUTE,0,c.FechaHoraInicio),20) as fecha, CONCAT(c.LastMsgLat,',',c.LastMsgLong) as pos, "+
                     "ISNULL(c.FKTrayecto, 0) as trayecto, r.DescripcionRuta, t.DescripcionTrayecto, c.ContainerNum, c.NombreConductor, "+
                     "c.Ref, tp.NombreTranspo, c.MovilConductor, c.PlacaTrailer, CONVERT(varchar,DATEADD(minute,0,c.FechaHoraInicio),20) as fechainicio, "+
