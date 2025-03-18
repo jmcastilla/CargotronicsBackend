@@ -1938,6 +1938,7 @@ router.post('/getreportescontroldevicexequipo', OperacionesController.get_report
  *               success: false
  */
 router.post('/getreportesdevice', OperacionesController.get_reportesdevice);
+router.post('/getreportesdevice2', OperacionesController.get_reportesdevice2);
 /**
  * @swagger
  * /operaciones/getreportescontroldevice:

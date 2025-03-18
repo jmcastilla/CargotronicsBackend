@@ -486,6 +486,59 @@ controller.get_reportesdevice = async (req, res) => {
     }
 }
 
+controller.get_reportesdevice2 = async (req, res) => {
+    try{
+        var token = req.headers.authorization;
+        if (!token) {
+            return res.json({ success: false, message: 'Token is missing' });
+        }else{
+            token = req.headers.authorization.split(' ')[1];
+            jwt.verify(token, 'secret_key', async (err, decoded) => {
+                if (err) {
+                    res.json({ success: false, message: 'Failed to authenticate token' });
+                } else {
+                    let m = moment();
+                    m.add(decoded.diffhorario, 'minutes');
+                    var datos={
+                      "fechainicio": req.body.fechainicio,
+                      "fechafin":m.format('YYYY-MM-DD HH:mm:ss'),
+                      "device": req.body.device,
+                      "utcMinutos": decoded.diffUTC,
+                      "allreport": req.body.allreport
+                    }
+                    if(req.body.tipo == 0){
+                        datos={
+                          "fechainicio": req.body.fechainicio,
+                          "fechafin":req.body.fechafin,
+                          "device": req.body.device,
+                          "utcMinutos": decoded.diffUTC,
+                          "allreport": req.body.allreport
+                        }
+                    }
+                    var procedure="SelectJ701TrackMsg"
+                    if(req.body.tipoequipo == 1){
+                        procedure="SelectWSLoksysMsg";
+                    }else if(req.body.tipoequipo == 2){
+                        procedure="SelectWLMsg";
+                    }else if(req.body.tipoequipo == 3){
+                        procedure="SelectEnvotechMsg";
+                    }else if(req.body.tipoequipo == 6){
+                        procedure="SelectCellTrackMsg";
+                    }else if(req.body.tipoequipo == 7){
+                        procedure="SelectNuevoMsg";
+                    }else if(req.body.tipoequipo == 10){
+                        procedure="SelectJT707TrackMsg";
+                    }
+                    let resultado=await sqlconfig.query2Procedure(procedure, datos);
+                    res.json({success : true, data : resultado.recordsets[0]});
+                }
+            });
+        }
+    }catch(err){
+        res.json({success : false});
+    }
+}
+
 // FUNCION QUE RETORNA EL LISTADO DE CONTRATOS ACTIVOS, GRILLA DE TRAFICO
 controller.get_fotoscontrato = async (req, res) => {
     try{
