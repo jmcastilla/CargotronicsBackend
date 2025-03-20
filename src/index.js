@@ -882,7 +882,7 @@ const getSolicitudesGlobal = async () => {
 const getTraficoGlobal = async () => {
     var consulta = "SELECT c.ContractID, c.FKLokDeviceID, e.IdEmpresa, e.NombreEmpresa, c.PlacaTruck, '' as username, "+
     "CONVERT(varchar,DATEADD(MINUTE,0,c.FechaHoraInicio),20) as fecha, CONCAT(c.LastMsgLat,',',c.LastMsgLong) as pos, "+
-    "ISNULL(c.FKTrayecto, 0) as trayecto, r.DescripcionRuta, t.DescripcionTrayecto, c.NombreConductor, "+
+    "ISNULL(c.FKTrayecto, 0) as trayecto, d.bitGPS, r.DescripcionRuta, t.DescripcionTrayecto, c.NombreConductor, "+
     "CASE WHEN c.ContainerNum IS NULL OR c.ContainerNum = 'ND' THEN (LEFT(c.Documento, 35) + CASE WHEN LEN(c.Documento) > 35 THEN '...' ELSE '' END) ELSE c.ContainerNum END as ContainerNum, "+
     "c.Ref, tp.NombreTranspo, c.MovilConductor, c.PlacaTrailer, CONVERT(varchar,DATEADD(minute,0,c.FechaHoraInicio),20) as fechainicio, "+
     "ISNULL(CONVERT(varchar,DATEADD(minute,0,c.FechaHoraFin),20), CONVERT(varchar,DATEADD(minute,120,GETDATE()),20)) as fechafin, c.LastMsgLat, c.LastMsgLong, "+
