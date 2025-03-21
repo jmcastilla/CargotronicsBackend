@@ -503,7 +503,8 @@ controller.get_reportesdevice2 = async (req, res) => {
                     m.add(decoded.diffhorario, 'minutes');
                     var datos={
                       "fechainicio": req.body.fechainicio,
-                      "fechafin":m.format('YYYY-MM-DD HH:mm:ss'),
+                      //"fechafin":m.format('YYYY-MM-DD HH:mm:ss'),
+                      "fechafin":"2024-10-11 00:00:00",
                       "device": req.body.device,
                       "utcMinutos": decoded.diffUTC,
                       "allreport": req.body.allreport
