@@ -318,7 +318,7 @@ controller.get_contratostrafico = async (req, res) => {
                     "CAST(CASE WHEN c.Active=1 THEN 0 ELSE 1 END AS BIT) AS expanded, "+
                     "CASE WHEN qr.Verificado_global=1 AND c.FKQrMaestro IS NOT NULL THEN '/images/valitronics.png' "+
                     "WHEN qr.Verificado_global=0 AND c.FKQrMaestro IS NOT NULL THEN '/images/valitronics_gris.png' "+
-                    "ELSE '/images/transparent.png' END as IconValitronics, d.Speed, Convert(nvarchar(10),DATEDIFF(MINUTE, isnull(d.DateDetencion, DATEADD(hh,2,getdate())), DATEADD(hh,2,getdate()))) as tiempodetencion, c.FKLokProyecto, c.FKICEmpresa "+
+                    "ELSE '/images/transparent.png' END as IconValitronics, d.Speed, Convert(nvarchar(10),DATEDIFF(MINUTE, isnull(d.DateDetencion, DATEADD(hh,2,getdate())), DATEADD(hh,2,getdate()))) as tiempodetencion, c.FKLokProyecto, c.FKICEmpresa, , corig.NombreCiudad as CiudadOrigen, cdest.NombreCiudad as CiudadDestino "+
                     "FROM LokcontractID as c "+
                     "INNER JOIN LokDeviceID as d ON d.DeviceID = c.FKLokDeviceID "+
                     "LEFT JOIN ICEmpresa as e ON e.IdEmpresa = c.FKICEmpresa "+
@@ -328,6 +328,8 @@ controller.get_contratostrafico = async (req, res) => {
                     "LEFT JOIN ICTransportadora as tp ON tp.IdTransportadora = c.FKICTransportadora "+
                     "LEFT JOIN QR_Maestro as qr ON c.FKQrMaestro = qr.ID_QRMaestro "+
                     "LEFT JOIN GeoCercas as geo ON geo.ID = d.UltimaGeoCerca "+
+                    "LEFT JOIN LokCiudades as corig ON corig.IDCiudad = r.FKLokCiudadOrigen "+
+                    "LEFT JOIN LokCiudades as cdest ON cdest.IDCiudad = r.FKLokCiudadDestino "+
                     "OUTER APPLY dbo.IconosContract(c.ContractID, c.FKLokDeviceID) AS iconos ";
                     /*if(decoded.roltrafico != 0){
                         consulta+="INNER JOIN (SELECT * FROM LokEmpresaRol WHERE id_roltrafico_ = "+decoded.roltrafico+") as Rol ON Rol.id_empresa = c.FKICEmpresa ";
