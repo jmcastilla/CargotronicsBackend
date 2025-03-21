@@ -535,6 +535,7 @@ controller.get_reportesdevice2 = async (req, res) => {
                     console.log(procedure);
                     console.log(datos);
                     let resultado=await sqlconfig.query2Procedure(procedure, datos);
+                    console.log(resultado.recordsets[0].length);
                     res.json({success : true, data : resultado.recordsets[0]});
                 }
             });
