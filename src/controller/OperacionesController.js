@@ -531,6 +531,8 @@ controller.get_reportesdevice2 = async (req, res) => {
                     }else if(req.body.tipoequipo == 10){
                         procedure="SelectJT707TrackMsg";
                     }
+                    console.log(procedure);
+                    console.log(datos);
                     let resultado=await sqlconfig.query2Procedure(procedure, datos);
                     res.json({success : true, data : resultado.recordsets[0]});
                 }
