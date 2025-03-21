@@ -903,7 +903,7 @@ const getTraficoGlobal = async () => {
     "ELSE '/images/transparent.png' END as IconValitronics, d.Speed, Convert(nvarchar(10),DATEDIFF(MINUTE, isnull(d.DateDetencion, DATEADD(hh,2,getdate())), DATEADD(hh,2,getdate()))) as tiempodetencion, c.FKLokProyecto, c.FKICEmpresa, "+
     "CASE WHEN c.FKLokProyecto = 1 THEN CASE WHEN d.FKLokTipoEquipo IN (SELECT IDTipoEquipo FROM LokTipoEquipo WHERE Critico = 1) AND e.bitCritico = 1 AND (bitAperturaRespo = 0 OR bitBackRespo = 0 OR bitAlejadoRespo = 0 OR bitDesvioRespo = 0 OR bitDetencionRespo = 0 "+
     "OR Locked = 0 OR Desautorizado = 1 OR ContadorGps > 3 OR dbo.TiemposDetencion(ContractID) = 1 OR DATEDIFF(SECOND, LoksysServerTime, GETUTCDATE()) > 960 OR ROUND(d.BatteryVoltage,2) <= 3.65) "+
-    "THEN 1 ELSE 0 END ELSE CASE WHEN d.FKLokTipoEquipo IN (SELECT IDTipoEquipo FROM LokTipoEquipo WHERE Critico = 1) THEN 1 ELSE 0 END END AS EsCritico "+
+    "THEN 1 ELSE 0 END ELSE CASE WHEN d.FKLokTipoEquipo IN (SELECT IDTipoEquipo FROM LokTipoEquipo WHERE Critico = 1) THEN 1 ELSE 0 END END AS EsCritico, corig.NombreCiudad as CiudadOrigen, cdest.NombreCiudad as CiudadDestino "+
     "FROM LokcontractID as c "+
     "INNER JOIN LokDeviceID as d ON d.DeviceID = c.FKLokDeviceID "+
     "LEFT JOIN ICEmpresa as e ON e.IdEmpresa = c.FKICEmpresa "+
@@ -913,6 +913,8 @@ const getTraficoGlobal = async () => {
     "LEFT JOIN ICTransportadora as tp ON tp.IdTransportadora = c.FKICTransportadora "+
     "LEFT JOIN QR_Maestro as qr ON c.FKQrMaestro = qr.ID_QRMaestro "+
     "LEFT JOIN GeoCercas as geo ON geo.ID = d.UltimaGeoCerca "+
+    "LEFT JOIN LokCiudades as corig ON corig.IDCiudad = r.FKLokCiudadOrigen "+
+    "LEFT JOIN LokCiudades as cdest ON cdest.IDCiudad = r.FKLokCiudadDestino "+
     "OUTER APPLY dbo.IconosContract(c.ContractID, c.FKLokDeviceID) AS iconos WHERE c.Active=1 "+
     "ORDER BY bitAperturaRespo ASC, d.Locked ASC";
     //"ORDER BY d.Locked ASC, bitAperturaRespo ASC, bitBackRespo ASC, bitAlejadoRespo ASC, bitDesvioRespo ASC, bitDetencionRespo ASC, bitGpsRespo ASC, bitTiempoRespo ASC, d.LoksysServerTime";
