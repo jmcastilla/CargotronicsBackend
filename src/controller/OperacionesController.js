@@ -318,7 +318,7 @@ controller.get_contratostrafico = async (req, res) => {
                     "CAST(CASE WHEN c.Active=1 THEN 0 ELSE 1 END AS BIT) AS expanded, "+
                     "CASE WHEN qr.Verificado_global=1 AND c.FKQrMaestro IS NOT NULL THEN '/images/valitronics.png' "+
                     "WHEN qr.Verificado_global=0 AND c.FKQrMaestro IS NOT NULL THEN '/images/valitronics_gris.png' "+
-                    "ELSE '/images/transparent.png' END as IconValitronics, d.Speed, Convert(nvarchar(10),DATEDIFF(MINUTE, isnull(d.DateDetencion, DATEADD(hh,2,getdate())), DATEADD(hh,2,getdate()))) as tiempodetencion, c.FKLokProyecto, c.FKICEmpresa, , corig.NombreCiudad as CiudadOrigen, cdest.NombreCiudad as CiudadDestino "+
+                    "ELSE '/images/transparent.png' END as IconValitronics, d.Speed, Convert(nvarchar(10),DATEDIFF(MINUTE, isnull(d.DateDetencion, DATEADD(hh,2,getdate())), DATEADD(hh,2,getdate()))) as tiempodetencion, c.FKLokProyecto, c.FKICEmpresa, corig.NombreCiudad as CiudadOrigen, cdest.NombreCiudad as CiudadDestino "+
                     "FROM LokcontractID as c "+
                     "INNER JOIN LokDeviceID as d ON d.DeviceID = c.FKLokDeviceID "+
                     "LEFT JOIN ICEmpresa as e ON e.IdEmpresa = c.FKICEmpresa "+
