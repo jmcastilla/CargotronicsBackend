@@ -1133,48 +1133,9 @@ setInterval(checkContratos, Configuracion.TIME_TRAFICO);
     sqlconfig.registerNotification('Sol_Queue', async (message) => {
         console.log("Mensaje procesado:", message);
         await checkSolicitudes();
-
-        // Extraer el conversation_handle del mensaje
-        const conversationHandle = message.conversation_handle;
-        if (conversationHandle) {
-            await cerrarConversacion(conversationHandle);
-        }
     });
 
-    async function cerrarConversacion(conversationHandle) {
-        console.log(conversationHandle);
-        try {
-            const pool = await sqlconfig.getPool(); // Asegurarse de obtener el pool correctamente
 
-            // Verificar si la conversación está activa
-            const result = await pool.request()
-                .input('handle', sql.UniqueIdentifier, conversationHandle)
-                .query(`
-                    SELECT state_desc
-                    FROM sys.conversation_endpoints
-                    WHERE conversation_handle = @handle
-                `);
-
-            if (result.recordset.length > 0) {
-                const estado = result.recordset[0].state_desc;
-                console.log(`Estado actual de la conversación ${conversationHandle}: ${estado}`);
-
-                if (estado === 'CONVERSING') {
-                    await pool.request()
-                        .input('handle', sql.UniqueIdentifier, conversationHandle)
-                        .query('END CONVERSATION @handle');
-
-                    console.log(`Conversación ${conversationHandle} cerrada.`);
-                } else {
-                    console.log(`No se cerró la conversación ${conversationHandle} porque está en estado: ${estado}`);
-                }
-            } else {
-                console.log(`No se encontró la conversación ${conversationHandle} en sys.conversation_endpoints.`);
-            }
-        } catch (err) {
-            console.error("Error cerrando la conversación:", err);
-        }
-    }
 
 
 

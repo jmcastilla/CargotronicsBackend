@@ -262,7 +262,8 @@ const registerNotification = function(queueName, callback) {
 
                 if (result.recordset.length > 0) {
                     const message = result.recordset[0];
-                    if (message.message_type_name === 'http://schemas.microsoft.com/SQL/ServiceBroker/EndDialog') {
+                    console.log(message);
+                    if (message.message_type_name === 'Sol_Notifications') {
                         console.log('END DIALOG recibido, cerrando la conversación.');
 
                         // Cierra la conversación usando otra consulta sin await
