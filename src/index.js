@@ -1133,9 +1133,24 @@ setInterval(checkContratos, Configuracion.TIME_TRAFICO);
 sqlconfig.registerNotification('Sol_Queue', (message) => {
     console.log("Mensaje procesado:", message);
     checkSolicitudes();
-    sqlconfig.unregisterNotification('Sol_Queue');
-    console.log("Notificación eliminada después de leerla.");
+    // Extraer el conversation_handle del mensaje
+    const conversationHandle = message.conversation_handle;
+    if (conversationHandle) {
+        await cerrarConversacion(conversationHandle);
+    }
 });
+
+async function cerrarConversacion(conversationHandle) {
+    try {
+        let pool = await sql.connect(config);
+        await pool.request()
+            .input('handle', sql.UniqueIdentifier, conversationHandle)
+            .query('END CONVERSATION @handle');
+        console.log(`Conversación ${conversationHandle} cerrada en la base de datos.`);
+    } catch (err) {
+        console.error("Error cerrando la conversación:", err);
+    }
+}
 
 
 /*const wss = new WebSocket.Server({ port: 8080 });
