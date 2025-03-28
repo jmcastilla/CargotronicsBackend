@@ -229,7 +229,7 @@ let query2Procedure = function( procedureName, params ) {
     });
 }
 
-const registerNotification = function(queueName, callback) {
+const registerNotification = function(queueName, type_name, callback) {
     const conn = new sql.ConnectionPool(config1);
 
     conn.connect().then(() => {
@@ -263,7 +263,7 @@ const registerNotification = function(queueName, callback) {
                 if (result.recordset.length > 0) {
                     const message = result.recordset[0];
                     console.log(message);
-                    if (message.message_type_name === 'Sol_Notifications') {
+                    if (message.message_type_name === type_name) {
                         console.log('END DIALOG recibido, cerrando la conversación.');
 
                         // Cierra la conversación usando otra consulta sin await

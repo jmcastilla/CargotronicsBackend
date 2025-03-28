@@ -1130,7 +1130,7 @@ setInterval(checkContratos, Configuracion.TIME_TRAFICO);
         console.error("Error al registrar notificación:", err);
     });*/
 
-    sqlconfig.registerNotification('Sol_Queue', async (message) => {
+    sqlconfig.registerNotification('Sol_Queue', 'Sol_Notifications', async (message) => {
         console.log("Mensaje procesado:", message);
         await checkSolicitudes();
     });
