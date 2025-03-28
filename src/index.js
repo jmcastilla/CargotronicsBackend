@@ -1142,7 +1142,7 @@ sqlconfig.registerNotification('Sol_Queue', (message) => {
 
 function cerrarConversacion(conversationHandle) {
     try {
-        let pool = await sql.connect(config);
+        let pool = sqlconfig.connect(config);
         pool.request()
             .input('handle', sql.UniqueIdentifier, conversationHandle)
             .query('END CONVERSATION @handle');
