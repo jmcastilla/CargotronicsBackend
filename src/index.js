@@ -1133,6 +1133,8 @@ setInterval(checkContratos, Configuracion.TIME_TRAFICO);
 sqlconfig.registerNotification('Sol_Queue', (message) => {
     console.log("Mensaje procesado:", message);
     checkSolicitudes();
+    sqlconfig.unregisterNotification('Sol_Queue');
+    console.log("Notificación eliminada después de leerla.");
 });
 
 
