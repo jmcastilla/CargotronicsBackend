@@ -1142,6 +1142,7 @@ setInterval(checkContratos, Configuracion.TIME_TRAFICO);
     });
 
     async function cerrarConversacion(conversationHandle) {
+        console.log(conversationHandle);
         try {
             const pool = await sqlconfig.getPool(); // Asegurarse de obtener el pool correctamente
 
