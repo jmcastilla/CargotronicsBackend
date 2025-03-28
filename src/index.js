@@ -1142,15 +1142,38 @@ sqlconfig.registerNotification('Sol_Queue', (message) => {
 
 function cerrarConversacion(conversationHandle) {
     try {
-        let pool = sqlconfig.connect(config);
-        pool.request()
+        const pool = sqlconfig.getPool();
+
+        // Verificar si la conversación está en estado activo
+        const result = pool.request()
             .input('handle', sql.UniqueIdentifier, conversationHandle)
-            .query('END CONVERSATION @handle');
-        console.log(`Conversación ${conversationHandle} cerrada en la base de datos.`);
+            .query(`
+                SELECT state_desc
+                FROM sys.conversation_endpoints
+                WHERE conversation_handle = @handle
+            `);
+
+        if (result.recordset.length > 0) {
+            const estado = result.recordset[0].state_desc;
+            console.log(`Estado actual de la conversación ${conversationHandle}: ${estado}`);
+
+            if (estado === 'CONVERSING') {
+                pool.request()
+                    .input('handle', sql.UniqueIdentifier, conversationHandle)
+                    .query('END CONVERSATION @handle');
+
+                console.log(`Conversación ${conversationHandle} cerrada.`);
+            } else {
+                console.log(`No se cerró la conversación ${conversationHandle} porque está en estado: ${estado}`);
+            }
+        } else {
+            console.log(`No se encontró la conversación ${conversationHandle} en sys.conversation_endpoints.`);
+        }
     } catch (err) {
         console.error("Error cerrando la conversación:", err);
     }
 }
+
 
 
 /*const wss = new WebSocket.Server({ port: 8080 });
