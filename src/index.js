@@ -1136,14 +1136,14 @@ sqlconfig.registerNotification('Sol_Queue', (message) => {
     // Extraer el conversation_handle del mensaje
     const conversationHandle = message.conversation_handle;
     if (conversationHandle) {
-        await cerrarConversacion(conversationHandle);
+        cerrarConversacion(conversationHandle);
     }
 });
 
-async function cerrarConversacion(conversationHandle) {
+function cerrarConversacion(conversationHandle) {
     try {
         let pool = await sql.connect(config);
-        await pool.request()
+        pool.request()
             .input('handle', sql.UniqueIdentifier, conversationHandle)
             .query('END CONVERSATION @handle');
         console.log(`Conversación ${conversationHandle} cerrada en la base de datos.`);
