@@ -934,9 +934,10 @@ const getNotificacionesGlobal = async () => {
     var consulta = "SELECT TOP 1000 IdNotificacion, FkLokDeviceID, alertValue, idMensaje, DatetimeNoti, FkTipoNotificacion, "
     +"FkLokContractID, FkUltGeoCerca, bitGeoAutorizada, Notificacion, FkLokProyecto, FkICEmpresa, FkIdAtencionNoti "
     +"FROM LokNotificaciones where FkIdAtencionNoti is null";
-
+    console.log(consulta);
     try {
         let resultado = await sqlconfig.query(consulta);
+        console.log(resultado.recordsets[0] );
         return { success: true, data: resultado.recordsets[0] };
     } catch (error) {
         console.error('Error al ejecutar la consulta:', error);
@@ -1000,7 +1001,7 @@ const checkNotificaciones = async () => {
     try {
       console.log("entro a check notificaciones");
       const globalNotificacionesData = await getNotificacionesGlobal();
-      console.log("clientes:"+clientsNotificaciones.length);
+      console.log("clientes:"+clientsNotificaciones);
       if (globalNotificacionesData.success) {
           // Filtrar los datos para cada cliente según su idempresa
           clientsNotificaciones.forEach((client) => {
