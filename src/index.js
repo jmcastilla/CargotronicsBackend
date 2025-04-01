@@ -1000,7 +1000,7 @@ const checkNotificaciones = async () => {
     try {
       console.log("entro a check notificaciones");
       const globalNotificacionesData = await getNotificacionesGlobal();
-
+      console.log("clientes:"+clientsNotificaciones.length);
       if (globalNotificacionesData.success) {
           // Filtrar los datos para cada cliente según su idempresa
           clientsNotificaciones.forEach((client) => {
