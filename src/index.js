@@ -1002,11 +1002,10 @@ const checkNotificaciones = async () => {
       if (globalNotificacionesData.success) {
           // Filtrar los datos para cada cliente según su idempresa
           clientsNotificaciones.forEach((client) => {
-              console.log("ebtriiiiiii");
-              //if (clientsNotificaciones.readyState === WebSocket.OPEN && clientsNotificaciones.decoded) {
+              
+              if (client.readyState === WebSocket.OPEN && client.decoded) {
                   let dataToSend;
-                  console.log(globalNotificacionesData.data);
-                  if (clientsNotificaciones.decoded.idempresa !== 2) {
+                  if (client.decoded.idempresa !== 2) {
                       // Filtrar los datos para el cliente con idempresa diferente de 2
                       //dataToSend = globalNotificacionesData.data.filter(noti => noti.FkICEmpresa === clientsNotificaciones.decoded.idempresa);
                       dataToSend = globalNotificacionesData.data;
@@ -1017,18 +1016,18 @@ const checkNotificaciones = async () => {
 
                   // Enviar los datos filtrados al cliente
                   if (dataToSend.length > 0) {
-                      clientsNotificaciones.send(JSON.stringify({
+                      client.send(JSON.stringify({
                           event: true,
                           message: 'Nueva Notificacion',
                           data: dataToSend
                       }));
                   } else {
-                      clientsNotificaciones.send(JSON.stringify({
+                      client.send(JSON.stringify({
                           event: false,
                           message: 'No hay Notificaciones para tu empresa'
                       }));
                   }
-              //}
+              }
           });
       } else {
           // Enviar mensaje a todos los usuarios en caso de error en la consulta
