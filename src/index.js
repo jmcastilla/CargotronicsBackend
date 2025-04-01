@@ -934,10 +934,8 @@ const getNotificacionesGlobal = async () => {
     var consulta = "SELECT TOP 1000 IdNotificacion, FkLokDeviceID, alertValue, idMensaje, DatetimeNoti, FkTipoNotificacion, "
     +"FkLokContractID, FkUltGeoCerca, bitGeoAutorizada, Notificacion, FkLokProyecto, FkICEmpresa, FkIdAtencionNoti "
     +"FROM LokNotificaciones where FkIdAtencionNoti is null";
-    console.log(consulta);
     try {
         let resultado = await sqlconfig.query(consulta);
-        console.log(resultado.recordsets[0] );
         return { success: true, data: resultado.recordsets[0] };
     } catch (error) {
         console.error('Error al ejecutar la consulta:', error);
@@ -1001,15 +999,16 @@ const checkNotificaciones = async () => {
     try {
       console.log("entro a check notificaciones");
       const globalNotificacionesData = await getNotificacionesGlobal();
-      console.log("clientes:"+clientsNotificaciones);
       if (globalNotificacionesData.success) {
           // Filtrar los datos para cada cliente según su idempresa
           clientsNotificaciones.forEach((client) => {
               if (clientsNotificaciones.readyState === WebSocket.OPEN && clientsNotificaciones.decoded) {
                   let dataToSend;
+                  console.log(globalNotificacionesData.data);
                   if (clientsNotificaciones.decoded.idempresa !== 2) {
                       // Filtrar los datos para el cliente con idempresa diferente de 2
-                      dataToSend = globalNotificacionesData.data.filter(noti => noti.FkICEmpresa === clientsNotificaciones.decoded.idempresa);
+                      //dataToSend = globalNotificacionesData.data.filter(noti => noti.FkICEmpresa === clientsNotificaciones.decoded.idempresa);
+                      dataToSend = globalNotificacionesData.data;
                   } else {
                       // Si la idempresa es 2, enviar todos los datos sin filtrar
                       dataToSend = globalNotificacionesData.data;
