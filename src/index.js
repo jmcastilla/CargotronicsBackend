@@ -1002,6 +1002,7 @@ const checkNotificaciones = async () => {
       if (globalNotificacionesData.success) {
           // Filtrar los datos para cada cliente según su idempresa
           clientsNotificaciones.forEach((client) => {
+              console.log("ebtriiiiiii");
               if (clientsNotificaciones.readyState === WebSocket.OPEN && clientsNotificaciones.decoded) {
                   let dataToSend;
                   console.log(globalNotificacionesData.data);
