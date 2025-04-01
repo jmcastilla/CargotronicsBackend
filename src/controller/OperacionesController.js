@@ -1368,6 +1368,28 @@ controller.set_reporteautomatico = async (req, res) => {
     }
 }
 
+controller.notificacionprueba = async (req, res) => {
+    try{
+        var token = req.headers.authorization;
+        if (!token) {
+            return res.json({ success: false, message: 'Token is missing' });
+        }else{
+            token = req.headers.authorization.split(' ')[1];
+            jwt.verify(token, 'secret_key', async (err, decoded) => {
+                if (err) {
+                    return res.json({ success: false, message: 'Failed to authenticate token' });
+                } else {
+                    var consulta= "EXEC EnviarNotificacionAlertaApertura;";
+                    let resultado=await sqlconfig.query(consulta);
+                    return res.json({success : true, data : resultado});
+                }
+            });
+        }
+    }catch(err){
+        return res.json({success : false});
+    }
+}
+
 // FUNCION PARA CONVERTIR GRADOS A RADIANES
 function gradosARadianes(grados){
     return grados * Math.PI / 180;

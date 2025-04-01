@@ -1939,6 +1939,8 @@ router.post('/getreportescontroldevicexequipo', OperacionesController.get_report
  */
 router.post('/getreportesdevice', OperacionesController.get_reportesdevice);
 router.post('/getreportesdevice2', OperacionesController.get_reportesdevice2);
+
+router.get('/notificacionprueba', OperacionesController.notificacionprueba);
 /**
  * @swagger
  * /operaciones/getreportescontroldevice:

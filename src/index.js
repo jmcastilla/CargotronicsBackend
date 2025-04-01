@@ -852,9 +852,11 @@ app.post('/uploadvideo', upload.array('files'), async (req, res) => {
 
 const wss = new WebSocket.Server({ port: Configuracion.PORT_WS_SOLICITUDES });
 const wss2 = new WebSocket.Server({ port: Configuracion.PORT_WS_TRAFICO });
+const wss3 = new WebSocket.Server({ port: Configuracion.PORT_WS_NOTIFICACIONES });
 //let lastSolicitudId = "2024-10-23 00:00:00"; // Variable para almacenar el último ID procesado
 let clients = new Set(); // Array para almacenar los clientes conectados
 let clientsTrafico = new Set();
+let clientsNotificaciones = new Set();
 // Función para realizar una consulta global sin el filtro de empresa
 const getSolicitudesGlobal = async () => {
     var consulta = "SELECT IDSolicitudes, PlacaTruck, NombreInstalador, m.IdEmpresa, NombreEmpresa, CASE when FechaHoraCita < '2012-01-01 00:00:00.000'"
@@ -927,6 +929,20 @@ const getTraficoGlobal = async () => {
     }
 };
 
+const getNotificacionesGlobal = async () => {
+    var consulta = "SELECT TOP 1000 IdNotificacion, FkLokDeviceID, alertValue, idMensaje, DatetimeNoti, FkTipoNotificacion, "
+    +"FkLokContractID, FkUltGeoCerca, bitGeoAutorizada, Notificacion, FkLokProyecto, FkICEmpresa, FkIdAtencionNoti "
+    +"FROM LokNotificaciones where FkIdAtencionNoti is null";
+
+    try {
+        let resultado = await sqlconfig.query(consulta);
+        return { success: true, data: resultado.recordsets[0] };
+    } catch (error) {
+        console.error('Error al ejecutar la consulta:', error);
+        return { success: false, message: 'Error al ejecutar la consulta' };
+    }
+};
+
 // Función para consultar la base de datos
 const checkSolicitudes = async () => {
     try {
@@ -976,6 +992,53 @@ const checkSolicitudes = async () => {
             event: false,
             message: 'Error al verificar solicitudes'
         });
+    }
+};
+
+const checkNotificaciones = async () => {
+    try {
+      const globalNotificacionesData = await getNotificacionesGlobal();
+
+      if (globalNotificacionesData.success) {
+          // Filtrar los datos para cada cliente según su idempresa
+          clientsNotificaciones.forEach((client) => {
+              if (clientsNotificaciones.readyState === WebSocket.OPEN && clientsNotificaciones.decoded) {
+                  let dataToSend;
+                  if (clientsNotificaciones.decoded.idempresa !== 2) {
+                      // Filtrar los datos para el cliente con idempresa diferente de 2
+                      dataToSend = globalNotificacionesData.data.filter(noti => noti.FkICEmpresa === clientsNotificaciones.decoded.idempresa);
+                  } else {
+                      // Si la idempresa es 2, enviar todos los datos sin filtrar
+                      dataToSend = globalNotificacionesData.data;
+                  }
+
+                  // Enviar los datos filtrados al cliente
+                  if (dataToSend.length > 0) {
+                      clientsNotificaciones.send(JSON.stringify({
+                          event: true,
+                          message: 'Nueva Notificacion',
+                          data: dataToSend
+                      }));
+                  } else {
+                      clientsNotificaciones.send(JSON.stringify({
+                          event: false,
+                          message: 'No hay Notificaciones para tu empresa'
+                      }));
+                  }
+              }
+          });
+      } else {
+          // Enviar mensaje a todos los usuarios en caso de error en la consulta
+          clientsNotificaciones.send(JSON.stringify({
+              event: false,
+              message: 'Error BD Notificaciones'
+          }));
+      }
+    } catch (err) {
+        clientsNotificaciones.send(JSON.stringify({
+            event: false,
+            message: 'Error WS Notificaciones'
+        }));
     }
 };
 
@@ -1030,6 +1093,13 @@ const solicitudesHB = async () => {
   });
 };
 
+const notificacionesHB = async () => {
+  broadcast2({
+      event: false,
+      message: 'No hay notificaciones'
+  });
+};
+
 const checkContratos = async () => {
     try {
         const globalContratosData = await getTraficoGlobal();
@@ -1062,6 +1132,14 @@ const checkContratos = async () => {
 // Función para enviar mensajes a todos los clientes conectados
 const broadcast = (data) => {
     clients.forEach((client) => {
+        if (client.readyState === WebSocket.OPEN) {
+            client.send(JSON.stringify(data));
+        }
+    });
+};
+
+const broadcast2 = (data) => {
+    clientsNotificaciones.forEach((client) => {
         if (client.readyState === WebSocket.OPEN) {
             client.send(JSON.stringify(data));
         }
@@ -1117,8 +1195,35 @@ wss2.on('connection', (ws, req) => {
     }
 });
 
+wss3.on('connection', (ws, req) => {
+    const token = req.headers['sec-websocket-protocol'];
+    if (!token || token === 'undefined') {
+        ws.send(JSON.stringify({ success: false, message: 'Token is missing' }));
+        ws.close(); // Cerrar la conexión si no hay token
+    } else {
+        jwt.verify(token, 'secret_key', (err, decoded) => {
+            if (err) {
+                ws.send(JSON.stringify({ success: false, message: 'Failed to authenticate token' }));
+                ws.close(); // Cerrar la conexión si el token no es válido
+            } else {
+                // El token es válido, podemos agregar el socket al conjunto de clientes
+                ws.decoded = decoded;
+                clientsNotificaciones.add(ws);
+
+                ws.send(JSON.stringify({ success: true, message: 'Successfully authenticated' }));
+
+                // Cuando el cliente se desconecta
+                ws.on('close', () => {
+                    clientsNotificaciones.delete(ws);
+                });
+            }
+        });
+    }
+});
+
 // Ejecutar la consulta cada 10 segundos
 setInterval(solicitudesHB, Configuracion.HB_SOLICITUDES);
+setInterval(notificacionesHB, Configuracion.HB_SOLICITUDES);
 setInterval(checkContratos, Configuracion.TIME_TRAFICO);
 
 /*sqlconfig.registerNotification('SELECT IDSolicitudes FROM LokSolicitudes WHERE FKLokEstados = 2')
@@ -1137,56 +1242,8 @@ setInterval(checkContratos, Configuracion.TIME_TRAFICO);
 
     sqlconfig.registerNotification('Noti_Queue', 'Noti_Notifications', async (message) => {
         console.log("Mensaje procesado:", message);
-        //await checkSolicitudes();
+        await checkNotificaciones();
     });
-
-
-
-
-/*const wss = new WebSocket.Server({ port: 8080 });
-let lastSolicitudId = "2024-10-23 00:00:00"; // Variable para almacenar el último ID procesado
-
-wss.on('connection', (ws) => {
-    console.log('Client connected via WebSocket');
-
-    // Función para consultar la base de datos
-    const checkSolicitudes = async () => {
-        try {
-          var consulta="SELECT count(1) as total, CONVERT(VARCHAR(19), MAX(FechaHoraSolicitud), 120) AS maxId FROM LokSolicitudes WHERE FechaHoraSolicitud>'"+lastSolicitudId+"'";
-          let resultado=await sqlconfig.query(consulta);
-          if (resultado.recordset.length > 0) {
-            const newSolicitudId = resultado.recordset[0].maxId;
-            const count= resultado.recordset[0].total;
-            console.log(resultado.recordset[0]);
-            if (count > 0) {
-              console.log(lastSolicitudId+" - "+newSolicitudId);
-              lastSolicitudId = newSolicitudId+".999";
-
-              // Enviar mensaje al frontend con la nueva actualización
-              ws.send(JSON.stringify({
-                event: true,
-                message: 'Nueva solicitud'
-              }));
-            }else{
-              ws.send(JSON.stringify({
-                event: false,
-                message: 'No hay solicitud'
-              }));
-            }
-          }
-        } catch (err) {
-          console.error('Error al consultar la base de datos:', err);
-        }
-    };
-
-    // Ejecutar la consulta cada 5 segundos
-    const intervalId = setInterval(checkSolicitudes, 10000);
-
-    ws.on('close', () => {
-        console.log('Client disconnected');
-        clearInterval(intervalId); // Limpiar el intervalo cuando el cliente se desconecta
-    });
-});*/
 
 
 app.listen(PORT, () =>{
