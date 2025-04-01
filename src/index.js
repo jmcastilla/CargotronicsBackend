@@ -1163,7 +1163,7 @@ wss.on('connection', (ws, req) => {
                 // El token es válido, podemos agregar el socket al conjunto de clientes
                 ws.decoded = decoded;
                 clients.add(ws);
-
+                console.log("entro a clientes solicitudes");
                 ws.send(JSON.stringify({ success: true, message: 'Successfully authenticated' }));
 
                 // Cuando el cliente se desconecta
@@ -1211,7 +1211,7 @@ wss3.on('connection', (ws, req) => {
                 // El token es válido, podemos agregar el socket al conjunto de clientes
                 ws.decoded = decoded;
                 clientsNotificaciones.add(ws);
-
+                console.log("entro a clientes notificaciones");
                 ws.send(JSON.stringify({ success: true, message: 'Successfully authenticated' }));
 
                 // Cuando el cliente se desconecta
