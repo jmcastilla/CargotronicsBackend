@@ -276,6 +276,11 @@ const registerNotification = function(queueName, type_name, callback) {
                                 console.log("Conversación cerrada.");
                             }
                             // Continúa escuchando mensajes después de cerrar la conversación
+                            const decodedMessage = message.message_body.toString('utf16le');
+                            console.log('Mensaje procesado:', decodedMessage);
+
+                            // Llama al callback con el mensaje recibido
+                            callback(decodedMessage);
                             listenToQueue();
                         });
                     } else {
