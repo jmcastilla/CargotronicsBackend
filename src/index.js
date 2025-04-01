@@ -1003,7 +1003,7 @@ const checkNotificaciones = async () => {
           // Filtrar los datos para cada cliente según su idempresa
           clientsNotificaciones.forEach((client) => {
               console.log("ebtriiiiiii");
-              if (clientsNotificaciones.readyState === WebSocket.OPEN && clientsNotificaciones.decoded) {
+              //if (clientsNotificaciones.readyState === WebSocket.OPEN && clientsNotificaciones.decoded) {
                   let dataToSend;
                   console.log(globalNotificacionesData.data);
                   if (clientsNotificaciones.decoded.idempresa !== 2) {
@@ -1028,7 +1028,7 @@ const checkNotificaciones = async () => {
                           message: 'No hay Notificaciones para tu empresa'
                       }));
                   }
-              }
+              //}
           });
       } else {
           // Enviar mensaje a todos los usuarios en caso de error en la consulta
