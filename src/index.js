@@ -997,6 +997,7 @@ const checkSolicitudes = async () => {
 
 const checkNotificaciones = async () => {
     try {
+      console.log("entro a check notificaciones");
       const globalNotificacionesData = await getNotificacionesGlobal();
 
       if (globalNotificacionesData.success) {
