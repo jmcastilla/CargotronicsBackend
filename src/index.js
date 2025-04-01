@@ -874,6 +874,7 @@ const getSolicitudesGlobal = async () => {
 
     try {
         let resultado = await sqlconfig.query(consulta);
+        console.log(resultado);
         return { success: true, data: resultado.recordsets[0] };
     } catch (error) {
         console.error('Error al ejecutar la consulta:', error);
@@ -963,7 +964,7 @@ const checkSolicitudes = async () => {
                       // Si la idempresa es 2, enviar todos los datos sin filtrar
                       dataToSend = globalSolicitudesData.data;
                   }
-
+                  console.log(dataToSend);
                   // Enviar los datos filtrados al cliente
                   if (dataToSend.length > 0) {
                       client.send(JSON.stringify({
