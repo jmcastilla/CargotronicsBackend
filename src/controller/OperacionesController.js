@@ -1390,6 +1390,38 @@ controller.notificacionprueba = async (req, res) => {
     }
 }
 
+controller.get_notificaciones = async (req, res) => {
+    try{
+        var token = req.headers.authorization;
+        if (!token) {
+            return res.json({ success: false, message: 'Token is missing' });
+        }else{
+            token = req.headers.authorization.split(' ')[1];
+            jwt.verify(token, 'secret_key', async (err, decoded) => {
+                if (err) {
+                    return res.json({ success: false, message: 'Failed to authenticate token' });
+                } else {
+                    var proyecto=decoded.proyecto;
+                    var idcliente=decoded.empresaprincipal;
+                    var consulta = "SELECT TOP 1000 IdNotificacion, FkLokDeviceID, alertValue, idMensaje, DatetimeNoti, FkTipoNotificacion, "
+                    +"FkLokContractID, FkUltGeoCerca, bitGeoAutorizada, Notificacion, FkLokProyecto, FkICEmpresa, FkIdAtencionNoti "
+                    +"FROM LokNotificaciones where FkIdAtencionNoti is null";
+                    if (idcliente != 2){
+                        consulta += " AND FkICEmpresa = " + idcliente;
+                    }else{
+                        consulta += " AND FkLokProyecto = " + proyecto;
+                    }
+
+                    let resultado=await sqlconfig.query(consulta);
+                    return res.json({success : true, data : resultado});
+                }
+            });
+        }
+    }catch(err){
+        return res.json({success : false});
+    }
+}
+
 // FUNCION PARA CONVERTIR GRADOS A RADIANES
 function gradosARadianes(grados){
     return grados * Math.PI / 180;
