@@ -10,7 +10,7 @@
     PORT_WS_TRAFICO: 8081,
     PORT_WS_SOLICITUDES: 8080,
     PORT_WS_NOTIFICACIONES: 8083,
-    URL_VISUALLOGISTIC: "visuallogisticstest",
+    URL_VISUALLOGISTIC: "visuallogisticstestyolo",
   }
 
   //visuallogisticstest
