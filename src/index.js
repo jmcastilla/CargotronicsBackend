@@ -931,9 +931,9 @@ const getTraficoGlobal = async () => {
 };
 
 const getNotificacionesGlobal = async () => {
-    var consulta = "SELECT TOP 1000 IdNotificacion, FkLokDeviceID, alertValue, idMensaje, DatetimeNoti, FkTipoNotificacion, "
-    +"FkLokContractID, FkUltGeoCerca, bitGeoAutorizada, Notificacion, FkLokProyecto, FkICEmpresa, FkIdAtencionNoti "
-    +"FROM LokNotificaciones where FkIdAtencionNoti is null";
+    var consulta = "SELECT TOP 1000 n.IdNotificacion, n.FkLokDeviceID, n.alertValue, n.idMensaje, n.DatetimeNoti, n.FkTipoNotificacion, "
+    +"n.FkLokContractID, n.FkUltGeoCerca, n.bitGeoAutorizada, n.Notificacion, n.FkLokProyecto, n.FkICEmpresa, n.FkIdAtencionNoti, e.NombreEmpresa "
+    +"FROM n.LokNotificaciones as n INNER JOIN ICEmpresa AS e ON n.FkICEmpresa = e.IdEmpresa where n.FkIdAtencionNoti is null";
     try {
         let resultado = await sqlconfig.query(consulta);
         return { success: true, data: resultado.recordsets[0] };
@@ -1002,7 +1002,7 @@ const checkNotificaciones = async () => {
       if (globalNotificacionesData.success) {
           // Filtrar los datos para cada cliente según su idempresa
           clientsNotificaciones.forEach((client) => {
-              
+
               if (client.readyState === WebSocket.OPEN && client.decoded) {
                   let dataToSend;
                   if (client.decoded.idempresa !== 2) {

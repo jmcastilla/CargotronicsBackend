@@ -1403,13 +1403,13 @@ controller.get_notificaciones = async (req, res) => {
                 } else {
                     var proyecto=decoded.proyecto;
                     var idcliente=decoded.empresaprincipal;
-                    var consulta = "SELECT TOP 1000 IdNotificacion, FkLokDeviceID, alertValue, idMensaje, DatetimeNoti, FkTipoNotificacion, "
-                    +"FkLokContractID, FkUltGeoCerca, bitGeoAutorizada, Notificacion, FkLokProyecto, FkICEmpresa, FkIdAtencionNoti "
-                    +"FROM LokNotificaciones where FkIdAtencionNoti is null";
+                    var consulta = "SELECT TOP 1000 n.IdNotificacion, n.FkLokDeviceID, n.alertValue, n.idMensaje, n.DatetimeNoti, n.FkTipoNotificacion, "
+                    +"n.FkLokContractID, n.FkUltGeoCerca, n.bitGeoAutorizada, n.Notificacion, n.FkLokProyecto, n.FkICEmpresa, n.FkIdAtencionNoti, e.NombreEmpresa "
+                    +"FROM LokNotificaciones as n INNER JOIN ICEmpresa AS e ON n.FkICEmpresa = e.IdEmpresa where n.FkIdAtencionNoti is null";
                     if (idcliente != 2){
-                        consulta += " AND FkICEmpresa = " + idcliente;
+                        consulta += " AND n.FkICEmpresa = " + idcliente;
                     }else{
-                        consulta += " AND FkLokProyecto = " + proyecto;
+                        consulta += " AND n.FkLokProyecto = " + proyecto;
                     }
 
                     let resultado=await sqlconfig.query(consulta);
