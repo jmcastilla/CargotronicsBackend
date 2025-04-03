@@ -933,7 +933,7 @@ const getTraficoGlobal = async () => {
 const getNotificacionesGlobal = async () => {
     var consulta = "SELECT TOP 1000 n.IdNotificacion, n.FkLokDeviceID, n.alertValue, n.idMensaje, n.DatetimeNoti, n.FkTipoNotificacion, "
     +"n.FkLokContractID, n.FkUltGeoCerca, n.bitGeoAutorizada, n.Notificacion, n.FkLokProyecto, n.FkICEmpresa, n.FkIdAtencionNoti, e.NombreEmpresa "
-    +"FROM n.LokNotificaciones as n INNER JOIN ICEmpresa AS e ON n.FkICEmpresa = e.IdEmpresa where n.FkIdAtencionNoti is null";
+    +"FROM LokNotificaciones as n INNER JOIN ICEmpresa AS e ON n.FkICEmpresa = e.IdEmpresa where n.FkIdAtencionNoti is null";
     try {
         let resultado = await sqlconfig.query(consulta);
         return { success: true, data: resultado.recordsets[0] };
