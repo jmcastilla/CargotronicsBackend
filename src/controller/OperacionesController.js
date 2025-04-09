@@ -1405,7 +1405,7 @@ controller.get_notificaciones = async (req, res) => {
                     var idcliente=decoded.empresaprincipal;
                     var consulta = "SELECT TOP 1000 n.IdNotificacion, n.FkLokDeviceID, n.alertValue, n.idMensaje, n.DatetimeNoti, n.FkTipoNotificacion, "
                     +"n.NotificacionCliente, n.DatetimeEvento, n.AlertLevel, "
-                    +"n.FkLokContractID, n.FkUltGeoCerca, n.bitGeoAutorizada, n.Notificacion, n.FkLokProyecto, n.FkICEmpresa, n.FkIdAtencionNoti, '' as NombreEmpresa "
+                    +"n.FkLokContractID, n.FkUltGeoCerca, n.bitGeoAutorizada, n.Notificacion, n.FkLokProyecto, n.FkICEmpresa, n.FkIdAtencionNoti, 'a' as NombreEmpresa "
                     +"FROM LokNotificaciones as n INNER JOIN LokcontractID as c ON n.FkLokContractID = c.ContractID where n.FkIdAtencionNoti is null AND c.Active=1";
                     if (idcliente != 2){
                         consulta += " AND n.FkICEmpresa = " + idcliente;
