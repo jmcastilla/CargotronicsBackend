@@ -1006,12 +1006,14 @@ const checkNotificaciones = async () => {
               if (client.readyState === WebSocket.OPEN && client.decoded) {
                   let dataToSend;
                   if (client.decoded.idempresa !== 2) {
+
                       // Filtrar los datos para el cliente con idempresa diferente de 2
                       //dataToSend = globalNotificacionesData.data.filter(noti => noti.FkICEmpresa === clientsNotificaciones.decoded.idempresa);
-                      dataToSend = globalNotificacionesData.data;
+                      //dataToSend = globalNotificacionesData.data;
+                      dataToSend = globalNotificacionesData.data.filter(noti => noti.FkICEmpresa === client.decoded.idempresa);
                   } else {
                       // Si la idempresa es 2, enviar todos los datos sin filtrar
-                      dataToSend = globalNotificacionesData.data;
+                      dataToSend = globalNotificacionesData.data.filter(noti => noti.FkLokProyecto === client.decoded.proyecto);
                   }
 
                   // Enviar los datos filtrados al cliente
