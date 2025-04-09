@@ -1412,6 +1412,8 @@ controller.get_notificaciones = async (req, res) => {
                         consulta += " AND n.FkLokProyecto = " + proyecto;
                     }
 
+                    console.log(consulta);
+
                     let resultado=await sqlconfig.query(consulta);
                     return res.json({success : true, data : resultado});
                 }
