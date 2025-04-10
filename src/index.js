@@ -1245,10 +1245,10 @@ setInterval(checkContratos, Configuracion.TIME_TRAFICO);
         await checkSolicitudes();
     });
 
-    /*sqlconfig.registerNotification('Noti_Queue', 'Noti_Notifications', async (message) => {
+    sqlconfig.registerNotification('Noti_Queue', 'Noti_Notifications', async (message) => {
         console.log("Mensaje procesado:", message);
         await checkNotificaciones();
-    });*/
+    });
 
 
 app.listen(PORT, () =>{
