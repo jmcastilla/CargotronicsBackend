@@ -1412,6 +1412,7 @@ controller.get_notificaciones = async (req, res) => {
                     }else{
                         consulta += " AND n.FkLokProyecto = " + proyecto;
                     }
+                    consulta += " order by n.IdNotificacion desc";
 
                     console.log(consulta);
 

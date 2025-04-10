@@ -934,7 +934,7 @@ const getNotificacionesGlobal = async () => {
     var consulta = "SELECT TOP 1000 n.IdNotificacion, n.FkLokDeviceID, n.alertValue, n.idMensaje, n.DatetimeNoti, n.FkTipoNotificacion, "
     +"n.NotificacionCliente, n.DatetimeEvento, n.AlertLevel, "
     +"n.FkLokContractID, n.FkUltGeoCerca, n.bitGeoAutorizada, n.Notificacion, n.FkLokProyecto, n.FkICEmpresa, n.FkIdAtencionNoti, '' as NombreEmpresa "
-    +"FROM LokNotificaciones as n INNER JOIN LokcontractID as c ON n.FkLokContractID = c.ContractID where n.FkIdAtencionNoti is null AND c.Active=1";
+    +"FROM LokNotificaciones as n INNER JOIN LokcontractID as c ON n.FkLokContractID = c.ContractID where n.FkIdAtencionNoti is null AND c.Active=1 order by n.IdNotificacion desc";
     try {
         let resultado = await sqlconfig.query(consulta);
         return { success: true, data: resultado.recordsets[0] };
