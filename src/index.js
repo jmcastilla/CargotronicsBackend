@@ -1146,6 +1146,7 @@ const broadcast = (data) => {
 const broadcast2 = (data) => {
     clientsNotificaciones.forEach((client) => {
         if (client.readyState === WebSocket.OPEN) {
+            console.log("envio de hb de notificaciones");
             client.send(JSON.stringify(data));
         }
     });
@@ -1218,7 +1219,9 @@ wss3.on('connection', (ws, req) => {
                 ws.send(JSON.stringify({ success: true, message: 'Successfully authenticated' }));
 
                 // Cuando el cliente se desconecta
-                ws.on('close', () => {
+                
+                ws.on('close', (code, reason) => {
+                    console.log(`Conexión cerrada. Código: ${code}, Motivo: ${reason}`);
                     clientsNotificaciones.delete(ws);
                 });
             }

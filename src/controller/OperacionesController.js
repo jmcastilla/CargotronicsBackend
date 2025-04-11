@@ -1426,6 +1426,61 @@ controller.get_notificaciones = async (req, res) => {
     }
 }
 
+controller.get_dispositivoscambio = async (req, res) => {
+    try{
+        var token = req.headers.authorization;
+        if (!token) {
+            return res.json({ success: false, message: 'Token is missing' });
+        }else{
+            token = req.headers.authorization.split(' ')[1];
+            jwt.verify(token, 'secret_key', async (err, decoded) => {
+                if (err) {
+                    return res.json({ success: false, message: 'Failed to authenticate token' });
+                } else {
+                    var proyecto=req.body.proyectoorigen;
+                    var consulta = "SELECT TOP 1000 DeviceID, LastContractID, FKLokProyecto, Estado FROM LokDeviceID WHERE FKLokProyecto = "+proyecto+" AND LastContractID = 'none' AND Estado = 1";
+
+                    let resultado=await sqlconfig.query(consulta);
+                    return res.json({success : true, data : resultado});
+                }
+            });
+        }
+    }catch(err){
+        return res.json({success : false});
+    }
+}
+
+controller.update_cambioproyecto = async (req, res) => {
+    try{
+        var token = req.headers.authorization;
+        if (!token) {
+            return res.json({ success: false, message: 'Token is missing' });
+        }else{
+            token = req.headers.authorization.split(' ')[1];
+            jwt.verify(token, 'secret_key', async (err, decoded) => {
+                if (err) {
+                    res.json({ success: false, message: 'Failed to authenticate token' });
+                } else {
+                    var listadevice= req.body.listadevice;
+                    var proyectodestino = req.body.proyectodestino;
+
+                    if (!listadevice || listadevice.trim() === '') {
+                      return res.json({ success: false, message: 'Device list is empty' });
+                    }
+
+                    // Convertir string "id1,id2,id3" en array
+                    let deviceArray = listadevice.split(',').map(id => `'${id.trim()}'`);
+
+                    let consulta = `UPDATE LokDeviceID SET FKLokProyecto = ${proyectodestino} WHERE DeviceID IN (${deviceArray.join(',')})`;
+                    res.json({success : await sqlconfig.query(consulta)});
+                }
+            });
+        }
+    }catch(error){
+        res.json({success : false});
+    }
+}
+
 // FUNCION PARA CONVERTIR GRADOS A RADIANES
 function gradosARadianes(grados){
     return grados * Math.PI / 180;
