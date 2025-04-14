@@ -1402,7 +1402,7 @@ controller.get_notificaciones = async (req, res) => {
                     return res.json({ success: false, message: 'Failed to authenticate token' });
                 } else {
                     var proyecto=decoded.proyecto;
-                    var idcliente=decoded.empresaprincipal;
+                    var idcliente=decoded.idempresa;
                     var consulta = "SELECT TOP 1000 n.IdNotificacion, n.FkLokDeviceID, n.alertValue, n.idMensaje, n.DatetimeNoti, n.FkTipoNotificacion, "
                     +"n.NotificacionCliente, n.DatetimeEvento, n.AlertLevel, "
                     +"n.FkLokContractID, n.FkUltGeoCerca, n.bitGeoAutorizada, n.Notificacion, n.FkLokProyecto, n.FkICEmpresa, n.FkIdAtencionNoti, 'a' as NombreEmpresa "
