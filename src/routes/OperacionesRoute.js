@@ -1941,6 +1941,157 @@ router.post('/getreportesdevice', OperacionesController.get_reportesdevice);
 router.post('/getreportesdevice2', OperacionesController.get_reportesdevice2);
 router.get('/getnotificaciones', OperacionesController.get_notificaciones);
 router.get('/notificacionprueba', OperacionesController.notificacionprueba);
+router.post('/getdispositivoscambio', OperacionesController.get_dispositivoscambio);
+/**
+ * @swagger
+ * /operaciones/getdispositivoscambio:
+ *   post:
+ *     summary: Obtener lista de dispositivos disponibles para cambio
+ *     description: Devuelve los dispositivos del proyecto origen que están disponibles para realizar un cambio (sin contrato activo y en estado 1).
+ *     tags:
+ *       - Operaciones
+ *     security:
+ *       - BearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               proyectoorigen:
+ *                 type: integer
+ *                 description: ID del proyecto origen desde donde se desea obtener los dispositivos disponibles.
+ *                 example: 3
+ *     responses:
+ *       200:
+ *         description: Lista de dispositivos disponibles retornada exitosamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       DeviceID:
+ *                         type: string
+ *                         example: "ABC123"
+ *                       LastContractID:
+ *                         type: string
+ *                         example: "none"
+ *                       FKLokProyecto:
+ *                         type: integer
+ *                         example: 3
+ *                       Estado:
+ *                         type: integer
+ *                         example: 1
+ *       401:
+ *         description: Token ausente o no válido.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Token is missing"
+ *       500:
+ *         description: Error interno del servidor.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ */
+
+router.post('/updatecambioproyecto', OperacionesController.update_cambioproyecto);
+
+/**
+ * @swagger
+ * /operaciones/updatecambioproyecto:
+ *   post:
+ *     summary: Actualiza el proyecto de múltiples dispositivos
+ *     description: Cambia el proyecto (`FKLokProyecto`) de los dispositivos especificados a uno nuevo.
+ *     tags:
+ *       - Operaciones
+ *     security:
+ *       - BearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               listadevice:
+ *                 type: string
+ *                 description: Lista de DeviceID separados por coma (ejemplo: "ABC123,XYZ456").
+ *                 example: "ABC123,XYZ456"
+ *               proyectodestino:
+ *                 type: integer
+ *                 description: ID del nuevo proyecto al cual mover los dispositivos.
+ *                 example: 5
+ *     responses:
+ *       200:
+ *         description: Actualización exitosa del proyecto para los dispositivos.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *       400:
+ *         description: Lista de dispositivos vacía.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Device list is empty"
+ *       401:
+ *         description: Token ausente o inválido.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Token is missing"
+ *       500:
+ *         description: Error interno del servidor.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ */
+
 /**
  * @swagger
  * /operaciones/getreportescontroldevice:
