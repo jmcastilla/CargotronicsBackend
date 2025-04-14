@@ -1941,7 +1941,6 @@ router.post('/getreportesdevice', OperacionesController.get_reportesdevice);
 router.post('/getreportesdevice2', OperacionesController.get_reportesdevice2);
 router.get('/getnotificaciones', OperacionesController.get_notificaciones);
 router.get('/notificacionprueba', OperacionesController.notificacionprueba);
-router.post('/getdispositivoscambio', OperacionesController.get_dispositivoscambio);
 /**
  * @swagger
  * /operaciones/getdispositivoscambio:
@@ -2015,15 +2014,14 @@ router.post('/getdispositivoscambio', OperacionesController.get_dispositivoscamb
  *                   type: boolean
  *                   example: false
  */
-
-router.post('/updatecambioproyecto', OperacionesController.update_cambioproyecto);
+router.post('/getdispositivoscambio', OperacionesController.get_dispositivoscambio);
 
 /**
  * @swagger
  * /operaciones/updatecambioproyecto:
  *   post:
  *     summary: Actualiza el proyecto de múltiples dispositivos
- *     description: Cambia el proyecto (`FKLokProyecto`) de los dispositivos especificados a uno nuevo.
+ *     description: Cambia el proyecto FKLokProyecto de los dispositivos especificados a uno nuevo.
  *     tags:
  *       - Operaciones
  *     security:
@@ -2091,6 +2089,9 @@ router.post('/updatecambioproyecto', OperacionesController.update_cambioproyecto
  *                   type: boolean
  *                   example: false
  */
+router.post('/updatecambioproyecto', OperacionesController.update_cambioproyecto);
+
+
 
 /**
  * @swagger
