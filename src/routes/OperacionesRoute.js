@@ -2020,7 +2020,7 @@ router.post('/getdispositivoscambio', OperacionesController.get_dispositivoscamb
  * @swagger
  * /operaciones/updatecambioproyecto:
  *   post:
- *     summary: Actualiza el proyecto de múltiples dispositivos
+ *     summary: Actualiza el proyecto de multiples dispositivos
  *     description: Cambia el proyecto FKLokProyecto de los dispositivos especificados a uno nuevo.
  *     tags:
  *       - Operaciones
@@ -2035,7 +2035,7 @@ router.post('/getdispositivoscambio', OperacionesController.get_dispositivoscamb
  *             properties:
  *               listadevice:
  *                 type: string
- *                 description: Lista de DeviceID separados por coma (ejemplo: "ABC123,XYZ456").
+ *                 description: Lista de DeviceID separados por coma
  *                 example: "ABC123,XYZ456"
  *               proyectodestino:
  *                 type: integer
