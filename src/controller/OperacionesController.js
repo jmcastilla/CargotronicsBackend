@@ -1413,7 +1413,7 @@ controller.get_notificaciones = async (req, res) => {
                         consulta += " AND n.FkLokProyecto = " + proyecto;
                     }
                     consulta += " order by n.IdNotificacion desc";
-
+                    console.log("empresa: "+idcliente);
                     console.log(consulta);
 
                     let resultado=await sqlconfig.query(consulta);
