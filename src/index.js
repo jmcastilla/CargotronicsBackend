@@ -957,12 +957,14 @@ const checkSolicitudes = async () => {
                   //console.log("idempresa="+client.decoded.idempresa);
                   //console.log("globalSolicitudesData.data=",JSON.stringify(globalSolicitudesData.data, null, 2));
                   // Verificar si la idempresa del cliente es diferente de 2
+                  var aceptar=false;
                   if (client.decoded.idempresa !== 2) {
                       // Filtrar los datos para el cliente con idempresa diferente de 2
                       dataToSend = globalSolicitudesData.data.filter(solicitud => solicitud.IdEmpresa === client.decoded.idempresa);
                   } else {
                       // Si la idempresa es 2, enviar todos los datos sin filtrar
                       dataToSend = globalSolicitudesData.data;
+                      aceptar= true;
                   }
                   console.log(dataToSend);
                   // Enviar los datos filtrados al cliente
@@ -970,7 +972,8 @@ const checkSolicitudes = async () => {
                       client.send(JSON.stringify({
                           event: true,
                           message: 'Nueva solicitud',
-                          data: dataToSend
+                          data: dataToSend,
+                          aceptar: aceptar
                       }));
                   } else {
                       client.send(JSON.stringify({
@@ -1219,7 +1222,7 @@ wss3.on('connection', (ws, req) => {
                 ws.send(JSON.stringify({ success: true, message: 'Successfully authenticated' }));
 
                 // Cuando el cliente se desconecta
-                
+
                 ws.on('close', (code, reason) => {
                     console.log(`Conexión cerrada. Código: ${code}, Motivo: ${reason}`);
                     clientsNotificaciones.delete(ws);
