@@ -1506,6 +1506,7 @@ controller.update_checklist = async (req, res) => {
                       return res.json({ success: false, message: 'Faltan datos' });
                     }
                     let consulta = `UPDATE ValitronicsChequeo SET nombre_conductor1 = '${conductor}', placa1 = '${placa}', observaciones1 = observaciones1+' ${observaciones}' WHERE Fk_ContractID ='${contrato}'`;
+                    console.log(consulta);
                     res.json({success : await sqlconfig.query(consulta)});
 
 
