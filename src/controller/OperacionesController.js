@@ -1470,9 +1470,14 @@ controller.update_cambioproyecto = async (req, res) => {
 
                     // Convertir string "id1,id2,id3" en array
                     let deviceArray = listadevice.split(',').map(id => `'${id.trim()}'`);
+                    if(proyectodestino !== 1 ){
+                        let consulta = `UPDATE LokDeviceID SET FKLokProyecto = ${proyectodestino} WHERE DeviceID IN (${deviceArray.join(',')})`;
+                        res.json({success : await sqlconfig.query(consulta)});
+                    }else{
+                        let consulta = `UPDATE LokDeviceID SET FKLokProyecto = ${proyectodestino}, EmpresaFija = 2, CategoriaTipo = 2 WHERE DeviceID IN (${deviceArray.join(',')})`;
+                        res.json({success : await sqlconfig.query(consulta)});
+                    }
 
-                    let consulta = `UPDATE LokDeviceID SET FKLokProyecto = ${proyectodestino} WHERE DeviceID IN (${deviceArray.join(',')})`;
-                    res.json({success : await sqlconfig.query(consulta)});
                 }
             });
         }
