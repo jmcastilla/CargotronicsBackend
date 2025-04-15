@@ -1486,6 +1486,37 @@ controller.update_cambioproyecto = async (req, res) => {
     }
 }
 
+controller.update_checklist = async (req, res) => {
+    try{
+        var token = req.headers.authorization;
+        if (!token) {
+            return res.json({ success: false, message: 'Token is missing' });
+        }else{
+            token = req.headers.authorization.split(' ')[1];
+            jwt.verify(token, 'secret_key', async (err, decoded) => {
+                if (err) {
+                    res.json({ success: false, message: 'Failed to authenticate token' });
+                } else {
+                    var contrato= req.body.contrato;
+                    var conductor = req.body.conductor;
+                    var placa = req.body.placa;
+                    var observaciones = req.body.observaciones;
+
+                    if (contrato === '') {
+                      return res.json({ success: false, message: 'Faltan datos' });
+                    }
+                    let consulta = `UPDATE ValitronicsChequeo SET nombre_conductor1 = '${conductor}', placa1 = '${placa}', observaciones1 = observaciones1+' ${observaciones}' WHERE Fk_ContractID ='${contrato}'`;
+                    res.json({success : await sqlconfig.query(consulta)});
+
+
+                }
+            });
+        }
+    }catch(error){
+        res.json({success : false});
+    }
+}
+
 // FUNCION PARA CONVERTIR GRADOS A RADIANES
 function gradosARadianes(grados){
     return grados * Math.PI / 180;

@@ -2091,8 +2091,89 @@ router.post('/getdispositivoscambio', OperacionesController.get_dispositivoscamb
  */
 router.post('/updatecambioproyecto', OperacionesController.update_cambioproyecto);
 
+/**
+ * @swagger
+ * /operaciones/updatechecklist:
+ *   post:
+ *     summary: Actualiza informacion del checklist de un contrato
+ *     description: Permite actualizar el nombre del conductor, la placa y agregar observaciones a un registro de checklist asociado a un contrato.
+ *     tags:
+ *       - Operaciones
+ *     security:
+ *       - BearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               contrato:
+ *                 type: string
+ *                 description: ID del contrato relacionado con el checklist.
+ *                 example: "CNT-001"
+ *               conductor:
+ *                 type: string
+ *                 description: Nombre del conductor.
+ *                 example: "Juan Pérez"
+ *               placa:
+ *                 type: string
+ *                 description: Placa del vehículo.
+ *                 example: "ABC123"
+ *               observaciones:
+ *                 type: string
+ *                 description: Observaciones adicionales para el checklist.
+ *                 example: "Se encontró la unidad con rayón en el costado derecho."
+ *     responses:
+ *       200:
+ *         description: Actualización exitosa del checklist.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *       400:
+ *         description: Faltan datos obligatorios (por ejemplo, contrato vacío).
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Faltan datos"
+ *       401:
+ *         description: Token ausente o inválido.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Token is missing"
+ *       500:
+ *         description: Error interno del servidor.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ */
 
-
+router.post('/updatechecklist', OperacionesController.update_checklist);
 /**
  * @swagger
  * /operaciones/getreportescontroldevice:
