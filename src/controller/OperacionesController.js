@@ -1438,7 +1438,7 @@ controller.get_dispositivoscambio = async (req, res) => {
                     return res.json({ success: false, message: 'Failed to authenticate token' });
                 } else {
                     var proyecto=req.body.proyectoorigen;
-                    var consulta = "SELECT TOP 1000 DeviceID, LastContractID, FKLokProyecto, Estado FROM LokDeviceID WHERE FKLokProyecto = "+proyecto+" AND LastContractID = 'none' AND Estado = 1";
+                    var consulta = "SELECT TOP 1000 DeviceID, LastContractID, FKLokProyecto, Estado FROM LokDeviceID WHERE FKLokProyecto = "+proyecto+" AND Estado = 1";
 
                     let resultado=await sqlconfig.query(consulta);
                     return res.json({success : true, data : resultado});
