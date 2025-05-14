@@ -18,10 +18,18 @@ const net = require('net');
 const fs = require('fs');
 const { Readable } = require('stream');
 const {swaggerDocs} = require('./swagger');
+const { GoogleAuth } = require('google-auth-library');
 const WebSocket = require('ws');
 const PORT = Configuracion.PUERTO;
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage, limits: {fileSize: 100 * 1024 * 1024} });
+
+const auth = new GoogleAuth({
+  keyFile: 'valitronicskt-firebase-adminsdk-fbsvc-3d3889fb2b.json',
+  scopes: ['https://www.googleapis.com/auth/firebase.messaging'],
+});
+
+const PROJECT_ID = '614539482642';
 
 app.use(express.json({ limit: '100mb' }));
 app.use(bodyParser.json({ limit: '100mb' }));
@@ -90,6 +98,44 @@ app.use('/operaciones', operacionesRouters);
 app.use('/empresas', empresasRouters);
 app.use('/dian', dianRouters);
 app.use('/usuarios', usuariosRouters);
+
+app.post('/enviarnotificacion', async (req, res) => {
+  try {
+    const { authorization } = req.headers;
+
+    if (!authorization) {
+      return res.status(401).json({ success: false, message: 'Token is missing' });
+    }
+
+    const token = authorization.split(' ')[1];
+    jwt.verify(token, 'secret_key', async (err, decoded) => {
+      if (err) {
+        return res.status(403).json({ success: false, message: 'Invalid token' });
+      }
+
+      const client = await auth.getClient();
+      const accessToken = await client.getAccessToken();
+
+      const mensaje = req.body; // debe incluir el body FCM válido
+
+      const response = await axios.post(
+        `https://fcm.googleapis.com/v1/projects/${PROJECT_ID}/messages:send`,
+        mensaje,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken.token}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      res.json({ success: true, message: 'Enviado correctamente', fcmResponse: response.data });
+    });
+  } catch (error) {
+    console.error('Error al enviar notificación:', error.response?.data || error.message);
+    res.status(500).json({ success: false, error: error.response?.data || error.message });
+  }
+});
 
 
 app.post('/editar-excel', async (req, res) => {
