@@ -53,7 +53,7 @@ const verifyToken = (req, res, next) => {
 
 const allowedOrigins = [
   'https://infocarga-frontend-jwt-theta.vercel.app',
-  //'http://localhost:3000',
+  'http://localhost:3000',
   'https://cargotronics.com'
 ];
 
