@@ -232,7 +232,7 @@ app.post('/editar-excel', async (req, res) => {
  *                   type: boolean
  *                   description: Indica si el inicio de sesión ha fallado debido a credenciales inválidas.
  */
-app.post('/login', async (req, res) =>{
+/*app.post('/login', async (req, res) =>{
     try{
         let user=req.body.user;
         let pass=req.body.pass;
@@ -277,7 +277,77 @@ app.post('/login', async (req, res) =>{
     }catch(err){
         res.json({success : false});
     }
+});*/
+
+app.post('/login', async (req, res) => {
+    try {
+        const userAgent = req.headers['user-agent'] || '';
+
+        // Detecta automatización (headless browsers, Selenium, scripts Python, etc.)
+        const patronesBot = /headless|selenium|phantomjs|python|webdriver|curl|node-fetch/i;
+
+        if (patronesBot.test(userAgent) || userAgent.length < 10) {
+            return res.status(403).json({
+                success: false,
+                message: 'Automatización detectada. Acceso denegado.'
+            });
+        }
+
+        let user = req.body.user;
+        let pass = req.body.pass;
+
+        var consulta = "SELECT u.Pwd, u.Salt, u.FKProyecto, p.DiferenciaServidor, p.DiferenciaHorariaM, " +
+            "u.RolTrafico, u.Trafico, ISNULL(p.ProyectoPrincipal, 1) as ownr, ISNULL(p.varidcliente, 2) as varidcliente, " +
+            "e.IdEmpresa, ISNULL(clientede, 0) as clientede, p.TimeReload, u.tipoUser, r.Jerarquia, u.EmpresasTrafico FROM ICUsers as u " +
+            "INNER JOIN ICEmpresa as e on e.IdEmpresa = u.FKICEmpresa " +
+            "INNER JOIN LokProyectos as p on p.IDProyecto = u.FKProyecto " +
+            "INNER JOIN LokRoles as r on r.IDRol = u.tipoUser " +
+            "WHERE u.IdUser='" + user + "' and u.Activo=1";
+
+        let resultado = await sqlconfig.query(consulta);
+
+        if (resultado.recordset.length > 0) {
+            const hashresult = crypto.createHash('sha256')
+                .update(pass + '|' + resultado.recordset[0].Salt)
+                .digest('hex');
+
+            if (hashresult == resultado.recordset[0].Pwd) {
+                var tokenPayload = {
+                    username: user,
+                    proyecto: resultado.recordset[0].FKProyecto,
+                    diffhorario: resultado.recordset[0].DiferenciaServidor,
+                    diffUTC: resultado.recordset[0].DiferenciaHorariaM,
+                    roltrafico: resultado.recordset[0].RolTrafico,
+                    trafico: resultado.recordset[0].Trafico,
+                    owner: resultado.recordset[0].ownr,
+                    empresaprincipal: resultado.recordset[0].varidcliente,
+                    idempresa: resultado.recordset[0].IdEmpresa,
+                    idcliente: resultado.recordset[0].clientede,
+                    tipouser: resultado.recordset[0].tipoUser,
+                    jerarquia: resultado.recordset[0].Jerarquia,
+                    empresastrafico: resultado.recordset[0].EmpresasTrafico,
+                    server: sqlconfig.server
+                };
+                const token = jwt.sign(tokenPayload, 'secret_key', { expiresIn: '1h' });
+                res.json({
+                    success: true,
+                    entorno: sqlconfig.server,
+                    timereload: resultado.recordset[0].TimeReload,
+                    proyecto: resultado.recordset[0].FKProyecto,
+                    token,
+                    empresa: resultado.recordset[0].IdEmpresa
+                });
+            } else {
+                res.json({ success: false });
+            }
+        } else {
+            res.json({ success: false });
+        }
+    } catch (err) {
+        res.json({ success: false });
+    }
 });
+
 
 app.post('/falabella', async (req, res) =>{
     try{
