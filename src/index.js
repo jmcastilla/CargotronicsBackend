@@ -86,7 +86,7 @@ app.use((req, res, next) => {
   const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
 
   // Define aquí las IPs que permites (pueden ser públicas o internas)
-  const whitelistIps = ['64.29.17.193', '216.198.79.1', '216.198.79.65', '216.198.79.129', '216.198.79.193']; // reemplaza por IPs reales de Vercel o tus servidores
+  const whitelistIps = ['64.29.17.193', '216.198.79.1', '216.198.79.65', '216.198.79.129', '216.198.79.193', '201.216.13.106']; // reemplaza por IPs reales de Vercel o tus servidores
 
   // Opcional: Mostrar IP para debug
   console.log('IP solicitante:', ip);
