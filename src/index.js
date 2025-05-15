@@ -82,7 +82,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use((req, res, next) => {
+/*app.use((req, res, next) => {
   const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
 
   // Define aquí las IPs que permites (pueden ser públicas o internas)
@@ -98,7 +98,7 @@ app.use((req, res, next) => {
   }
 
   next(); // Permitir si está en whitelist
-});
+});*/
 
 
 
