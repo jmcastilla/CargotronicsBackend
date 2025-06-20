@@ -1209,6 +1209,7 @@ const filtrarContratos = (contratos, decoded) => {
                 contrato.Owner === decoded.idempresa
             );
         }*/
+
         if (decoded.idempresa !== decoded.empresaprincipal && decoded.proyecto === decoded.owner) {
             if (
                 contrato.FKICEmpresa !== decoded.idempresa &&

@@ -50,6 +50,18 @@ controller.list_historicos = async (req, res) => {
                     if(empresa != 0){
                       consulta+=" AND e.IdEmpresa="+empresa;
                     }
+                    if(decoded.idempresa != decoded.empresaprincipal && decoded.proyecto == decoded.owner){
+                        consulta+=" AND (c.FKICEmpresa = "+decoded.idempresa+
+                        " OR c.FKICEmpresaConsulta = "+decoded.idempresa+
+                        " OR c.FKICEmpresaConsulta2 = "+decoded.idempresa+
+                        " OR c.FKICEmpresaConsulta3 = "+decoded.idempresa+
+                        " OR e.Owner = "+decoded.idempresa+" ";
+                        if (decoded.empresastrafico && decoded.empresastrafico.length > 0) {
+                            consulta+=" OR c.FKICEmpresa IN ("+decoded.empresastrafico+")) ";
+                        }else{
+                            consulta+=") ";
+                        }
+                    }
                     let resultado=await sqlconfig.query(consulta);
                     if (resultado.recordsets && resultado.recordsets[0]) {
   			               res.json({ success: true, data: resultado.recordsets[0] });
@@ -1228,7 +1240,7 @@ controller.get_poly = async (req, res) => {
 }
 
 // FUNCION QUE RETORNA SI SE ENCUENTRA EN LA RUTA
-controller.get_find2 = async (req, res) => {
+controller.get_find21 = async (req, res) => {
     try{
         var id=parseInt(req.body.ID);
         var latnow=req.body.latitud;
@@ -1290,6 +1302,54 @@ controller.get_find2 = async (req, res) => {
     }
 
 }
+
+controller.get_find2 = async (req, res) => {
+    try {
+        var id = parseInt(req.body.ID);
+        var latnow = parseFloat(req.body.latitud);
+        var lngnow = parseFloat(req.body.longitud);
+
+        var consulta = "SELECT * FROM Trayectos WHERE IDTrayecto=" + id;
+        let resultado = await sqlconfig.query(consulta);
+        let trayecto = resultado.recordset[0];
+
+        var posOrigen = trayecto.Origen.split(",");
+        var posDestino = trayecto.Destino.split(",");
+        var kmrecorrido = calcularDistancia(posOrigen[0], posOrigen[1], latnow, lngnow);
+
+        var polylineaArray = trayecto.Polyline.split("||||");
+
+        // Validación de tramos (todas las polylíneas)
+        let puntoActual = { lat: latnow, lng: lngnow };
+        let estaEnAlguna = false;
+        let tramoCoincidente = -1;
+
+        for (let i = 0; i < polylineaArray.length; i++) {
+            const tramo = decodePolyline(polylineaArray[i]);
+            const enEsteTramo = Poly.PolyUtil.isLocationOnEdge(
+                puntoActual,
+                tramo,
+                trayecto.Tolerancia,
+                true
+            );
+            if (enEsteTramo) {
+                estaEnAlguna = true;
+                tramoCoincidente = i;
+                break;
+            }
+        }
+
+        res.json({
+            success: true,
+            data: estaEnAlguna
+        });
+
+    } catch (err) {
+        console.error(err);
+        res.json({ success: false });
+    }
+};
+
 
 //FUNCION QUE GUARDA O ACTUALIZA EL TRAYECTO
 controller.set_ultimopunto = async (req, res) => {
