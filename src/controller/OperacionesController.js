@@ -1332,13 +1332,14 @@ controller.get_find2 = async (req, res) => {
                 trayecto.Tolerancia,
                 true
             );
+            console.log("respuesta "+i+" : "+enEsteTramo);
             if (enEsteTramo) {
                 estaEnAlguna = true;
                 tramoCoincidente = i;
                 break;
             }
         }
-
+        console.log("respuesta total : "+estaEnAlguna);
         res.json({
             success: true,
             data: estaEnAlguna
