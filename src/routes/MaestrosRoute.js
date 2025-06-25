@@ -70,6 +70,70 @@ const MaestrosController = require('../controller/MaestrosController.js');
 router.get('/getrutas', MaestrosController.get_rutas);
 /**
  * @swagger
+ * /maestros/getgeocercas:
+ *   get:
+ *     summary: Obtener lista de geocercas del proyecto
+ *     description: Retorna todas las geocercas registradas del proyecto asociado al usuario autenticado.
+ *     tags:
+ *       - Maestros
+ *     security:
+ *       - BearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Lista de geocercas obtenida correctamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       ID:
+ *                         type: integer
+ *                         example: 12
+ *                       Nombre:
+ *                         type: string
+ *                         example: "Zona Norte"
+ *                       Vertices:
+ *                         type: string
+ *                         example: "[-74.1, 10.9], [-74.2, 10.95], [-74.15, 10.92]"
+ *                       Descripcion:
+ *                         type: string
+ *                         example: "Zona de entrega preferencial"
+ *       401:
+ *         description: Token ausente o inválido
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Token is missing
+ *       500:
+ *         description: Error interno al obtener las geocercas
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ */
+
+router.get('/getgeocercas', MaestrosController.get_geocercas);
+/**
+ * @swagger
  * /maestros/setinsertruta:
  *   post:
  *     summary: Insertar una nueva ruta
