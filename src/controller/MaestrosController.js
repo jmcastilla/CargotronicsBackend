@@ -194,7 +194,7 @@ controller.get_geocercas = async (req, res) => {
                 if (err) {
                     res.json({ success: false, message: 'Failed to authenticate token' });
                 } else {
-                    var consulta="SELECT ID, Nombre, Vertices, Descripcion from GeoCercas where FKProyecto ="+decoded.proyecto+" and Ciudad=0 ORDER BY Nombre";
+                    var consulta="SELECT ID, Nombre, Vertices, Descripcion, FKCatGeoCerca from GeoCercas where FKProyecto ="+decoded.proyecto+" and Ciudad=0 ORDER BY Nombre";
                     //agregar antes el no asignado
                     let resultado=await sqlconfig.query(consulta);
                     res.json({success : true, data : resultado.recordsets[0]});
