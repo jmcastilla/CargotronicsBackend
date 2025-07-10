@@ -75,7 +75,7 @@ controller.set_insertcontacto = async (req, res) => {
                         "VelocidadM": req.body.VelocidadM,
                         "VelocidadT": req.body.VelocidadT,
                         "ReportTrafico": req.body.ReportTrafico,
-                        "RolTrafico": req.body.RolTrafico
+                        "RolTrafico": req.body.RolTrafico,
                         "tipo": req.body.tipo
                     };
                     let resultado=await sqlconfig.queryProcedure('InsertContacto', data);
