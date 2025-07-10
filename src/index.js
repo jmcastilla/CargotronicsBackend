@@ -106,6 +106,7 @@ const contratosRouters = require('./routes/ContratosRoute');
 const maestrosRouters = require('./routes/MaestrosRoute');
 const solicitudesRouters = require('./routes/SolicitudesRoute');
 const operacionesRouters = require('./routes/OperacionesRoute');
+const operacionesRouters2 = require('./routes/OperacionesRoute2');
 const empresasRouters = require('./routes/EmpresasRoute');
 const dianRouters = require('./routes/DianRoute');
 const usuariosRouters = require('./routes/UsuariosRoute');
@@ -113,6 +114,7 @@ app.use('/contratos', contratosRouters);
 app.use('/maestros', maestrosRouters);
 app.use('/solicitudes', solicitudesRouters);
 app.use('/operaciones', operacionesRouters);
+app.use('/operaciones2', operacionesRouters2);
 app.use('/empresas', empresasRouters);
 app.use('/dian', dianRouters);
 app.use('/usuarios', usuariosRouters);
@@ -316,7 +318,7 @@ app.post('/login', async (req, res) => {
 
         var consulta = "SELECT u.Pwd, u.Salt, u.FKProyecto, p.DiferenciaServidor, p.DiferenciaHorariaM, " +
             "u.RolTrafico, u.Trafico, ISNULL(p.ProyectoPrincipal, 1) as ownr, ISNULL(p.varidcliente, 2) as varidcliente, " +
-            "e.IdEmpresa, ISNULL(clientede, 0) as clientede, p.TimeReload, u.tipoUser, r.Jerarquia, u.EmpresasTrafico FROM ICUsers as u " +
+            "e.IdEmpresa, ISNULL(clientede, 0) as clientede, p.TimeReload, u.tipoUser, r.Jerarquia, u.EmpresasTrafico, u.TiempoSesionH FROM ICUsers as u " +
             "INNER JOIN ICEmpresa as e on e.IdEmpresa = u.FKICEmpresa " +
             "INNER JOIN LokProyectos as p on p.IDProyecto = u.FKProyecto " +
             "INNER JOIN LokRoles as r on r.IDRol = u.tipoUser " +
@@ -344,9 +346,11 @@ app.post('/login', async (req, res) => {
                     tipouser: resultado.recordset[0].tipoUser,
                     jerarquia: resultado.recordset[0].Jerarquia,
                     empresastrafico: resultado.recordset[0].EmpresasTrafico,
-                    server: sqlconfig.server
+                    server: sqlconfig.server,
+                    tiempo: resultado.recordset[0].TiempoSesionH,
                 };
-                const token = jwt.sign(tokenPayload, 'secret_key', { expiresIn: '1h' });
+                var time= resultado.recordset[0].TiempoSesionH+"h";
+                const token = jwt.sign(tokenPayload, 'secret_key', { expiresIn: time });
                 res.json({
                     success: true,
                     entorno: sqlconfig.server,
@@ -497,9 +501,11 @@ app.get('/actualizartoken', async (req, res) => {
                         tipouser: decoded.tipouser,
                         jerarquia: decoded.jerarquia,
                         empresastrafico: decoded.empresastrafico,
-                        server: decoded.server
+                        server: decoded.server,
+                        tiempo: decoded.tiempo
                     };
-                    const nuevotoken = jwt.sign(tokenPayload, 'secret_key', { expiresIn: '1h' });
+                    var time = decoded.tiempo+"h";
+                    const nuevotoken = jwt.sign(tokenPayload, 'secret_key', { expiresIn: time });
                     res.json({success : true, nuevotoken});
                 }
             });
