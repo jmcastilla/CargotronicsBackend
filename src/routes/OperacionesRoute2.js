@@ -330,3 +330,6 @@ router.post('/setinsertcontacto', OperacionesController.set_insertcontacto);
  */
 
 router.post('/setupdatecontacto', OperacionesController.set_updatecontacto);
+
+
+module.exports = router;
