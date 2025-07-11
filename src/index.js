@@ -357,7 +357,8 @@ app.post('/login', async (req, res) => {
                     timereload: resultado.recordset[0].TimeReload,
                     proyecto: resultado.recordset[0].FKProyecto,
                     token,
-                    empresa: resultado.recordset[0].IdEmpresa
+                    empresa: resultado.recordset[0].IdEmpresa,
+                    TiempoSesionH: resultado.recordset[0].TiempoSesionH
                 });
             } else {
                 res.json({ success: false });
