@@ -551,14 +551,13 @@ router.post('/setciudad', OperacionesController.set_ciudad);
 router.post('/getacompanantes', OperacionesController.get_acompanantes);
 /**
  * @swagger
- * /operaciones2/setacompanante:
+ * /operaciones2/setacompanantes:
  *   post:
- *     summary: Registrar acompañante
- *     description: Registra un nuevo acompañante para una ciudad mediante el procedimiento almacenado setAcompanante.
+ *     summary: Crea o actualiza un acompañante
  *     tags:
  *       - Operaciones2
  *     security:
- *       - BearerAuth: []
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -566,33 +565,51 @@ router.post('/getacompanantes', OperacionesController.get_acompanantes);
  *           schema:
  *             type: object
  *             required:
+ *               - ID
+ *               - NoDocumento
  *               - Nombre
- *               - FKCiudad
+ *               - Telefono
  *             properties:
+ *               ID:
+ *                 type: integer
+ *                 description: Si es -1 se crea un nuevo acompañante, si es distinto se actualiza
+ *                 example: -1
+ *               NoDocumento:
+ *                 type: string
+ *                 example: "1234567890"
  *               Nombre:
  *                 type: string
- *               FKCiudad:
- *                 type: integer
+ *                 example: "Juan Pérez"
+ *               Telefono:
+ *                 type: string
+ *                 example: "3014567890"
  *     responses:
  *       200:
- *         description: Acompañante registrado correctamente.
- *       401:
- *         description: Token inválido o no proporcionado.
- *       500:
- *         description: Error del servidor al registrar el acompañante.
+ *         description: Resultado del guardado o actualización
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   description: Resultado de la consulta SQL si es éxito
  */
+
 
 router.post('/setacompanantes', OperacionesController.set_acompanantes);
 /**
  * @swagger
- * /operaciones2/deleteacompanante:
+ * /operaciones2/deleteacompanantes:
  *   post:
- *     summary: Eliminar acompañante
- *     description: Elimina un acompañante de la ciudad mediante el procedimiento almacenado deleteAcompanante.
+ *     summary: Elimina un acompañante por ID
  *     tags:
  *       - Operaciones2
  *     security:
- *       - BearerAuth: []
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -604,14 +621,20 @@ router.post('/setacompanantes', OperacionesController.set_acompanantes);
  *             properties:
  *               ID:
  *                 type: integer
+ *                 example: 12
  *     responses:
  *       200:
- *         description: Acompañante eliminado correctamente.
- *       401:
- *         description: Token inválido o no proporcionado.
- *       500:
- *         description: Error del servidor al eliminar el acompañante.
+ *         description: Resultado de la eliminación
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
  */
+
 
 router.post('/deleteacompanantes', OperacionesController.delete_acompanantes);
 /**
@@ -638,65 +661,83 @@ router.post('/getinstaladores', OperacionesController.get_instaladores);
  * @swagger
  * /operaciones2/setinstaladores:
  *   post:
- *     summary: Crear o actualizar instalador
- *     description: Crea o actualiza un instalador mediante un procedimiento almacenado.
+ *     summary: Insertar o actualizar un instalador
  *     tags:
  *       - Operaciones2
  *     security:
- *       - BearerAuth: []
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
  *             type: object
- *             required:
- *               - ID
- *               - Descripcion
  *             properties:
- *               ID:
+ *               NEW:
  *                 type: integer
- *               Descripcion:
+ *                 description: '-1 para insertar, otro valor para actualizar'
+ *                 example: -1
+ *               CCInstalador:
  *                 type: string
+ *                 example: "123456789"
+ *               NombreInstalador:
+ *                 type: string
+ *                 example: "Juan Pérez"
+ *               TelefonoInstalador:
+ *                 type: string
+ *                 example: "3001234567"
  *     responses:
  *       200:
- *         description: Instalador registrado correctamente.
- *       401:
- *         description: Token inválido o no proporcionado.
- *       500:
- *         description: Error del servidor al registrar el instalador.
+ *         description: Resultado de la operación
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 data:
+ *                   type: object
+ *                   nullable: true
  */
+
 
 router.post('/setinstaladores', OperacionesController.set_instaladores);
 /**
  * @swagger
  * /operaciones2/deleteinstalador:
  *   post:
- *     summary: Eliminar instalador
- *     description: Elimina un instalador del proyecto actual.
+ *     summary: Elimina un instalador por su cédula
  *     tags:
  *       - Operaciones2
  *     security:
- *       - BearerAuth: []
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
  *             type: object
- *             required:
- *               - ID
  *             properties:
- *               ID:
- *                 type: integer
+ *               CCInstalador:
+ *                 type: string
+ *                 description: Cédula del instalador a eliminar
+ *             required:
+ *               - CCInstalador
  *     responses:
  *       200:
- *         description: Instalador eliminado correctamente.
+ *         description: Resultado de la operación
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
  *       401:
- *         description: Token inválido o no proporcionado.
- *       500:
- *         description: Error del servidor al eliminar el instalador.
+ *         description: Token inválido o ausente
  */
+
 
 router.post('/deleteinstalador', OperacionesController.delete_instalador);
 /**
@@ -724,7 +765,7 @@ router.post('/gettraportadoras', OperacionesController.get_traportadoras);
  * /operaciones2/settransportadora:
  *   post:
  *     summary: Crear o actualizar transportadora
- *     description: Crea o actualiza una transportadora mediante procedimiento almacenado.
+ *     description: Crea una nueva transportadora o actualiza una existente según el valor del campo ID. Si el ID es -1, se crea una nueva transportadora. Si es diferente de -1, se actualiza la transportadora existente.
  *     tags:
  *       - Operaciones2
  *     security:
@@ -737,19 +778,28 @@ router.post('/gettraportadoras', OperacionesController.get_traportadoras);
  *             type: object
  *             required:
  *               - ID
- *               - Descripcion
+ *               - NombreTranspo
+ *               - AliasTranspo
  *             properties:
  *               ID:
  *                 type: integer
- *               Descripcion:
+ *                 description: ID de la transportadora. Usar -1 para crear una nueva.
+ *               NombreTranspo:
  *                 type: string
+ *                 description: Nombre de la transportadora.
+ *               AliasTranspo:
+ *                 type: string
+ *                 description: Alias de la transportadora.
+ *               proyectoTransportadora:
+ *                 type: integer
+ *                 description: ID del proyecto (solo requerido para actualizar).
  *     responses:
  *       200:
- *         description: Transportadora registrada correctamente.
+ *         description: Transportadora creada o actualizada correctamente.
  *       401:
  *         description: Token inválido o no proporcionado.
  *       500:
- *         description: Error del servidor al registrar la transportadora.
+ *         description: Error del servidor al procesar la solicitud.
  */
 
 router.post('/settransportadora', OperacionesController.set_transportadora);
@@ -757,31 +807,43 @@ router.post('/settransportadora', OperacionesController.set_transportadora);
  * @swagger
  * /operaciones2/deletetransportadora:
  *   post:
- *     summary: Eliminar transportadora
- *     description: Elimina una transportadora asociada al proyecto autenticado.
+ *     summary: Elimina una transportadora por su ID
  *     tags:
  *       - Operaciones2
  *     security:
- *       - BearerAuth: []
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
  *             type: object
- *             required:
- *               - ID
  *             properties:
- *               ID:
+ *               IdTransportadora:
  *                 type: integer
+ *                 description: ID de la transportadora a eliminar
+ *             required:
+ *               - IdTransportadora
  *     responses:
  *       200:
- *         description: Transportadora eliminada correctamente.
+ *         description: Resultado de la operación
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 message:
+ *                   type: string
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
  *       401:
- *         description: Token inválido o no proporcionado.
- *       500:
- *         description: Error del servidor al eliminar la transportadora.
+ *         description: Token inválido o ausente
  */
+
 
 router.post('/deletetransportadora', OperacionesController.delete_transportadora);
 
