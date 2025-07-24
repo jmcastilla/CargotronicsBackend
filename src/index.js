@@ -361,13 +361,13 @@ app.post('/login', async (req, res) => {
                     TiempoSesionH: resultado.recordset[0].TiempoSesionH
                 });
             } else {
-                res.json({ success: false });
+                res.json({ success: false, message: 'Password Incorrecto' });
             }
         } else {
-            res.json({ success: false });
+            res.json({ success: false, message: 'No existe el usuario' });
         }
     } catch (err) {
-        res.json({ success: false });
+        res.json({ success: false, message: err });
     }
 });
 
