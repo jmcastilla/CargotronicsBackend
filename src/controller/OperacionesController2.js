@@ -297,7 +297,7 @@ controller.set_acompanantes = async (req, res) => {
                 } else {
                     if(req.body.ID == -1){
                         var consulta = "INSERT INTO LokAcompanianteOC (NoDocumento, Nombre, Telefono) VALUES ("+
-                        "'"+req.body.NoDocumento+"',''"+req.body.Nombre+"'','"+req.body.Telefono+"')";
+                        "'"+req.body.NoDocumento+"','"+req.body.Nombre+"','"+req.body.Telefono+"')";
 
                         res.json({success : true, data : await sqlconfig.query(consulta)});
                     }else{
