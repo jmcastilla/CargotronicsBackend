@@ -471,7 +471,7 @@ controller.set_transportadora = async (req, res) => {
                         res.json({success : true, data : await sqlconfig.query(consulta)});
                     }else{
                         try{
-                            var consulta = "UPDATE ICTransportadora SET NombreTranspo='"+req.body.NombreTranspo+"', AliasTranspo='"+req.body.AliasTranspo+"', proyectoTransportadora="+req.body.proyectoTransportadora+" WHERE IdTransportadora='"+req.body.ID+"'";
+                            var consulta = "UPDATE ICTransportadora SET NombreTranspo='"+req.body.NombreTranspo+"', AliasTranspo='"+req.body.AliasTranspo+"', proyectoTransportadora="+req.body.proyectoTransportadora+" WHERE IdTransportadora="+req.body.ID;
                             res.json({success : await sqlconfig.query(consulta)});
                         }catch(error){
                             res.json({success : false});
