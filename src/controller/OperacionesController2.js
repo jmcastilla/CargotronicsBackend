@@ -441,7 +441,7 @@ controller.get_traportadoras = async (req, res) => {
                 } else {
                     var proyecto=decoded.proyecto;
 
-                    var consulta = "SELECT IdTransportadora, NombreTranspo, AliasTranspo From ICTransportadora ORDER BY NombreTranspo";
+                    var consulta = "SELECT IdTransportadora, NombreTranspo, AliasTranspo, proyectoTransportadora From ICTransportadora ORDER BY NombreTranspo";
 
                     let resultado=await sqlconfig.query(consulta);
                     return res.json({success : true, data : resultado});
