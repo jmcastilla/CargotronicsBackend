@@ -466,7 +466,7 @@ controller.set_transportadora = async (req, res) => {
                 } else {
                     if(req.body.ID == -1){
                         var consulta = "INSERT INTO ICTransportadora (NombreTranspo, AliasTranspo, proyectoTransportadora) VALUES ("+
-                        "'"+req.body.NombreTranspo+"',''"+req.body.AliasTranspo+"'',"+decoded.proyecto+")";
+                        "'"+req.body.NombreTranspo+"','"+req.body.AliasTranspo+"',"+decoded.proyecto+")";
 
                         res.json({success : true, data : await sqlconfig.query(consulta)});
                     }else{
