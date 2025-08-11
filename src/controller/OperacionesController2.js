@@ -381,12 +381,12 @@ controller.set_instaladores = async (req, res) => {
                 } else {
                     if(req.body.NEW == -1){
                         var consulta = "INSERT INTO LokInstaladores (CCInstalador, NombreInstalador, TelefonoInstalador) VALUES ("+
-                        "'"+req.body.CCInstalador+"',''"+req.body.NombreInstalador+"'',"+req.body.TelefonoInstalador+")";
+                        "'"+req.body.CCInstalador+"','"+req.body.NombreInstalador+"','"+req.body.TelefonoInstalador+"')";
 
                         res.json({success : true, data : await sqlconfig.query(consulta)});
                     }else{
                         try{
-                            var consulta = "UPDATE LokInstaladores SET NombreInstalador='"+req.body.NombreInstalador+"', TelefonoInstalador="+req.body.TelefonoInstalador+" WHERE CCInstalador='"+req.body.CCInstalador+"'";
+                            var consulta = "UPDATE LokInstaladores SET NombreInstalador='"+req.body.NombreInstalador+"', TelefonoInstalador='"+req.body.TelefonoInstalador+"' WHERE CCInstalador='"+req.body.CCInstalador+"'";
                             res.json({success : await sqlconfig.query(consulta)});
                         }catch(error){
                             res.json({success : false});
