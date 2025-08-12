@@ -1287,6 +1287,37 @@ router.post('/getfind2', OperacionesController.get_find2);
 router.get('/getcontratostrafico', OperacionesController.get_contratostrafico);
 /**
  * @swagger
+ * /operaciones/getcontratostraficooculto:
+ *   get:
+ *     summary: Obtener contratos de trafico oculto
+ *     description: Endpoint para obtener contratos de trafico oculto asociados al proyecto.
+ *     tags:
+ *       - Operaciones
+ *     responses:
+ *       200:
+ *         description: Contratos de trafico oculto obtenidos con exito.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: true
+ *               data:
+ *                 - // Aquí debes especificar la estructura del objeto de contratos obtenido
+ *       400:
+ *         description: Error en la solicitud.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *       500:
+ *         description: Error en el servidor.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ */
+router.get('/getcontratostraficooculto', OperacionesController.get_contratostraficooculto);
+/**
+ * @swagger
  * /operaciones/getcontratostraficocritico:
  *   get:
  *     summary: Obtiene contratos de tráfico crítico.

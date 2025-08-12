@@ -375,6 +375,68 @@ controller.get_contratostrafico = async (req, res) => {
     }
 }
 
+// FUNCION QUE RETORNA EL LISTADO DE CONTRATOS ACTIVOS, GRILLA DE TRAFICO
+controller.get_contratostraficooculto = async (req, res) => {
+    try{
+        var token = req.headers.authorization;
+        if (!token) {
+            return res.json({ success: false, message: 'Token is missing' });
+        }else{
+            token = req.headers.authorization.split(' ')[1];
+            jwt.verify(token, 'secret_key', async (err, decoded) => {
+                if (err) {
+                    res.json({ success: false, message: 'Failed to authenticate token' });
+                } else {
+                    var consulta= "SELECT c.ContractID, c.FKLokDeviceID, e.IdEmpresa, e.NombreEmpresa, c.PlacaTruck, '"+decoded.username+"' as username, "+
+                    "CONVERT(varchar,DATEADD(MINUTE,0,c.FechaHoraInicio),20) as fecha, CONCAT(c.LastMsgLat,',',c.LastMsgLong) as pos, "+
+                    "ISNULL(c.FKTrayecto, 0) as trayecto, d.bitGPS, d.ContadorGps, r.DescripcionRuta, t.DescripcionTrayecto, c.NombreConductor, "+
+                    "CASE WHEN c.ContainerNum IS NULL OR c.ContainerNum = 'ND' THEN (LEFT(c.Documento, 35) + CASE WHEN LEN(c.Documento) > 35 THEN '...' ELSE '' END) ELSE c.ContainerNum END as ContainerNum, "+
+                    "c.Ref, tp.NombreTranspo, c.MovilConductor, c.PlacaTrailer, CONVERT(varchar,DATEADD(minute,0,c.FechaHoraInicio),20) as fechainicio, "+
+                    "ISNULL(CONVERT(varchar,DATEADD(minute,0,c.FechaHoraFin),20), CONVERT(varchar,DATEADD(minute,"+decoded.diffhorario+",GETDATE()),20)) as fechafin, c.LastMsgLat, c.LastMsgLong, "+
+                    "d.Locked, c.Active, ISNULL(t.DistanciaReal,0) as DistanciaCompleta, t.Origen, d.FKLokTipoEquipo, "+
+                    "dbo.Tiempo(DATEDIFF(SECOND, LoksysServerTime, GETUTCDATE())) as Tiempo, DATEDIFF(SECOND, '1970-01-01 00:00:00', LoksysServerTime) as tiempoUnix, "+
+                    "dbo.iconbateria2(ISNULL(ROUND(BatteryVoltage, 2),3), d.FKLokTipoEquipo, c.FKLokDeviceID) as icon_bat, ROUND(BatteryVoltage, 2) as bateria, "+
+                    "c.LastReportNota, tr.TipoReporte, c.LastReportUbica+ ' ('+CONVERT(NVARCHAR(20), DATEDIFF(MINUTE, LastReportTime, DATEADD(MINUTE,"+decoded.diffhorario+", GETDATE())))+' min)' as LastReportUbica, "+
+                    "d.Ciudad+': '+d.Location+ CASE WHEN ContadorGps <> 0 THEN ' ('+CONVERT(NVARCHAR(20), ContadorGps)+')' ELSE '' END as Ciudad, "+
+                    "DATEADD(MINUTE, DATEDIFF(MINUTE, GETUTCDATE(), GETDATE()) + "+decoded.diffhorario+", LoksysServerTime) as LoksysServerTime, "+
+                    "ISNULL(geo.Nombre, 'ND') as geocerca, CASE WHEN ISNULL(d.DatetimeUltGeo, '2024-01-01 00:00:00') > c.FechaHoraInicio THEN 1 ELSE 0 END as mostrargeocerca, DATEDIFF(MINUTE, ISNULL(d.DatetimeUltGeo, '2024-01-01 00:00:00'), DATEADD(MINUTE,"+decoded.diffhorario+", GETDATE())) as LastReportgeocerca, "+
+                    //"c.LastReportNota, tr.TipoReporte, (CASE d.Moving WHEN 1 THEN '/images/moving.png' ELSE '/images/stop.png' END) as IconMoving, "+
+                    //"(CASE d.Locked WHEN 1 THEN '/images/closedpadlock.png' ELSE '/images/openedpadlock.png' END) as IconLocked2, "+
+                    "SUBSTRING(iconos.IconMoving, 2, CHARINDEX('|', iconos.IconMoving) - 2) AS IconMoving, "+
+                    "SUBSTRING(iconos.IconLocked, 2, CHARINDEX('|', iconos.IconLocked) - 2) AS IconLocked, "+
+                    "SUBSTRING(iconos.IconDesvio, 2, CHARINDEX('|', iconos.IconDesvio) - 2) AS IconDesvio, "+
+                    "SUBSTRING(iconos.IconSeguro, 2, CHARINDEX('|', iconos.IconSeguro) - 2) AS IconSeguro, "+
+                    "SUBSTRING(iconos.IconBack, 2, CHARINDEX('|', iconos.IconBack) - 2) AS IconBack, "+
+                    "CAST(CASE WHEN c.Active=1 THEN 0 ELSE 1 END AS BIT) AS expanded, "+
+                    "CASE WHEN qr.Verificado_global=1 AND c.FKQrMaestro IS NOT NULL THEN '/images/valitronics.png' "+
+                    "WHEN qr.Verificado_global=0 AND c.FKQrMaestro IS NOT NULL THEN '/images/valitronics_gris.png' "+
+                    "ELSE '/images/transparent.png' END as IconValitronics, d.Speed, Convert(nvarchar(10),DATEDIFF(MINUTE, isnull(d.DateDetencion, DATEADD(hh,2,getdate())), DATEADD(hh,2,getdate()))) as tiempodetencion, c.FKLokProyecto, c.FKICEmpresa, corig.NombreCiudad as CiudadOrigen, cdest.NombreCiudad as CiudadDestino "+
+                    "FROM LokcontractID as c "+
+                    "INNER JOIN LokDeviceID as d ON d.DeviceID = c.FKLokDeviceID "+
+                    "LEFT JOIN ICEmpresa as e ON e.IdEmpresa = c.FKICEmpresa "+
+                    "LEFT JOIN ICRutas as r ON r.IdRuta = c.FKICRutas "+
+                    "LEFT JOIN Trayectos as t ON c.FKTrayecto =  t.IDTrayecto "+
+                    "LEFT JOIN ICTipoReporte as tr ON c.LastICTipoReporte =  tr.IdTipoReporte "+
+                    "LEFT JOIN ICTransportadora as tp ON tp.IdTransportadora = c.FKICTransportadora "+
+                    "LEFT JOIN QR_Maestro as qr ON c.FKQrMaestro = qr.ID_QRMaestro "+
+                    "LEFT JOIN GeoCercas as geo ON geo.ID = d.UltimaGeoCerca "+
+                    "LEFT JOIN LokCiudades as corig ON corig.IDCiudad = r.FKLokCiudadOrigen "+
+                    "LEFT JOIN LokCiudades as cdest ON cdest.IDCiudad = r.FKLokCiudadDestino "+
+                    "OUTER APPLY dbo.IconosContract(c.ContractID, c.FKLokDeviceID) AS iconos ";
+                    
+                    consulta+="WHERE c.Active=1 AND c.FKLokProyecto="+decoded.proyecto+" AND c.FKICEmpresa IS NULL";
+
+                    //consulta+="ORDER BY d.Locked ASC, bitAperturaRespo ASC, bitBackRespo ASC, bitAlejadoRespo ASC, bitDesvioRespo ASC, bitDetencionRespo ASC, bitGpsRespo ASC, bitTiempoRespo ASC, d.LoksysServerTime";
+                    let resultado=await sqlconfig.query(consulta);
+                    res.json({success : true, data : resultado.recordsets[0]});
+                }
+            });
+        }
+    }catch(err){
+        res.json({success : false});
+    }
+}
+
 
 // FUNCION QUE RETORNA EL LISTADO DE CONTRATOS CRITICO, GRILLA DE TRAFICO
 controller.get_contratostraficocritico = async (req, res) => {
