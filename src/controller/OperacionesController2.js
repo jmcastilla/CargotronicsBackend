@@ -211,7 +211,7 @@ controller.get_ciudades = async (req, res) => {
                 } else {
                     var proyecto=decoded.proyecto;
 
-                    var consulta = "SELECT * FROM LOKCIUDADES Where FKProyecto ="+proyecto;
+                    var consulta = "SELECT * FROM LOKCIUDADES Where FKLokProyecto ="+proyecto;
                     consulta += " order by NombreCiudad";
 
                     let resultado=await sqlconfig.query(consulta);
