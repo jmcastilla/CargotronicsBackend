@@ -26,6 +26,31 @@ controller.get_listadispositivos = async (req, res) => {
     }
 }
 
+controller.get_crearcontrato = async (req, res) => {
+    try{
+        var token = req.headers.authorization;
+        if (!token) {
+            return res.json({ success: false, message: 'Token is missing' });
+        }else{
+            token = req.headers.authorization.split(' ')[1];
+            jwt.verify(token, 'secret_key', async (err, decoded) => {
+                if (err) {
+                    res.json({ success: false, message: 'Failed to authenticate token' });
+                } else {
+                    var device= req.body.device;
+                    var consulta= "SELECT d.DeviceID FROM LokDeviceID as d "+
+                    "LEFT JOIN LokContractID as c ON d.LastContractID = c.ContractID "+
+                    "WHERE (c.Active = 0 OR d.LastContractID = 'none') AND d.Estado = 1 AND d.DeviceID = '"+device+"' and d.FKLokProyecto = "+decoded.proyecto;
+                    let resultado=await sqlconfig.query(consulta);
+                    res.json({success : true, data : resultado.recordsets[0]});
+                }
+            });
+        }
+    }catch(err){
+        res.json({success : false});
+    }
+}
+
 controller.get_modalidadservicio = async (req, res) => {
     try{
         var token = req.headers.authorization;

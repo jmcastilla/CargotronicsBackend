@@ -504,10 +504,16 @@ router.post('/getciudades', OperacionesController.get_ciudades);
  *               - Nombre
  *               - FKAgencia
  *             properties:
+ *               ID:
+ *                 type: integer
  *               Nombre:
  *                 type: string
  *               FKAgencia:
  *                 type: integer
+ *               Latitud:
+ *                 type: string
+ *               Longitud:
+ *                 type: string
  *     responses:
  *       200:
  *         description: Ciudad registrada correctamente.
