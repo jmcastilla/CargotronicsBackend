@@ -74,9 +74,9 @@ controller.set_insertcontacto = async (req, res) => {
                         "TiempoGpsT": req.body.TiempoGpsT,
                         "VelocidadM": req.body.VelocidadM,
                         "VelocidadT": req.body.VelocidadT,
+                        "tipo": req.body.tipo,
                         "ReportTrafico": req.body.ReportTrafico,
-                        "RolTrafico": req.body.RolTrafico,
-                        "tipo": req.body.tipo
+                        "RolTrafico": req.body.RolTrafico
                     };
                     let resultado=await sqlconfig.queryProcedure('InsertContacto', data);
                     res.json({success : true, data : resultado.recordsets[0]});
@@ -255,7 +255,6 @@ controller.set_ciudad = async (req, res) => {
     }catch(err){
         res.json({success : false});
     }
-
 }
 
 controller.get_acompanantes = async (req, res) => {
