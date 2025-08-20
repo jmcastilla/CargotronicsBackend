@@ -76,6 +76,7 @@ controller.set_insertcontacto = async (req, res) => {
                         "VelocidadT": req.body.VelocidadT,
                         "tipo": req.body.tipo,
                         "ReportTrafico": req.body.ReportTrafico,
+                        "RolTrafico": req.body.RolTrafico,
                         "FKProyecto": decoded.proyecto
 
                     };
