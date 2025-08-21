@@ -80,7 +80,7 @@ controller.set_insertcontacto = async (req, res) => {
                         "FKProyecto": decoded.proyecto
 
                     };
-                    console.log(data);
+
                     let resultado=await sqlconfig.queryProcedure('InsertContacto', data);
                     res.json({success : true, data : resultado.recordsets[0]});
                 }
@@ -131,6 +131,7 @@ controller.set_updatecontacto = async (req, res) => {
                         "ReportTrafico": req.body.ReportTrafico,
                         "RolTrafico": req.body.RolTrafico
                     };
+                    console.log(data);
                     let resultado=await sqlconfig.queryProcedure('UpdateContacto', data);
                     res.json({success : true, data : resultado.recordsets[0]});
                 }
