@@ -423,7 +423,7 @@ controller.get_contratostraficooculto = async (req, res) => {
                     "LEFT JOIN LokCiudades as corig ON corig.IDCiudad = r.FKLokCiudadOrigen "+
                     "LEFT JOIN LokCiudades as cdest ON cdest.IDCiudad = r.FKLokCiudadDestino "+
                     "OUTER APPLY dbo.IconosContract(c.ContractID, c.FKLokDeviceID) AS iconos ";
-                    
+
                     consulta+="WHERE c.Active=1 AND c.FKLokProyecto="+decoded.proyecto+" AND c.FKICEmpresa IS NULL";
 
                     //consulta+="ORDER BY d.Locked ASC, bitAperturaRespo ASC, bitBackRespo ASC, bitAlejadoRespo ASC, bitDesvioRespo ASC, bitDetencionRespo ASC, bitGpsRespo ASC, bitTiempoRespo ASC, d.LoksysServerTime";
@@ -799,7 +799,7 @@ controller.get_reportescontroldevice = async (req, res) => {
                     var orden1=req.body.orden1;
                     var orden2=req.body.orden2;
                     var idempresa=decoded.idempresa;
-                    var consulta = "SELECT DeviceID, dbo.UltimoContrato(DeviceID) As UltContrato, ICRutas.DescripcionRuta AS Ruta, NombreEmpresa AS Cliente, LokDeviceIDEstado.Descripcion AS Estado, ISNULL(ROUND(BatteryVoltage, 2),3) AS voltage, dbo.iconbateria(ISNULL(ROUND(BatteryVoltage, 2),3)) AS icon_bat, Apn1, Apn2, ";
+                    var consulta = "SELECT DeviceID, dbo.UltimoContrato(DeviceID) As UltContrato, ICRutas.DescripcionRuta AS Ruta, NombreEmpresa AS Cliente, IDEstado, LokDeviceIDEstado.Descripcion AS Estado, LokDeviceID.LastContractID, LokContractID.Active, ISNULL(ROUND(BatteryVoltage, 2),3) AS voltage, dbo.iconbateria(ISNULL(ROUND(BatteryVoltage, 2),3)) AS icon_bat, Apn1, Apn2, ";
                     consulta += "dbo.Tiempo(DATEDIFF(SECOND, LoksysServerTime, GETUTCDATE())) AS Tiempo, dbo.Tiempo(DATEDIFF(SECOND, DATEADD(MINUTE, -" + utcServidor + ", PositionTime), UltActualizacionDevice)) as Diff,  DATEADD(MINUTE, -" + utcServidor + ", PositionTime) AS ";
                     consulta += " eventDateTime,  UltActualizacionDevice AS LastSaved, Ciudad + ', ' + Departamento AS Position, ISNULL(UltServer, '-') AS UltServer, ";
                     consulta += " ISNULL(operador+'('+CAST(mcc AS NVARCHAR(4))+')','Desconocido('+CAST(UltMccc AS NVARCHAR(4))+')')AS Compania, CASE WHEN FKLokTipoEquipo in (select t.idtipoequipo from loktipoequipo t where mostrar = 1) ";
@@ -993,7 +993,7 @@ controller.get_reportescontroldeviceunico = async (req, res) => {
                     var idcliente=decoded.empresaprincipal;
                     var utcServidor=decoded.diffhorario;
                     var filtro=req.body.filtro;
-                    var consulta = "SELECT DeviceID, dbo.UltimoContrato(DeviceID) As UltContrato, ICRutas.DescripcionRuta AS Ruta, NombreEmpresa AS Cliente, LokDeviceIDEstado.Descripcion AS Estado, ISNULL(ROUND(BatteryVoltage, 2),3) AS voltage, dbo.iconbateria(ISNULL(ROUND(BatteryVoltage, 2),3)) AS icon_bat, Apn1, Apn2, ";
+                    var consulta = "SELECT DeviceID, dbo.UltimoContrato(DeviceID) As UltContrato, ICRutas.DescripcionRuta AS Ruta, NombreEmpresa AS Cliente, IDEstado, LokDeviceIDEstado.Descripcion AS Estado, LokDeviceID.LastContractID, LokContractID.Active, ISNULL(ROUND(BatteryVoltage, 2),3) AS voltage, dbo.iconbateria(ISNULL(ROUND(BatteryVoltage, 2),3)) AS icon_bat, Apn1, Apn2, ";
                     consulta += "dbo.Tiempo(DATEDIFF(SECOND, LoksysServerTime, GETUTCDATE())) AS Tiempo, dbo.Tiempo(DATEDIFF(SECOND, DATEADD(MINUTE, -" + utcServidor + ", PositionTime), UltActualizacionDevice)) as Diff,  DATEADD(MINUTE, -" + utcServidor + ", PositionTime) AS ";
                     consulta += " eventDateTime,  UltActualizacionDevice AS LastSaved, Ciudad + ', ' + Departamento AS Position, ISNULL(UltServer, '-') AS UltServer, ";
                     consulta += " ISNULL(operador+'('+CAST(mcc AS NVARCHAR(4))+')','Desconocido('+CAST(UltMccc AS NVARCHAR(4))+')')AS Compania, CASE WHEN FKLokTipoEquipo in (select t.idtipoequipo from loktipoequipo t where mostrar = 1) ";
