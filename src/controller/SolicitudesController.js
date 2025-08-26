@@ -39,6 +39,31 @@ controller.get_Solicitudes = async (req, res) => {
     }
 }
 
+controller.get_Solicitudestrafico = async (req, res) => {
+    try{
+        var token = req.headers.authorization;
+        if (!token) {
+            return res.json({ success: false, message: 'Token is missing' });
+        }else{
+            token = req.headers.authorization.split(' ')[1];
+            jwt.verify(token, 'secret_key', async (err, decoded) => {
+                if (err) {
+                    res.json({ success: false, message: 'Failed to authenticate token' });
+                } else {
+                    var consulta= "SELECT IDSolicitudes, FKICEmpresa, FKInstaladorId, bitRestriccion, HoraInicioR, HoraFinR, FKICEmpresaConsulta, FKICEmpresaConsulta2, FKICEmpresaConsulta3, Ref, PlacaTruck, ColorTruck, PlacaTriler, NombreConductor, NitConductor,"
+                    +" MovilConductor, ContainerNum, FKLokCercaAutorizada, DigitoVerificacion, Notas, NombreEscolta, DigitoVerificacion, MovilEscolta, NotasTI, FKLokCategoriaServ, Marca, FKICTransportadora, FKLokEstados,"
+                    +" FechaHoraSolicitud, FechaHoraCita, FechaHoraCitaDescargue, NotasDatosEntrega, UserSolicitud, FKNegociacion, Solicitante, FKICRutas, Contacto, FKLokTipoUnidadCarga, bitMostrarCritico"
+                    +" FROM LokSolicitudes WHERE IDSolicitudes = '" + req.body.idsolicitud + "'";
+                    let resultado=await sqlconfig.query(consulta);
+                    res.json({success : true, data : resultado.recordsets[0]});
+                }
+            });
+        }
+    }catch(err){
+        res.json({success : false});
+    }
+}
+
 controller.delete_solicitud = async (req, res) => {
     try{
         var token = req.headers.authorization;

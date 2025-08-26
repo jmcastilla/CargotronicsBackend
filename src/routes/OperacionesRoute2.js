@@ -482,8 +482,171 @@ router.post('/setagencia', OperacionesController.set_agencia);
  *       500:
  *         description: Error del servidor al obtener las ciudades.
  */
-
 router.post('/getciudades', OperacionesController.get_ciudades);
+/**
+ * @swagger
+ * /operaciones2/getcategoriasoc:
+ *   post:
+ *     summary: Obtener categorías OC
+ *     description: Devuelve la lista de categorías de búsquedas OC ordenadas por descripción.
+ *     tags:
+ *       - Operaciones2
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Lista de categorías obtenida correctamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       id_categoria_oc:
+ *                         type: integer
+ *                         example: 1
+ *                       desc_categoria_oc:
+ *                         type: string
+ *                         example: "Categoría de prueba"
+ *       401:
+ *         description: Token inválido o no proporcionado
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Token is missing
+ *       500:
+ *         description: Error del servidor al obtener las categorías
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ */
+
+router.post('/getcategoriasoc', OperacionesController.get_categoriasoc);
+/**
+ * @swagger
+ * /operaciones2/getordenescompra:
+ *   post:
+ *     summary: Obtener órdenes de compra
+ *     description: Devuelve la lista de órdenes de compra asociadas a una solicitud específica.
+ *     tags:
+ *       - Operaciones2
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - idsolicitud
+ *             properties:
+ *               idsolicitud:
+ *                 type: integer
+ *                 description: ID de la solicitud para filtrar órdenes de compra
+ *                 example: 123
+ *     responses:
+ *       200:
+ *         description: Órdenes de compra obtenidas correctamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       IdOCBusqueda:
+ *                         type: integer
+ *                         example: 1
+ *                       NumOCBusqueda:
+ *                         type: string
+ *                         example: "OC-2025-001"
+ *                       ciudadorigen:
+ *                         type: string
+ *                         example: "Bogotá"
+ *                       FKCiudadOrigen:
+ *                         type: integer
+ *                         example: 10
+ *                       ciudaddestino:
+ *                         type: string
+ *                         example: "Medellín"
+ *                       FKCiudadDestino:
+ *                         type: integer
+ *                         example: 20
+ *                       acompanante:
+ *                         type: string
+ *                         example: "Juan Pérez"
+ *                       FKLokAcompanianteOC:
+ *                         type: integer
+ *                         example: 5
+ *                       FKLokEmpresaOC:
+ *                         type: integer
+ *                         example: 7
+ *                       FechaCita:
+ *                         type: string
+ *                         format: date-time
+ *                         example: "2025-08-25T14:30:00Z"
+ *                       Observaciones:
+ *                         type: string
+ *                         example: "Entrega prioritaria"
+ *                       FechaFin:
+ *                         type: string
+ *                         format: date-time
+ *                         example: "2025-08-26T18:00:00Z"
+ *                       FKLokCategoriaOC:
+ *                         type: integer
+ *                         example: 2
+ *       401:
+ *         description: Token inválido o no proporcionado
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Token is missing
+ *       500:
+ *         description: Error del servidor al obtener las órdenes de compra
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ */
+
+router.post('/getordenescompra', OperacionesController.get_ordenescompra);
 /**
  * @swagger
  * /operaciones2/setciudad:
@@ -555,6 +718,65 @@ router.post('/setciudad', OperacionesController.set_ciudad);
  */
 
 router.post('/getacompanantes', OperacionesController.get_acompanantes);
+/**
+ * @swagger
+ * /operaciones2/getempresasbusqueda:
+ *   post:
+ *     summary: Obtiene la lista de empresas para búsqueda
+ *     description: Devuelve las empresas registradas en el sistema ordenadas por descripción.
+ *     tags:
+ *       - Operaciones2
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Lista de empresas obtenida correctamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       IDEmpresasOC:
+ *                         type: integer
+ *                         example: 1
+ *                       Descripcion:
+ *                         type: string
+ *                         example: "Empresa XYZ"
+ *       401:
+ *         description: Token inválido o no proporcionado
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Token is missing
+ *       500:
+ *         description: Error del servidor al obtener las empresas
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ */
+
+
+router.post('/getempresasbusqueda', OperacionesController.get_empresasbusqueda);
 /**
  * @swagger
  * /operaciones2/setacompanantes:

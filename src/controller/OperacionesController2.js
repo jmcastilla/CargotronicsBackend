@@ -286,6 +286,83 @@ controller.get_acompanantes = async (req, res) => {
     }
 }
 
+controller.get_empresasbusqueda = async (req, res) => {
+    try{
+        var token = req.headers.authorization;
+        if (!token) {
+            return res.json({ success: false, message: 'Token is missing' });
+        }else{
+            token = req.headers.authorization.split(' ')[1];
+            jwt.verify(token, 'secret_key', async (err, decoded) => {
+                if (err) {
+                    return res.json({ success: false, message: 'Failed to authenticate token' });
+                } else {
+                    var proyecto=decoded.proyecto;
+
+                    var consulta = "select IDEmpresasOC, Descripcion from LokEmpresasOC order by Descripcion";
+
+                    let resultado=await sqlconfig.query(consulta);
+                    return res.json({success : true, data : resultado});
+                }
+            });
+        }
+    }catch(err){
+        return res.json({success : false});
+    }
+}
+
+controller.get_categoriasoc = async (req, res) => {
+    try{
+        var token = req.headers.authorization;
+        if (!token) {
+            return res.json({ success: false, message: 'Token is missing' });
+        }else{
+            token = req.headers.authorization.split(' ')[1];
+            jwt.verify(token, 'secret_key', async (err, decoded) => {
+                if (err) {
+                    return res.json({ success: false, message: 'Failed to authenticate token' });
+                } else {
+                    var proyecto=decoded.proyecto;
+
+                    var consulta = "SELECT id_categoria_oc, desc_categoria_oc FROM LokCatBusquedasOC ORDER BY desc_categoria_oc";
+
+                    let resultado=await sqlconfig.query(consulta);
+                    return res.json({success : true, data : resultado});
+                }
+            });
+        }
+    }catch(err){
+        return res.json({success : false});
+    }
+}
+
+controller.get_ordenescompra = async (req, res) => {
+    try{
+        var token = req.headers.authorization;
+        if (!token) {
+            return res.json({ success: false, message: 'Token is missing' });
+        }else{
+            token = req.headers.authorization.split(' ')[1];
+            jwt.verify(token, 'secret_key', async (err, decoded) => {
+                if (err) {
+                    return res.json({ success: false, message: 'Failed to authenticate token' });
+                } else {
+                    var proyecto=decoded.proyecto;
+
+                    var consulta = "select IdOCBusqueda, NumOCBusqueda, Origen.NombreCiudad as ciudadorigen, FKCiudadOrigen, Destino.NombreCiudad as ciudaddestino, FKCiudadDestino, LokAcompanianteOC.Nombre as acompanante, FKLokAcompanianteOC, FKLokEmpresaOC, FechaCita, Observaciones, FechaFin, FKLokCategoriaOC ";
+                    consulta += " from LokBusquedasOC inner join LokAcompanianteOC ON FKLokAcompanianteOC = IDAcompaniante left join LokCiudades AS Origen ON FKCiudadOrigen = Origen.IDCiudad ";
+                    consulta += " left join LokCiudades AS Destino ON FKCiudadDestino = Destino.IDCiudad where FKLokSolicitudID ='"+req.body.idsolicitud+"'";
+
+                    let resultado=await sqlconfig.query(consulta);
+                    return res.json({success : true, data : resultado});
+                }
+            });
+        }
+    }catch(err){
+        return res.json({success : false});
+    }
+}
+
 
 controller.set_acompanantes = async (req, res) => {
     try{
