@@ -2207,12 +2207,12 @@ router.post('/updatecambioproyecto', OperacionesController.update_cambioproyecto
 router.post('/updatechecklist', OperacionesController.update_checklist);
 /**
  * @swagger
- * /getreportescontroldevice:
+ * /operaciones/getreportescontroldevice:
  *   post:
  *     summary: Obtiene reportes de control de dispositivos
  *     description: Retorna un listado detallado de dispositivos con su estado, voltaje, contrato, cliente y otros datos relacionados al control del dispositivo.
  *     tags:
- *       - Device
+ *       - Operaciones
  *     security:
  *       - bearerAuth: []
  *     requestBody:
