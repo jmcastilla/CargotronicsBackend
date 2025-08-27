@@ -796,6 +796,7 @@ controller.get_reportescontroldevice = async (req, res) => {
                     var idcliente=decoded.empresaprincipal;
                     var utcServidor=decoded.diffhorario;
                     var filtro=req.body.filtro;
+                    var estado=req.body.estado;
                     var orden1=req.body.orden1;
                     var orden2=req.body.orden2;
                     var idempresa=decoded.idempresa;
@@ -818,6 +819,9 @@ controller.get_reportescontroldevice = async (req, res) => {
                     }
                     if (filtro!="" && filtro!="*"){
                         consulta += " AND DeviceID LIKE '%" + filtro + "%' ";
+                    }
+                    if (estado!="" && estado!="*"){
+                        consulta += " AND LokDeviceIDEstado.IDEstado =" + estado + " ";
                     }
                     if(orden1 != "Todos"){
                         if(orden1 == "Activos"){
