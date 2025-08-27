@@ -363,6 +363,31 @@ controller.get_ordenescompra = async (req, res) => {
     }
 }
 
+controller.get_estadosdevice = async (req, res) => {
+    try{
+        var token = req.headers.authorization;
+        if (!token) {
+            return res.json({ success: false, message: 'Token is missing' });
+        }else{
+            token = req.headers.authorization.split(' ')[1];
+            jwt.verify(token, 'secret_key', async (err, decoded) => {
+                if (err) {
+                    return res.json({ success: false, message: 'Failed to authenticate token' });
+                } else {
+                    var proyecto=decoded.proyecto;
+
+                    var consulta = "SELECT IDEstado, Descripcion FROM LokDeviceIDEstado";
+
+                    let resultado=await sqlconfig.query(consulta);
+                    return res.json({success : true, data : resultado});
+                }
+            });
+        }
+    }catch(err){
+        return res.json({success : false});
+    }
+}
+
 
 controller.set_acompanantes = async (req, res) => {
     try{

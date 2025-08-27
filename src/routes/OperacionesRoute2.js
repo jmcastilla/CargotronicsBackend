@@ -649,6 +649,64 @@ router.post('/getcategoriasoc', OperacionesController.get_categoriasoc);
 router.post('/getordenescompra', OperacionesController.get_ordenescompra);
 /**
  * @swagger
+ * /operaciones2/getestadosdevice:
+ *   post:
+ *     summary: Obtiene los estados del dispositivo
+ *     description: Retorna una lista con los estados del dispositivo desde la base de datos.
+ *     tags:
+ *       - Device
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Lista de estados obtenida correctamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       IDEstado:
+ *                         type: integer
+ *                         example: 1
+ *                       Descripcion:
+ *                         type: string
+ *                         example: Activo
+ *       401:
+ *         description: Token faltante o inválido
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Token is missing
+ *       500:
+ *         description: Error interno del servidor
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ */
+
+router.post('/getestadosdevice', OperacionesController.get_estadosdevice);
+/**
+ * @swagger
  * /operaciones2/setciudad:
  *   post:
  *     summary: Registrar ciudad
