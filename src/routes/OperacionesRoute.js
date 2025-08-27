@@ -2207,50 +2207,117 @@ router.post('/updatecambioproyecto', OperacionesController.update_cambioproyecto
 router.post('/updatechecklist', OperacionesController.update_checklist);
 /**
  * @swagger
- * /operaciones/getreportescontroldevice:
+ * /getreportescontroldevice:
  *   post:
- *     summary: Obtiene reportes de control de un dispositivo.
- *     description: Este endpoint obtiene reportes de control de un dispositivo segun los parametros proporcionados.
+ *     summary: Obtiene reportes de control de dispositivos
+ *     description: Retorna un listado detallado de dispositivos con su estado, voltaje, contrato, cliente y otros datos relacionados al control del dispositivo.
  *     tags:
- *       - Operaciones
+ *       - Device
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
+ *       required: true
  *       content:
  *         application/json:
  *           schema:
  *             type: object
- *             properties:
- *               filtro:
- *                 type: string
- *               orden1:
- *                 type: string
- *               orden2:
- *                 type: integer
  *             required:
+ *               - proyecto
  *               - filtro
+ *               - estado
  *               - orden1
  *               - orden2
+ *             properties:
+ *               proyecto:
+ *                 type: integer
+ *                 example: 1
+ *               filtro:
+ *                 type: string
+ *                 example: "ABC123"
+ *               estado:
+ *                 type: string
+ *                 example: "1"
+ *               orden1:
+ *                 type: string
+ *                 example: "Activos"
+ *               orden2:
+ *                 type: integer
+ *                 example: 0
  *     responses:
  *       200:
- *         description: Reportes obtenidos con exito.
+ *         description: Lista de dispositivos obtenida exitosamente
  *         content:
  *           application/json:
- *             example:
- *               success: true
- *               data:
- *                 - // Aquí debes especificar la estructura del objeto de polilínea obtenido
- *       400:
- *         description: Error en la solicitud.
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       DeviceID:
+ *                         type: string
+ *                         example: "DEV12345"
+ *                       UltContrato:
+ *                         type: string
+ *                         example: "CONTR123"
+ *                       Ruta:
+ *                         type: string
+ *                         example: "Ruta Norte"
+ *                       Cliente:
+ *                         type: string
+ *                         example: "Empresa XYZ"
+ *                       IDEstado:
+ *                         type: integer
+ *                         example: 1
+ *                       Estado:
+ *                         type: string
+ *                         example: "Activo"
+ *                       voltage:
+ *                         type: number
+ *                         example: 3.7
+ *                       icon_bat:
+ *                         type: string
+ *                         example: "battery-full"
+ *                       eventDateTime:
+ *                         type: string
+ *                         format: date-time
+ *                         example: "2025-08-26T15:30:00Z"
+ *                       Position:
+ *                         type: string
+ *                         example: "Bogotá, Cundinamarca"
+ *                       Compania:
+ *                         type: string
+ *                         example: "Claro (732)"
+ *       401:
+ *         description: Token faltante o inválido
  *         content:
  *           application/json:
- *             example:
- *               success: false
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Token is missing
  *       500:
- *         description: Error en el servidor.
+ *         description: Error interno en el servidor
  *         content:
  *           application/json:
- *             example:
- *               success: false
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
  */
+
 router.post('/getreportescontroldevice', OperacionesController.get_reportescontroldevice);
 /**
  * @swagger
