@@ -850,6 +850,7 @@ controller.get_reportescontroldevice = async (req, res) => {
                     }else if(orden2 == 7){
                         consulta += " ORDER BY DATEDIFF(SECOND, DATEADD(MINUTE,-"+utcServidor+", PositionTime), UltActualizacionDevice) DESC ";
                     }
+                    console.log(consulta);
                     let resultado=await sqlconfig.query(consulta);
                     res.json({success : true, data : resultado.recordsets[0]});
                 }
