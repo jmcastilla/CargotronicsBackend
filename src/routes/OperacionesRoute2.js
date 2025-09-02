@@ -332,6 +332,242 @@ router.post('/setinsertcontacto', OperacionesController.set_insertcontacto);
 router.post('/setupdatecontacto', OperacionesController.set_updatecontacto);
 /**
  * @swagger
+ * /operaciones2/setinsertordencompra:
+ *   post:
+ *     summary: Inserta una nueva orden de compra
+ *     description: Crea una nueva orden de compra mediante el procedimiento almacenado `AgregarBusquedaOC`. Requiere autenticación con JWT en el header `Authorization`.
+ *     tags:
+ *       - Operaciones2
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - num
+ *               - FKLokSolicitudID
+ *               - fklokempresaoc
+ *               - fkacompaniante
+ *               - fkorigen
+ *               - fkdestino
+ *               - categoria
+ *               - observacion
+ *               - horacita
+ *               - horafin
+ *             properties:
+ *               num:
+ *                 type: integer
+ *                 description: Número identificador de la orden de compra.
+ *                 example: 12346
+ *               FKLokSolicitudID:
+ *                 type: integer
+ *                 description: ID de la solicitud asociada.
+ *                 example: 679
+ *               fklokempresaoc:
+ *                 type: integer
+ *                 description: ID de la empresa asociada a la orden.
+ *                 example: 15
+ *               fkacompaniante:
+ *                 type: integer
+ *                 description: ID del acompañante.
+ *                 example: 40
+ *               fkorigen:
+ *                 type: integer
+ *                 description: ID del origen.
+ *                 example: 1
+ *               fkdestino:
+ *                 type: integer
+ *                 description: ID del destino.
+ *                 example: 3
+ *               categoria:
+ *                 type: string
+ *                 description: Categoría de la orden de compra.
+ *                 example: "Logística"
+ *               observacion:
+ *                 type: string
+ *                 description: Observaciones adicionales.
+ *                 example: "Entrega urgente, revisar documentación"
+ *               horacita:
+ *                 type: string
+ *                 format: date-time
+ *                 description: Hora de inicio de la cita.
+ *                 example: "2025-08-26T14:00:00Z"
+ *               horafin:
+ *                 type: string
+ *                 format: date-time
+ *                 description: Hora de finalización de la cita.
+ *                 example: "2025-08-26T16:30:00Z"
+ *     responses:
+ *       200:
+ *         description: Orden de compra insertada exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   description: Resultado devuelto por el procedimiento almacenado
+ *                   items:
+ *                     type: object
+ *                     example:
+ *                       num: 12346
+ *                       status: "Insertado"
+ *       401:
+ *         description: Token inválido o ausente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Token is missing
+ *       500:
+ *         description: Error interno del servidor
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Internal server error
+ */
+
+router.post('/setinsertordencompra', OperacionesController.set_insertordencompra);
+/**
+ * @swagger
+ * /operaciones2/setupdateordencompra:
+ *   post:
+ *     summary: Actualiza una orden de compra existente
+ *     description: Actualiza los datos de una orden de compra mediante el procedimiento almacenado `EditarBusquedaOC`. Requiere autenticación con JWT en el header `Authorization`.
+ *     tags:
+ *       - Operaciones2
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - num
+ *               - FKLokSolicitudID
+ *               - fklokempresaoc
+ *               - fkacompaniante
+ *               - fkorigen
+ *               - fkdestino
+ *               - categoria
+ *               - observacion
+ *               - horacita
+ *               - horafin
+ *             properties:
+ *               num:
+ *                 type: integer
+ *                 description: Número identificador de la orden de compra.
+ *                 example: 12345
+ *               FKLokSolicitudID:
+ *                 type: integer
+ *                 description: ID de la solicitud asociada.
+ *                 example: 678
+ *               fklokempresaoc:
+ *                 type: integer
+ *                 description: ID de la empresa de orden de compra.
+ *                 example: 12
+ *               fkacompaniante:
+ *                 type: integer
+ *                 description: ID del acompañante.
+ *                 example: 34
+ *               fkorigen:
+ *                 type: integer
+ *                 description: ID del origen.
+ *                 example: 1
+ *               fkdestino:
+ *                 type: integer
+ *                 description: ID del destino.
+ *                 example: 2
+ *               categoria:
+ *                 type: string
+ *                 description: Categoría de la orden de compra.
+ *                 example: "Transporte"
+ *               observacion:
+ *                 type: string
+ *                 description: Observaciones adicionales.
+ *                 example: "Requiere autorización previa"
+ *               horacita:
+ *                 type: string
+ *                 format: date-time
+ *                 description: Hora de inicio de la cita.
+ *                 example: "2025-08-26T09:00:00Z"
+ *               horafin:
+ *                 type: string
+ *                 format: date-time
+ *                 description: Hora de finalización de la cita.
+ *                 example: "2025-08-26T11:00:00Z"
+ *     responses:
+ *       200:
+ *         description: Orden de compra actualizada exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   description: Resultado devuelto por el procedimiento almacenado
+ *                   items:
+ *                     type: object
+ *                     example:
+ *                       ident: 12345
+ *                       status: "Actualizado"
+ *       401:
+ *         description: Token inválido o ausente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Token is missing
+ *       500:
+ *         description: Error interno del servidor
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Internal server error
+ */
+
+router.post('/setupdateordencompra', OperacionesController.set_updateordencompra);
+/**
+ * @swagger
  * /operaciones2/getagencias:
  *   post:
  *     summary: Obtener agencias
@@ -654,7 +890,7 @@ router.post('/getordenescompra', OperacionesController.get_ordenescompra);
  *     summary: Obtiene los estados del dispositivo
  *     description: Retorna una lista con los estados del dispositivo desde la base de datos.
  *     tags:
- *       - Device
+ *       - Operaciones2
  *     security:
  *       - bearerAuth: []
  *     responses:
@@ -705,6 +941,64 @@ router.post('/getordenescompra', OperacionesController.get_ordenescompra);
  */
 
 router.post('/getestadosdevice', OperacionesController.get_estadosdevice);
+/**
+ * @swagger
+ * /operaciones2/getnumordencompra:
+ *   get:
+ *     summary: Obtiene el número de orden de compra
+ *     description: Retorna el número de orden de compra generado por la función `dbo.NumeroBusquedaOC()`. Requiere autenticación con token JWT en el header `Authorization`.
+ *     tags:
+ *       - Operaciones2
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Respuesta exitosa con el número de orden de compra.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       num:
+ *                         type: integer
+ *                         example: 10234
+ *       401:
+ *         description: Token inválido o ausente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Token is missing
+ *       500:
+ *         description: Error interno del servidor
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Internal server error
+ */
+
+router.get('/getnumordencompra', OperacionesController.get_numordencompra);
 /**
  * @swagger
  * /operaciones2/setciudad:

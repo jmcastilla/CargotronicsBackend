@@ -498,4 +498,82 @@ controller.get_configuracionPagina = async (req, res) => {
     }
 }
 
+
+controller.get_permisosrol = async (req, res) => {
+    try{
+        var token = req.headers.authorization;
+        if (!token) {
+    		    return res.json({ success: false, message: 'Token is missing' });
+	      }else{
+            token = req.headers.authorization.split(' ')[1];
+            jwt.verify(token, 'secret_key', async (err, decoded) => {
+                if (err) {
+                    res.json({ success: false, message: 'Failed to authenticate token' });
+                } else {
+                    var rol= decoded.tipouser;
+                    var consulta= "SELECT pag.IdPagina, pag.DescripcionPagina, perm.IdRolP, perm.bitOpen, perm.bitInsert, perm.bitEdit, perm.bitDelete "+
+                    "FROM CtPermisos as perm "+
+                    "inner join CtPaginas AS pag on pag.IdPagina = perm.IdPaginaP WHERE perm.IdRolP="+rol;
+                    let resultado=await sqlconfig.query(consulta);
+                    res.json({success : true, data : resultado.recordset});
+                }
+            });
+        }
+    }catch(err){
+        res.json({success : false});
+    }
+}
+
+controller.update_permisos = async (req, res) => {
+    try{
+        var token = req.headers.authorization;
+        if (!token) {
+            return res.json({ success: false, message: 'Token is missing' });
+        }else{
+            token = req.headers.authorization.split(' ')[1];
+            jwt.verify(token, 'secret_key', async (err, decoded) => {
+                if (err) {
+                    res.json({ success: false, message: 'Failed to authenticate token' });
+                } else {
+                    var pagina= decoded.IdPagina;
+                    var rol= decoded.IdRolP;
+                    var bitOpen= decoded.bitOpen;
+                    var bitInsert= decoded.bitInsert;
+                    var bitEdit= decoded.bitEdit;
+                    var bitDelete= decoded.bitDelete;
+                    var consulta = "UPDATE CtPermisos SET bitOpen = "+bitOpen+", bitInsert="+bitInsert+", bitEdit="+bitEdit+", bitDelete="+bitDelete+" WHERE IdPagina="+pagina+" AND IdRolP="+rol;
+
+                    res.json({success : true, data : await sqlconfig.query(consulta)});
+                }
+            });
+        }
+    }catch(err){
+        res.json({success : false});
+    }
+}
+
+controller.get_paginas = async (req, res) => {
+    try{
+        var token = req.headers.authorization;
+        if (!token) {
+    		    return res.json({ success: false, message: 'Token is missing' });
+	      }else{
+            token = req.headers.authorization.split(' ')[1];
+            jwt.verify(token, 'secret_key', async (err, decoded) => {
+                if (err) {
+                    res.json({ success: false, message: 'Failed to authenticate token' });
+                } else {
+                    var rol= decoded.tipouser;
+                    var consulta= "SELECT pag.IdPagina, pag.DescripcionPagina "+
+                    "FROM CtPaginas AS pag";
+                    let resultado=await sqlconfig.query(consulta);
+                    res.json({success : true, data : resultado.recordset});
+                }
+            });
+        }
+    }catch(err){
+        res.json({success : false});
+    }
+}
+
 module.exports = controller;

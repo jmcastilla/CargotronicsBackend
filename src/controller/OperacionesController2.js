@@ -616,4 +616,98 @@ controller.delete_transportadora = async (req, res) => {
     }
 
 }
+
+
+controller.set_insertordencompra = async (req, res) => {
+    try{
+        var token = req.headers.authorization;
+        if (!token) {
+            return res.json({ success: false, message: 'Token is missing' });
+        }else{
+            token = req.headers.authorization.split(' ')[1];
+            jwt.verify(token, 'secret_key', async (err, decoded) => {
+                if (err) {
+                    res.json({ success: false, message: 'Failed to authenticate token' });
+                } else {
+                    let data = {
+                        "num": req.body.num,
+                        "FKLokSolicitudID": req.body.FKLokSolicitudID,
+                        "fklokempresaoc": req.body.fklokempresaoc,
+                        "fkacompaniante": req.body.fkacompaniante,
+                        "fkorigen": req.body.fkorigen,
+                        "fkdestino": req.body.fkdestino,
+                        "categoria": req.body.categoria,
+                        "observacion": req.body.observacion,
+                        "horacita": req.body.horacita,
+                        "horafin": req.body.horafin,
+                        "usuario": decoded.username
+                    };
+
+                    let resultado=await sqlconfig.queryProcedure('AgregarBusquedaOC', data);
+                    res.json({success : true, data : resultado.recordsets[0]});
+                }
+            });
+        }
+    }catch(err){
+        res.json({success : false});
+    }
+}
+
+controller.set_updateordencompra = async (req, res) => {
+    try{
+        var token = req.headers.authorization;
+        if (!token) {
+            return res.json({ success: false, message: 'Token is missing' });
+        }else{
+            token = req.headers.authorization.split(' ')[1];
+            jwt.verify(token, 'secret_key', async (err, decoded) => {
+                if (err) {
+                    res.json({ success: false, message: 'Failed to authenticate token' });
+                } else {
+                    let data = {
+                        "ident": req.body.num,
+                        "FKLokSolicitudID": req.body.FKLokSolicitudID,
+                        "fklokempresaoc": req.body.fklokempresaoc,
+                        "fkacompaniante": req.body.fkacompaniante,
+                        "fkorigen": req.body.fkorigen,
+                        "fkdestino": req.body.fkdestino,
+                        "categoria": req.body.categoria,
+                        "observacion": req.body.observacion,
+                        "horacita": req.body.horacita,
+                        "horafin": req.body.horafin,
+                        "usuario": decoded.username
+                    };
+
+                    let resultado=await sqlconfig.queryProcedure('EditarBusquedaOC', data);
+                    res.json({success : true, data : resultado.recordsets[0]});
+                }
+            });
+        }
+    }catch(err){
+        res.json({success : false});
+    }
+}
+
+controller.get_numordencompra = async (req, res) => {
+    try{
+        var token = req.headers.authorization;
+        if (!token) {
+            return res.json({ success: false, message: 'Token is missing' });
+        }else{
+            token = req.headers.authorization.split(' ')[1];
+            jwt.verify(token, 'secret_key', async (err, decoded) => {
+                if (err) {
+                    return res.json({ success: false, message: 'Failed to authenticate token' });
+                } else {
+                    var consulta = "select dbo.NumeroBusquedaOC() AS num";
+
+                    let resultado=await sqlconfig.query(consulta);
+                    return res.json({success : true, data : resultado});
+                }
+            });
+        }
+    }catch(err){
+        return res.json({success : false});
+    }
+}
 module.exports = controller;

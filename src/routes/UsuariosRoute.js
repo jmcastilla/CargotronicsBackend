@@ -1197,5 +1197,206 @@ router.post('/updateusuariopass', UsuariosController.update_usuariopass);
  *                   example: false
  */
 router.post('/getconfiguracionpagina', UsuariosController.get_configuracionPagina);
+/**
+ * @swagger
+ * /usuarios/updatepermisos:
+ *   post:
+ *     summary: Actualiza los permisos de un rol en una página
+ *     description: Permite modificar los permisos de acceso (abrir, insertar, editar, eliminar) asignados a un rol sobre una página específica.
+ *     tags:
+ *       - Usuarios
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: false
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             description: Los valores de permisos se obtienen del token JWT decodificado.
+ *             properties: {}
+ *     responses:
+ *       200:
+ *         description: Permisos actualizados correctamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   description: Resultado de la consulta SQL de actualización
+ *                   example: { rowsAffected: [1] }
+ *       401:
+ *         description: Token faltante o inválido
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Token is missing
+ *       500:
+ *         description: Error interno del servidor
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ */
+
+router.post('/updatepermisos', UsuariosController.update_permisos);
+/**
+ * @swagger
+ * /usuarios/getpermisosrol:
+ *   post:
+ *     summary: Obtiene los permisos de un rol
+ *     description: Retorna la lista de páginas y permisos asociados a un rol específico. El rol se obtiene desde el token JWT.
+ *     tags:
+ *       - Usuarios
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: false
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             description: No se envían parámetros en el body, el rol se obtiene del token JWT.
+ *             properties: {}
+ *     responses:
+ *       200:
+ *         description: Lista de permisos del rol
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       IdPagina:
+ *                         type: integer
+ *                         example: 1
+ *                       DescripcionPagina:
+ *                         type: string
+ *                         example: "Gestión de usuarios"
+ *                       IdRolP:
+ *                         type: integer
+ *                         example: 2
+ *                       bitOpen:
+ *                         type: boolean
+ *                         example: true
+ *                       bitInsert:
+ *                         type: boolean
+ *                         example: false
+ *                       bitEdit:
+ *                         type: boolean
+ *                         example: true
+ *                       bitDelete:
+ *                         type: boolean
+ *                         example: false
+ *       401:
+ *         description: Token faltante o inválido
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Token is missing
+ *       500:
+ *         description: Error interno del servidor
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ */
+
+router.post('/getpermisosrol', UsuariosController.get_permisosrol);
+/**
+ * @swagger
+ * /usuarios/getpaginas:
+ *   post:
+ *     summary: Obtiene todas las páginas disponibles
+ *     description: Retorna las páginas almacenadas en el sistema. Se requiere token JWT en el encabezado de autorización.
+ *     tags:
+ *       - Usuarios
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Lista de páginas obtenida correctamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       IdPagina:
+ *                         type: integer
+ *                         example: 1
+ *                       DescripcionPagina:
+ *                         type: string
+ *                         example: "Página de inicio"
+ *       401:
+ *         description: Token faltante o inválido
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Token is missing"
+ *       403:
+ *         description: Token inválido o expirado
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Failed to authenticate token"
+ */
+
+router.post('/getpaginas', UsuariosController.get_paginas);
 
 module.exports = router;
