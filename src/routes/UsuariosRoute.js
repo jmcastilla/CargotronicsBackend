@@ -1291,27 +1291,33 @@ router.post('/getconfiguracionpagina', UsuariosController.get_configuracionPagin
 
 
 router.post('/updatepermisos', UsuariosController.update_permisos);
+
 /**
  * @swagger
  * /usuarios/getpermisosrol:
  *   post:
  *     summary: Obtiene los permisos de un rol
- *     description: Retorna la lista de páginas y permisos asociados a un rol específico. El rol se obtiene desde el token JWT.
+ *     description: Retorna las páginas y los permisos (abrir, insertar, editar, eliminar) asignados a un rol específico. Requiere autenticación mediante JWT.
  *     tags:
  *       - Usuarios
  *     security:
  *       - bearerAuth: []
  *     requestBody:
- *       required: false
+ *       required: true
  *       content:
  *         application/json:
  *           schema:
  *             type: object
- *             description: No se envían parámetros en el body, el rol se obtiene del token JWT.
- *             properties: {}
+ *             required:
+ *               - tipouser
+ *             properties:
+ *               tipouser:
+ *                 type: integer
+ *                 description: ID del rol del usuario.
+ *                 example: 5
  *     responses:
  *       200:
- *         description: Lista de permisos del rol
+ *         description: Permisos obtenidos correctamente
  *         content:
  *           application/json:
  *             schema:
@@ -1327,13 +1333,13 @@ router.post('/updatepermisos', UsuariosController.update_permisos);
  *                     properties:
  *                       IdPagina:
  *                         type: integer
- *                         example: 1
+ *                         example: 101
  *                       DescripcionPagina:
  *                         type: string
- *                         example: "Gestión de usuarios"
+ *                         example: "Gestión de Usuarios"
  *                       IdRolP:
  *                         type: integer
- *                         example: 2
+ *                         example: 5
  *                       bitOpen:
  *                         type: boolean
  *                         example: true
@@ -1347,7 +1353,7 @@ router.post('/updatepermisos', UsuariosController.update_permisos);
  *                         type: boolean
  *                         example: false
  *       401:
- *         description: Token faltante o inválido
+ *         description: Token inválido o ausente
  *         content:
  *           application/json:
  *             schema:
@@ -1369,6 +1375,9 @@ router.post('/updatepermisos', UsuariosController.update_permisos);
  *                 success:
  *                   type: boolean
  *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Internal server error
  */
 
 router.post('/getpermisosrol', UsuariosController.get_permisosrol);
