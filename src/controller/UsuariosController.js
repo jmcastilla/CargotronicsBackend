@@ -535,12 +535,12 @@ controller.update_permisos = async (req, res) => {
                 if (err) {
                     res.json({ success: false, message: 'Failed to authenticate token' });
                 } else {
-                    var pagina= decoded.IdPagina;
-                    var rol= decoded.IdRolP;
-                    var bitOpen= decoded.bitOpen;
-                    var bitInsert= decoded.bitInsert;
-                    var bitEdit= decoded.bitEdit;
-                    var bitDelete= decoded.bitDelete;
+                    var pagina= req.body.IdPagina;
+                    var rol= req.body.IdRolP;
+                    var bitOpen= req.body.bitOpen;
+                    var bitInsert= req.body.bitInsert;
+                    var bitEdit= req.body.bitEdit;
+                    var bitDelete= req.body.bitDelete;
                     var consulta = "UPDATE CtPermisos SET bitOpen = "+bitOpen+", bitInsert="+bitInsert+", bitEdit="+bitEdit+", bitDelete="+bitDelete+" WHERE IdPagina="+pagina+" AND IdRolP="+rol;
 
                     res.json({success : true, data : await sqlconfig.query(consulta)});

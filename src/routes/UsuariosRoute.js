@@ -1202,19 +1202,49 @@ router.post('/getconfiguracionpagina', UsuariosController.get_configuracionPagin
  * /usuarios/updatepermisos:
  *   post:
  *     summary: Actualiza los permisos de un rol en una página
- *     description: Permite modificar los permisos de acceso (abrir, insertar, editar, eliminar) asignados a un rol sobre una página específica.
+ *     description: Permite modificar los permisos (abrir, insertar, editar, eliminar) de un rol en una página específica. Requiere autenticación mediante JWT.
  *     tags:
  *       - Usuarios
  *     security:
  *       - bearerAuth: []
  *     requestBody:
- *       required: false
+ *       required: true
  *       content:
  *         application/json:
  *           schema:
  *             type: object
- *             description: Los valores de permisos se obtienen del token JWT decodificado.
- *             properties: {}
+ *             required:
+ *               - IdPagina
+ *               - IdRolP
+ *               - bitOpen
+ *               - bitInsert
+ *               - bitEdit
+ *               - bitDelete
+ *             properties:
+ *               IdPagina:
+ *                 type: integer
+ *                 description: ID de la página a la que se asignan permisos.
+ *                 example: 101
+ *               IdRolP:
+ *                 type: integer
+ *                 description: ID del rol al que se asignan permisos.
+ *                 example: 5
+ *               bitOpen:
+ *                 type: boolean
+ *                 description: Permiso de apertura (lectura).
+ *                 example: true
+ *               bitInsert:
+ *                 type: boolean
+ *                 description: Permiso para insertar registros.
+ *                 example: false
+ *               bitEdit:
+ *                 type: boolean
+ *                 description: Permiso para editar registros.
+ *                 example: true
+ *               bitDelete:
+ *                 type: boolean
+ *                 description: Permiso para eliminar registros.
+ *                 example: false
  *     responses:
  *       200:
  *         description: Permisos actualizados correctamente
@@ -1228,10 +1258,11 @@ router.post('/getconfiguracionpagina', UsuariosController.get_configuracionPagin
  *                   example: true
  *                 data:
  *                   type: object
- *                   description: Resultado de la consulta SQL de actualización
- *                   example: { rowsAffected: [1] }
+ *                   description: Resultado de la consulta SQL
+ *                   example:
+ *                     rowsAffected: [1]
  *       401:
- *         description: Token faltante o inválido
+ *         description: Token inválido o ausente
  *         content:
  *           application/json:
  *             schema:
@@ -1253,7 +1284,11 @@ router.post('/getconfiguracionpagina', UsuariosController.get_configuracionPagin
  *                 success:
  *                   type: boolean
  *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Internal server error
  */
+
 
 router.post('/updatepermisos', UsuariosController.update_permisos);
 /**
