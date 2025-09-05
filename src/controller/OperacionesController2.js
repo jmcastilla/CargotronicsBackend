@@ -677,6 +677,7 @@ controller.set_updateordencompra = async (req, res) => {
                         "horafin": req.body.horafin,
                         "usuario": decoded.username
                     };
+                    console.log(data);
 
                     let resultado=await sqlconfig.queryProcedure('EditarBusquedaOC', data);
                     res.json({success : true, data : resultado.recordsets[0]});
