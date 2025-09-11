@@ -541,7 +541,7 @@ controller.update_permisos = async (req, res) => {
                     var bitInsert= req.body.bitInsert;
                     var bitEdit= req.body.bitEdit;
                     var bitDelete= req.body.bitDelete;
-                    var consulta = "UPDATE CtPermisos SET bitOpen = "+bitOpen+", bitInsert="+bitInsert+", bitEdit="+bitEdit+", bitDelete="+bitDelete+" WHERE IdPagina="+pagina+" AND IdRolP="+rol;
+                    var consulta = "UPDATE CtPermisos SET bitOpen = "+bitOpen+", bitInsert="+bitInsert+", bitEdit="+bitEdit+", bitDelete="+bitDelete+" WHERE IdPaginaP="+pagina+" AND IdRolP="+rol;
 
                     res.json({success : true, data : await sqlconfig.query(consulta)});
                 }
