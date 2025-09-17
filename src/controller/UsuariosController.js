@@ -627,6 +627,8 @@ controller.crear_pagina = async (req, res) => {
                     }else{
                         consulta = "UPDATE CtPaginas SET DescripcionPagina = '"+descripcionPagina+"' WHERE IdPagina="+idPagina;
                     }
+                    console.log(consulta);
+                    console.log(idPagina);
 
 
                     res.json({success : true, data : await sqlconfig.query(consulta)});
