@@ -155,6 +155,37 @@ controller.get_listaRolusuarios = async (req, res) => {
     }
 }
 
+controller.crear_rolusuario = async (req, res) => {
+    try{
+        var token = req.headers.authorization;
+        if (!token) {
+            return res.json({ success: false, message: 'Token is missing' });
+        }else{
+            token = req.headers.authorization.split(' ')[1];
+            jwt.verify(token, 'secret_key', async (err, decoded) => {
+                if (err) {
+                    res.json({ success: false, message: 'Failed to authenticate token' });
+                } else {
+                    var iDRol=req.body.IDRol;
+                    var nombreRol=req.body.NombreRol;
+                    var consulta="";
+                    if(iDRol === -1 ){
+                        consulta = "INSERT LokRoles(IDRol, NombreRol, IDRolPadre, Jerarquia) VALUES ("+
+                        "'"+nombreRol+"',NULL,99)";
+                    }else{
+                        consulta = "UPDATE LokRoles SET NombreRol = "+nombreRol+" WHERE IDRol="+iDRol;
+                    }
+
+
+                    res.json({success : true, data : await sqlconfig.query(consulta)});
+                }
+            });
+        }
+    }catch(err){
+        res.json({success : false});
+    }
+}
+
 controller.get_listaRolTrafico = async (req, res) => {
     try{
         var token = req.headers.authorization;
@@ -568,6 +599,37 @@ controller.get_paginas = async (req, res) => {
                     "FROM CtPaginas AS pag";
                     let resultado=await sqlconfig.query(consulta);
                     res.json({success : true, data : resultado.recordset});
+                }
+            });
+        }
+    }catch(err){
+        res.json({success : false});
+    }
+}
+
+controller.crear_pagina = async (req, res) => {
+    try{
+        var token = req.headers.authorization;
+        if (!token) {
+            return res.json({ success: false, message: 'Token is missing' });
+        }else{
+            token = req.headers.authorization.split(' ')[1];
+            jwt.verify(token, 'secret_key', async (err, decoded) => {
+                if (err) {
+                    res.json({ success: false, message: 'Failed to authenticate token' });
+                } else {
+                    var idPagina=req.body.IdPagina;
+                    var descripcionPagina=req.body.DescripcionPagina;
+                    var consulta="";
+                    if(idPagina === -1 ){
+                        consulta = "INSERT CtPaginas(IdPagina, DescripcionPagina) VALUES ("+
+                        "'"+descripcionPagina+"')";
+                    }else{
+                        consulta = "UPDATE CtPaginas SET DescripcionPagina = "+descripcionPagina+" WHERE IdPagina="+idPagina;
+                    }
+
+
+                    res.json({success : true, data : await sqlconfig.query(consulta)});
                 }
             });
         }

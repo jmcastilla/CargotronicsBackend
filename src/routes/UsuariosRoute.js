@@ -99,6 +99,148 @@ const UsuariosController = require('../controller/UsuariosController');
 router.get('/getusuarios', UsuariosController.get_usuarios);
 /**
  * @swagger
+ * /usuarios/crearrolusuario:
+ *   post:
+ *     summary: Crea o actualiza un rol de usuario
+ *     description: Inserta un nuevo rol si el IDRol es -1 o actualiza un rol existente. Requiere autenticación mediante JWT.
+ *     tags:
+ *       - Usuarios
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - IDRol
+ *               - NombreRol
+ *             properties:
+ *               IDRol:
+ *                 type: integer
+ *                 description: ID del rol. Si es **-1**, se crea un nuevo rol.
+ *                 example: -1
+ *               NombreRol:
+ *                 type: string
+ *                 description: Nombre del rol.
+ *                 example: "Administrador"
+ *     responses:
+ *       200:
+ *         description: Operación exitosa (rol creado o actualizado)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   description: Resultado de la consulta SQL ejecutada.
+ *       401:
+ *         description: Token inválido o ausente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Token is missing
+ *       500:
+ *         description: Error interno del servidor
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Internal server error
+ */
+
+router.post('/crearrolusuario', UsuariosController.crear_rolusuario);
+/**
+ * @swagger
+ * /usuarios/crearpagina:
+ *   post:
+ *     summary: Crea o actualiza una página
+ *     description: Inserta una nueva página si el **IdPagina** es -1 o actualiza una existente. Requiere autenticación mediante JWT.
+ *     tags:
+ *       - Usuarios
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - IdPagina
+ *               - DescripcionPagina
+ *             properties:
+ *               IdPagina:
+ *                 type: integer
+ *                 description: ID de la página. Si es **-1**, se creará una nueva página.
+ *                 example: -1
+ *               DescripcionPagina:
+ *                 type: string
+ *                 description: Nombre o descripción de la página.
+ *                 example: "Gestión de usuarios"
+ *     responses:
+ *       200:
+ *         description: Operación exitosa (página creada o actualizada)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   description: Resultado de la consulta SQL ejecutada.
+ *       401:
+ *         description: Token inválido o ausente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Token is missing
+ *       500:
+ *         description: Error interno del servidor
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Internal server error
+ */
+
+router.post('/crearpagina', UsuariosController.crear_pagina);
+/**
+ * @swagger
  * /usuarios/getlistaproyectos:
  *   get:
  *     summary: Obtiene la lista de proyectos.
