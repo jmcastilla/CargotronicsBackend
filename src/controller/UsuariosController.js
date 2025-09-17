@@ -170,7 +170,7 @@ controller.crear_rolusuario = async (req, res) => {
                     var nombreRol=req.body.NombreRol;
                     var consulta="";
                     if(iDRol === -1 ){
-                        consulta = "INSERT LokRoles(IDRol, NombreRol, IDRolPadre, Jerarquia) VALUES ("+
+                        consulta = "INSERT LokRoles(NombreRol, IDRolPadre, Jerarquia) VALUES ("+
                         "'"+nombreRol+"',NULL,99)";
                     }else{
                         consulta = "UPDATE LokRoles SET NombreRol = "+nombreRol+" WHERE IDRol="+iDRol;
