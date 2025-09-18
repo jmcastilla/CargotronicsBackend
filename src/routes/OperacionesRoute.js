@@ -513,6 +513,164 @@ router.post('/getcomprobantevalitronics', OperacionesController.get_comprobantev
 router.get('/getreportesbi', OperacionesController.get_reportesBI);
 /**
  * @swagger
+ * /operaciones/getcategoriasBI:
+ *   get:
+ *     summary: Obtiene las categorías de reportes BI
+ *     description: Retorna todas las categorías almacenadas en la tabla `LokReportCategorias`. Requiere autenticación con JWT.
+ *     tags:
+ *       - Operaciones
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Lista de categorías obtenidas correctamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       IdCategoria:
+ *                         type: integer
+ *                         example: 1
+ *                       NombreCategoria:
+ *                         type: string
+ *                         example: "Ventas"
+ *                       Descripcion:
+ *                         type: string
+ *                         example: "Reportes relacionados con ventas"
+ *       401:
+ *         description: Token inválido o ausente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Token is missing
+ *       500:
+ *         description: Error interno del servidor
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Internal server error
+ */
+
+router.get('/getcategoriasBI', OperacionesController.get_categoriasBI);
+/**
+ * @swagger
+ * /operaciones/setreportesBI:
+ *   post:
+ *     tags:
+ *       - Operaciones
+ *     summary: Inserta o actualiza un reporte de Power BI
+ *     description: >
+ *       Inserta un nuevo reporte de Power BI o actualiza uno existente en la tabla `LokReportesPBI`.
+ *       Requiere un token JWT válido en el header `Authorization`.
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - Id_Reporte
+ *               - NombreReporte
+ *               - Id_PowerBI
+ *               - BitFiltroProyecto
+ *               - BitFiltroEmpresa
+ *               - ReportCategoria
+ *               - RolesAutorizados
+ *             properties:
+ *               Id_Reporte:
+ *                 type: integer
+ *                 example: -1
+ *                 description: |
+ *                   ID del reporte.
+ *                   Si es **-1**, se crea un nuevo registro.
+ *                   Si es distinto de -1, se actualiza el reporte con ese ID.
+ *               NombreReporte:
+ *                 type: string
+ *                 example: "Reporte de Ventas"
+ *               Id_PowerBI:
+ *                 type: string
+ *                 example: "abc123-powerbi-id"
+ *               BitFiltroProyecto:
+ *                 type: boolean
+ *                 example: true
+ *               BitFiltroEmpresa:
+ *                 type: boolean
+ *                 example: false
+ *               ReportCategoria:
+ *                 type: integer
+ *                 example: 2
+ *                 description: ID de la categoría (FK de LokReportCategorias)
+ *               RolesAutorizados:
+ *                 type: string
+ *                 example: "admin,gerente"
+ *                 description: Lista separada por comas de roles autorizados
+ *     responses:
+ *       200:
+ *         description: Operación exitosa
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   nullable: true
+ *                   description: Respuesta SQL
+ *       401:
+ *         description: Token faltante o inválido
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Failed to authenticate token"
+ *       500:
+ *         description: Error interno
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ */
+router.post('/setreportesBI', OperacionesController.set_reportesBI);
+/**
+ * @swagger
  * /operaciones/getcontratoscontroldevice:
  *   post:
  *     summary: Obtener contratos de control de un dispositivo

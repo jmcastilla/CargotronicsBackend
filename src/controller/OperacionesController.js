@@ -1154,6 +1154,28 @@ controller.get_polylinetrayecto = async (req, res) => {
 
 }
 
+controller.get_categoriasBI = async (req, res) => {
+    try{
+        var token = req.headers.authorization;
+        if (!token) {
+            return res.json({ success: false, message: 'Token is missing' });
+        }else{
+            token = req.headers.authorization.split(' ')[1];
+            jwt.verify(token, 'secret_key', async (err, decoded) => {
+                if (err) {
+                    res.json({ success: false, message: 'Failed to authenticate token' });
+                } else {
+                    var consulta= "SELECT * FROM LokReportCategorias";
+                    let resultado=await sqlconfig.query(consulta);
+                    res.json({success : true, data : resultado.recordsets[0]});
+                }
+            });
+        }
+    }catch(err){
+        res.json({success : false});
+    }
+}
+
 //FUNCION QUE RETORNA EL LISTADO DE REPORTES BI DE CADA PROYECTO
 controller.get_reportesBI = async (req, res) => {
     try{
@@ -1175,6 +1197,41 @@ controller.get_reportesBI = async (req, res) => {
     }catch(err){
         res.json({success : false});
     }
+}
+
+controller.set_reportesBI = async (req, res) => {
+    try{
+        var token = req.headers.authorization;
+        if (!token) {
+            return res.json({ success: false, message: 'Token is missing' });
+        }else{
+            token = req.headers.authorization.split(' ')[1];
+            jwt.verify(token, 'secret_key', async (err, decoded) => {
+                if (err) {
+                    res.json({ success: false, message: 'Failed to authenticate token' });
+                } else {
+                    var id= req.body.Id_Reporte;
+                    var nombre= req.body.NombreReporte;
+                    var idpbi= req.body.Id_PowerBI;
+                    var filtroproyecto= req.body.BitFiltroProyecto;
+                    var filtroempresa= req.body.BitFiltroEmpresa;
+                    var categoria= req.body.ReportCategoria;
+                    var roles= req.body.RolesAutorizados;
+                    var consulta="";
+                    if(id === -1){
+                      var consulta = "INSERT INTO LokReportesPBI (NombreReporte, Id_PowerBI, BitFiltroProyecto, BitFiltroEmpresa, Fk_ReportCategoria, RolesAutorizados) VALUES ("+
+                      "'"+nombre+"','"+idpbi+"',"+filtroproyecto+","+filtroempresa+","+categoria+",'"+roles+"')";
+                    }else{
+                        consulta = "UPDATE LokReportesPBI SET NombreReporte='"+nombre+"', Id_PowerBI='"+idpbi+"', BitFiltroProyecto="+filtroproyecto+", BitFiltroEmpresa="+filtroempresa+", Fk_ReportCategoria="+categoria+", RolesAutorizados='"+roles+"' WHERE Id_Reporte="+id;
+                    }
+                    res.json({success : await sqlconfig.query(consulta)});
+                }
+            });
+        }
+    }catch(err){
+        res.json({success : false});
+    }
+
 }
 
 //FUNCION QUE RETORNA EL JSON DE VISUALLOGISTIC
