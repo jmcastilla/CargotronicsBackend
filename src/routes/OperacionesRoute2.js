@@ -96,7 +96,7 @@ const OperacionesController = require('../controller/OperacionesController2');
 router.post('/getcontactos', OperacionesController.get_contactos);
 /**
  * @swagger
- * /getfotostraka:
+ * /operaciones2/getfotostraka:
  *   post:
  *     summary: Obtiene fotos asociadas a un dispositivo (Traka)
  *     description: Permite filtrar las fotos almacenadas en la tabla `LokTrakaphoto` por **device**, **fecha**, **usuario** o **placa**. Requiere autenticación mediante JWT.
