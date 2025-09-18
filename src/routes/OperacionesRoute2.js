@@ -94,6 +94,85 @@ const OperacionesController = require('../controller/OperacionesController2');
  */
 
 router.post('/getcontactos', OperacionesController.get_contactos);
+/**
+ * @swagger
+ * /getfotostraka:
+ *   post:
+ *     summary: Obtiene fotos asociadas a un dispositivo (Traka)
+ *     description: Permite filtrar las fotos almacenadas en la tabla `LokTrakaphoto` por **device**, **fecha**, **usuario** o **placa**. Requiere autenticación mediante JWT.
+ *     tags:
+ *       - Operaciones2
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               device:
+ *                 type: string
+ *                 description: ID del dispositivo (Device)
+ *                 example: "DEV12345"
+ *               fecha:
+ *                 type: string
+ *                 format: date
+ *                 description: Fecha de captura de la foto (YYYY-MM-DD)
+ *                 example: "2025-08-20"
+ *               usuario:
+ *                 type: string
+ *                 description: Usuario que tomó la foto
+ *                 example: "operador1"
+ *               placa:
+ *                 type: string
+ *                 description: Placa o descripción asociada a la foto
+ *                 example: "ABC123"
+ *     responses:
+ *       200:
+ *         description: Lista de fotos obtenidas correctamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     description: Registro de la tabla LokTrakaphoto
+ *       401:
+ *         description: Token inválido o ausente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Token is missing
+ *       500:
+ *         description: Error interno del servidor
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Internal server error
+ */
+
+router.post('/getfotostraka', OperacionesController.get_fotostraka);
 
 /**
  * @swagger

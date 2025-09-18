@@ -711,4 +711,61 @@ controller.get_numordencompra = async (req, res) => {
         return res.json({success : false});
     }
 }
+
+controller.get_fotostraka = async (req, res) => {
+    try{
+        var token = req.headers.authorization;
+        if (!token) {
+            return res.json({ success: false, message: 'Token is missing' });
+        }else{
+            token = req.headers.authorization.split(' ')[1];
+            jwt.verify(token, 'secret_key', async (err, decoded) => {
+                if (err) {
+                    return res.json({ success: false, message: 'Failed to authenticate token' });
+                } else {
+                    var device=req.body.device;
+                    var fecha=req.body.fecha;
+                    var usuario=req.body.usuario;
+                    var placa=req.body.placa;
+                    var count=0;
+                    var consulta = "select * from LokTrakaphoto ";
+                    if(device !== ""){
+                        consulta+= "WHERE Device = '"+device+"' ";
+                        count++;
+                    }
+                    if(fecha !== ""){
+                        if(count === 0){
+                            consulta+="WHERE CAST(Hora AS date)='"+fecha+"' ";
+                            count++;
+                        }else{
+                            consulta+="AND CAST(Hora AS date)='"+fecha+"' ";
+                        }
+                    }
+                    if(usuario !== ""){
+                        if(count === 0){
+                            consulta+="WHERE Usuario='"+usuario+"' ";
+                            count++;
+                        }else{
+                            consulta+="AND Usuario='"+usuario+"' ";
+                        }
+                    }
+                    if(placa !== ""){
+                        if(count === 0){
+                            consulta+="WHERE Descripcion='"+placa+"' ";
+                            count++;
+                        }else{
+                            consulta+="AND Descripcion='"+placa+"' ";
+                        }
+                    }
+
+
+                    let resultado=await sqlconfig.query(consulta);
+                    return res.json({success : true, data : resultado});
+                }
+            });
+        }
+    }catch(err){
+        return res.json({success : false});
+    }
+}
 module.exports = controller;
