@@ -728,7 +728,7 @@ controller.get_fotostraka = async (req, res) => {
                     var usuario=req.body.usuario;
                     var placa=req.body.placa;
                     var count=0;
-                    var consulta = "select * from LokTrakaphoto ";
+                    var consulta = "select TOP 2000 * from LokTrakaphoto ";
                     if(device !== ""){
                         consulta+= "WHERE Device = '"+device+"' ";
                         count++;
