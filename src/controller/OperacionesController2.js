@@ -751,10 +751,10 @@ controller.get_fotostraka = async (req, res) => {
                     }
                     if(placa !== ""){
                         if(count === 0){
-                            consulta+="WHERE Descripcion='"+placa+"' ";
+                            consulta+="WHERE Descripcion LIKE '%"+placa+"%' ";
                             count++;
                         }else{
-                            consulta+="AND Descripcion='"+placa+"' ";
+                            consulta+="AND Descripcion LIKE '%"+placa+"%' ";
                         }
                     }
                     consulta +=" ORDER BY IDPhoto DESC";
