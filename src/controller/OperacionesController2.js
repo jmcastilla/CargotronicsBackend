@@ -757,7 +757,8 @@ controller.get_fotostraka = async (req, res) => {
                             consulta+="AND Descripcion='"+placa+"' ";
                         }
                     }
-                    consulta +=" ORDER BY IDPhoto DESC"
+                    consulta +=" ORDER BY IDPhoto DESC";
+                    console.log(consulta);
 
 
                     let resultado=await sqlconfig.query(consulta);
