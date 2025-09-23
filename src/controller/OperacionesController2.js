@@ -712,6 +712,37 @@ controller.get_numordencompra = async (req, res) => {
     }
 }
 
+controller.set_fotostraka = async (req, res) => {
+    try{
+        var token = req.headers.authorization;
+        if (!token) {
+            return res.json({ success: false, message: 'Token is missing' });
+        }else{
+            token = req.headers.authorization.split(' ')[1];
+            jwt.verify(token, 'secret_key', async (err, decoded) => {
+                if (err) {
+                    res.json({ success: false, message: 'Failed to authenticate token' });
+                } else {
+                    var id= req.body.IDPhoto;
+                    var placa= req.body.Placa;
+                    var fecha= req.body.Fecha;
+                    var device= req.body.Device;
+                    var evento= req.body.Evento;
+                    var latitud= req.body.Latitud;
+                    var longitud= req.body.Longitud;
+                    var geocerca= req.body.Geocerca;
+                    var consulta= "UPDATE LokTrakaphoto SET Descripcion='"+placa+"', Hora='"+fecha+"', Device='"+device+"', Evento='"+evento+"', Latitud="+latitud+", Longitud="+longitud+", Geocerca="+geocerca+" WHERE IDPhoto="+id;
+                    }
+                    res.json({success : await sqlconfig.query(consulta)});
+                }
+            });
+        }
+    }catch(err){
+        res.json({success : false});
+    }
+
+}
+
 controller.get_fotostraka = async (req, res) => {
     try{
         var token = req.headers.authorization;

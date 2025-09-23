@@ -1219,7 +1219,7 @@ controller.set_reportesBI = async (req, res) => {
                     var roles= req.body.RolesAutorizados;
                     var consulta="";
                     if(id === -1){
-                      var consulta = "INSERT INTO LokReportesPBI (NombreReporte, Id_PowerBI, BitFiltroProyecto, BitFiltroEmpresa, Fk_ReportCategoria, RolesAutorizados) VALUES ("+
+                      consulta = "INSERT INTO LokReportesPBI (NombreReporte, Id_PowerBI, BitFiltroProyecto, BitFiltroEmpresa, Fk_ReportCategoria, RolesAutorizados) VALUES ("+
                       "'"+nombre+"','"+idpbi+"',"+filtroproyecto+","+filtroempresa+","+categoria+",'"+roles+"')";
                     }else{
                         consulta = "UPDATE LokReportesPBI SET NombreReporte='"+nombre+"', Id_PowerBI='"+idpbi+"', BitFiltroProyecto="+filtroproyecto+", BitFiltroEmpresa="+filtroempresa+", Fk_ReportCategoria="+categoria+", RolesAutorizados='"+roles+"' WHERE Id_Reporte="+id;

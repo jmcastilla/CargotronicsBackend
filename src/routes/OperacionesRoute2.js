@@ -175,6 +175,107 @@ router.post('/getcontactos', OperacionesController.get_contactos);
 router.post('/getfotostraka', OperacionesController.get_fotostraka);
 /**
  * @swagger
+ * /operaciones2/setfotostraka:
+ *   post:
+ *     summary: Actualizar foto de Traka
+ *     description: >
+ *       Actualiza los datos de una foto almacenada en `LokTrakaphoto` usando el ID de la foto.
+ *     tags:
+ *       - Operaciones2
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - IDPhoto
+ *               - Placa
+ *               - Fecha
+ *               - Device
+ *               - Evento
+ *               - Latitud
+ *               - Longitud
+ *               - Geocerca
+ *             properties:
+ *               IDPhoto:
+ *                 type: integer
+ *                 example: 101
+ *                 description: ID de la foto a actualizar
+ *               Placa:
+ *                 type: string
+ *                 example: "ABC123"
+ *                 description: Número de placa del vehículo
+ *               Fecha:
+ *                 type: string
+ *                 format: date-time
+ *                 example: "2025-08-26T14:30:00Z"
+ *                 description: Fecha y hora de la foto
+ *               Device:
+ *                 type: string
+ *                 example: "Device001"
+ *                 description: Identificador del dispositivo
+ *               Evento:
+ *                 type: string
+ *                 example: "Entrada a geocerca"
+ *                 description: Evento relacionado a la foto
+ *               Latitud:
+ *                 type: number
+ *                 format: float
+ *                 example: 4.60971
+ *                 description: Latitud de la ubicación
+ *               Longitud:
+ *                 type: number
+ *                 format: float
+ *                 example: -74.08175
+ *                 description: Longitud de la ubicación
+ *               Geocerca:
+ *                 type: integer
+ *                 example: 5
+ *                 description: ID de la geocerca asociada
+ *     responses:
+ *       200:
+ *         description: Foto actualizada exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *       401:
+ *         description: Token inválido o faltante
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Failed to authenticate token"
+ *       500:
+ *         description: Error en el servidor
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ */
+
+router.post('/setfotostraka', OperacionesController.set_fotostraka);
+/**
+ * @swagger
  * /operaciones2/getmovimientosusuarios:
  *   post:
  *     summary: Obtener movimientos de usuarios
