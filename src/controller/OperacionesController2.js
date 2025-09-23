@@ -732,7 +732,7 @@ controller.set_fotostraka = async (req, res) => {
                     var longitud= req.body.Longitud;
                     var geocerca= req.body.Geocerca;
                     var consulta= "UPDATE LokTrakaphoto SET Descripcion='"+placa+"', Hora='"+fecha+"', Device='"+device+"', Evento='"+evento+"', Latitud="+latitud+", Longitud="+longitud+", Geocerca="+geocerca+" WHERE IDPhoto="+id;
-                    
+
                     res.json({success : await sqlconfig.query(consulta)});
                 }
             });
@@ -838,7 +838,7 @@ controller.get_movimientosusuarios = async (req, res) => {
                             consulta+="AND id_row LIKE '%"+texto+"%' ";
                         }
                     }
-                    consulta +=" ORDER BY id_movivmiento DESC";
+                    consulta +=" ORDER BY id_movimiento DESC";
                     console.log(consulta);
 
 
