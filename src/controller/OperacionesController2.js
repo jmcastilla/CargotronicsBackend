@@ -732,7 +732,7 @@ controller.set_fotostraka = async (req, res) => {
                     var longitud= req.body.Longitud;
                     var geocerca= req.body.Geocerca;
                     var consulta= "UPDATE LokTrakaphoto SET Descripcion='"+placa+"', Hora='"+fecha+"', Device='"+device+"', Evento='"+evento+"', Latitud="+latitud+", Longitud="+longitud+", Geocerca="+geocerca+" WHERE IDPhoto="+id;
-                    }
+                    
                     res.json({success : await sqlconfig.query(consulta)});
                 }
             });
