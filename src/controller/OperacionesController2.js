@@ -770,4 +770,54 @@ controller.get_fotostraka = async (req, res) => {
         return res.json({success : false});
     }
 }
+
+controller.get_movimientosusuarios = async (req, res) => {
+    try{
+        var token = req.headers.authorization;
+        if (!token) {
+            return res.json({ success: false, message: 'Token is missing' });
+        }else{
+            token = req.headers.authorization.split(' ')[1];
+            jwt.verify(token, 'secret_key', async (err, decoded) => {
+                if (err) {
+                    return res.json({ success: false, message: 'Failed to authenticate token' });
+                } else {
+                    var usuario=req.body.usuario;
+                    var texto=req.body.texto;
+                    var fecha=req.body.fecha;
+                    var count=0;
+                    var consulta = "select TOP 2000 * from _Movimientos ";
+                    if(usuario !== ""){
+                        consulta+= "WHERE usuario = '"+usuario+"' ";
+                        count++;
+                    }
+                    if(fecha !== ""){
+                        if(count === 0){
+                            consulta+="WHERE CAST(hora AS date)='"+fecha+"' ";
+                            count++;
+                        }else{
+                            consulta+="AND CAST(hora AS date)='"+fecha+"' ";
+                        }
+                    }
+                    if(texto !== ""){
+                        if(count === 0){
+                            consulta+="WHERE id_row LIKE '%"+texto+"%' ";
+                            count++;
+                        }else{
+                            consulta+="AND id_row LIKE '%"+texto+"%' ";
+                        }
+                    }
+                    consulta +=" ORDER BY id_movivmiento DESC";
+                    console.log(consulta);
+
+
+                    let resultado=await sqlconfig.query(consulta);
+                    return res.json({success : true, data : resultado});
+                }
+            });
+        }
+    }catch(err){
+        return res.json({success : false});
+    }
+}
 module.exports = controller;

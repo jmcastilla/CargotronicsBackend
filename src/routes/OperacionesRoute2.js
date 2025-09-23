@@ -173,7 +173,78 @@ router.post('/getcontactos', OperacionesController.get_contactos);
  */
 
 router.post('/getfotostraka', OperacionesController.get_fotostraka);
+/**
+ * @swagger
+ * /operaciones2/getmovimientosusuarios:
+ *   post:
+ *     summary: Obtener movimientos de usuarios
+ *     description: >
+ *       Consulta los últimos 2000 movimientos de usuarios aplicando filtros opcionales por usuario, fecha y texto.
+ *     tags:
+ *       - Operaciones2
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               usuario:
+ *                 type: string
+ *                 example: "jdoe"
+ *                 description: Usuario a filtrar
+ *               fecha:
+ *                 type: string
+ *                 format: date
+ *                 example: "2025-08-26"
+ *                 description: Fecha del movimiento en formato YYYY-MM-DD
+ *               texto:
+ *                 type: string
+ *                 example: "12345"
+ *                 description: Texto a buscar en el campo id_row (soporta búsqueda parcial)
+ *     responses:
+ *       200:
+ *         description: Consulta exitosa
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *       401:
+ *         description: Token inválido o faltante
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Failed to authenticate token"
+ *       500:
+ *         description: Error en el servidor
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ */
 
+router.post('/getmovimientosusuarios', OperacionesController.get_movimientosusuarios);
 /**
  * @swagger
  * /operaciones2/setinsertcontacto:
