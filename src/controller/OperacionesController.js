@@ -20,7 +20,7 @@ var gmAPI = new GoogleMapsAPI(publicConfig);
 
 
 
-/*controller.upload_plantilla = async (req, res) => {
+controller.upload_plantilla = async (req, res) => {
     try {
         var token = req.headers.authorization;
         if (!token) {
@@ -66,7 +66,7 @@ var gmAPI = new GoogleMapsAPI(publicConfig);
         console.error('General error:', err);
         res.json({ success: false, message: 'Unexpected error', error: err.message });
     }
-};*/
+};
 
 // FUNCION QUE RETORNA EL LISTADO DE CONTRATOS HISTORICOS ENTRE UN RANGO DE FECHA
 controller.list_historicos = async (req, res) => {
