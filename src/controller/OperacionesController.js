@@ -20,7 +20,7 @@ var gmAPI = new GoogleMapsAPI(publicConfig);
 
 
 
-controller.upload_plantilla = async (req, res) => {
+/*controller.upload_plantilla = async (req, res) => {
     try {
         var token = req.headers.authorization;
         if (!token) {
@@ -51,7 +51,7 @@ controller.upload_plantilla = async (req, res) => {
                         },
                     });
 
-                    res.json({ success: true, info: response.data });
+                    res.json({ success: true, data: response.data });
                 } catch (uploadErr) {
                     console.error('Azure upload error:', uploadErr.response?.data || uploadErr.message);
                     res.status(500).json({
@@ -66,7 +66,7 @@ controller.upload_plantilla = async (req, res) => {
         console.error('General error:', err);
         res.json({ success: false, message: 'Unexpected error', error: err.message });
     }
-};
+};*/
 
 // FUNCION QUE RETORNA EL LISTADO DE CONTRATOS HISTORICOS ENTRE UN RANGO DE FECHA
 controller.list_historicos = async (req, res) => {

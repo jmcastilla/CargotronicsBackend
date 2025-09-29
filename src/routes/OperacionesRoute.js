@@ -112,7 +112,7 @@ router.post('/getfotoscontrato', OperacionesController.get_fotoscontrato);
  *         description: Error al subir el archivo a Azure
  */
 
-router.post('/uploadplantilla', OperacionesController.upload_plantilla);
+//router.post('/uploadplantilla', OperacionesController.upload_plantilla);
 /**
  * @swagger
  * /operaciones/getjsonvisuallogistic:
