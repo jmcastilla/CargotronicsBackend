@@ -66,6 +66,55 @@ const OperacionesController = require('../controller/OperacionesController');
 router.post('/getfotoscontrato', OperacionesController.get_fotoscontrato);
 /**
  * @swagger
+ * /operaciones/uploadplantilla:
+ *   post:
+ *     summary: Subir una plantilla al servidor y enviarla a Azure
+ *     description: >
+ *       Este endpoint permite subir un archivo (plantilla) al servidor.
+ *       El archivo se recibe en memoria y luego se envía al servicio externo de Azure SmartForms.
+ *       Se requiere autenticación mediante token JWT en el header `Authorization`.
+ *     tags:
+ *       - Operaciones
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - file
+ *             properties:
+ *               file:
+ *                 type: string
+ *                 format: binary
+ *                 description: Archivo de plantilla a subir
+ *     responses:
+ *       200:
+ *         description: Archivo subido correctamente a Azure
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 info:
+ *                   type: object
+ *                   description: Respuesta del servicio de Azure
+ *       400:
+ *         description: No se envió un archivo en la petición
+ *       401:
+ *         description: Token JWT faltante o inválido
+ *       500:
+ *         description: Error al subir el archivo a Azure
+ */
+
+router.post('/uploadplantilla', OperacionesController.upload_plantilla);
+/**
+ * @swagger
  * /operaciones/getjsonvisuallogistic:
  *   post:
  *     summary: Obtener JSON de Visual Logistic

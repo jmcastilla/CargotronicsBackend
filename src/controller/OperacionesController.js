@@ -8,7 +8,7 @@ const Configuracion = require("../config");
 const API_KEY = 'AIzaSyAF-lo1H_DaXWarJqU1sF1l0cil68y0ANQ';
 const decodePolyline = require('decode-google-map-polyline');
 const moment = require('moment');
-
+const FormData = require('form-data');
 
 var publicConfig = {
   key: API_KEY,
@@ -17,6 +17,56 @@ var publicConfig = {
   secure:             true
 };
 var gmAPI = new GoogleMapsAPI(publicConfig);
+
+
+
+controller.upload_plantilla = async (req, res) => {
+    try {
+        var token = req.headers.authorization;
+        if (!token) {
+            return res.json({ success: false, message: 'Token is missing' });
+        }
+
+        token = req.headers.authorization.split(' ')[1];
+
+        jwt.verify(token, 'secret_key', async (err, decoded) => {
+            if (err) {
+                return res.json({ success: false, message: 'Failed to authenticate token' });
+            } else {
+                if (!req.file) {
+                    return res.json({ success: false, message: 'No file uploaded' });
+                }
+
+                // Construir form-data con el buffer en memoria
+                const form = new FormData();
+                form.append('file', req.file.buffer, req.file.originalname);
+
+                const varEndpoint = `https://af-smartforms.azurewebsites.net/api/AF_SmartForms/`;
+
+                try {
+                    // Enviar archivo al endpoint de Azure (sin JWT)
+                    const response = await axios.post(varEndpoint, form, {
+                        headers: {
+                            ...form.getHeaders(),
+                        },
+                    });
+
+                    res.json({ success: true, info: response.data });
+                } catch (uploadErr) {
+                    console.error('Azure upload error:', uploadErr.response?.data || uploadErr.message);
+                    res.status(500).json({
+                        success: false,
+                        message: 'Error uploading file to Azure',
+                        error: uploadErr.response?.data || uploadErr.message
+                    });
+                }
+            }
+        });
+    } catch (err) {
+        console.error('General error:', err);
+        res.json({ success: false, message: 'Unexpected error', error: err.message });
+    }
+};
 
 // FUNCION QUE RETORNA EL LISTADO DE CONTRATOS HISTORICOS ENTRE UN RANGO DE FECHA
 controller.list_historicos = async (req, res) => {
