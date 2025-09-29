@@ -49,6 +49,7 @@ controller.upload_plantilla = async (req, res) => {
                         headers: {
                             ...form.getHeaders(),
                         },
+                        timeout: 10 * 60 * 1000
                     });
 
                     res.json({ success: true, data: response.data });
