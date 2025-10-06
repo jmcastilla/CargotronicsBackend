@@ -91,9 +91,6 @@ controller.set_plantilla = async (req, res) => {
                     }else{
                         consulta = "UPDATE LokPlantillas SET JsonData='"+jsondata+"', NombrePlantilla='"+nombreplantilla+"', FKEmpresa="+decoded.idempresa+", UrlFile='"+urlfile+"' WHERE IDPlantilla="+id;
                     }
-                    console.log("------------------");
-                    console.log(consulta);
-                    console.log("------------------");
                     res.json({success : await sqlconfig.query(consulta)});
                 }
             });
