@@ -83,14 +83,13 @@ controller.set_plantilla = async (req, res) => {
                     var id= req.body.IDPlantilla;
                     var nombreplantilla= req.body.NombrePlantilla;
                     var jsondata= req.body.JsonData;
-                    var fkempresa= req.body.FKEmpresa;
                     var urlfile= req.body.UrlFile;
                     var consulta="";
                     if(id === -1){
                       consulta = "INSERT INTO LokPlantillas (JsonData, NombrePlantilla, FKEmpresa, UrlFile) VALUES ("+
                       "'"+jsondata+"','"+nombreplantilla+"',"+fkempresa+",'"+urlfile+"')";
                     }else{
-                        consulta = "UPDATE LokPlantillas SET JsonData='"+jsondata+"', NombrePlantilla='"+nombreplantilla+"', FKEmpresa="+fkempresa+", UrlFile='"+urlfile+"' WHERE IDPlantilla="+id;
+                        consulta = "UPDATE LokPlantillas SET JsonData='"+jsondata+"', NombrePlantilla='"+nombreplantilla+"', FKEmpresa="+decoded.idempresa+", UrlFile='"+urlfile+"' WHERE IDPlantilla="+id;
                     }
                     res.json({success : await sqlconfig.query(consulta)});
                 }

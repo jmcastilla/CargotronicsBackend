@@ -158,10 +158,6 @@ router.post('/getfotoscontrato', OperacionesController.get_fotoscontrato);
   *                 type: string
   *                 example: "{\"campos\": [{\"nombre\": \"placa\", \"tipo\": \"texto\"}]}"
   *                 description: Estructura JSON que define los campos del formulario o plantilla
-  *               FKEmpresa:
-  *                 type: integer
-  *                 example: 5
-  *                 description: ID de la empresa asociada
   *               UrlFile:
   *                 type: string
   *                 example: "https://misarchivos.blob.core.windows.net/plantillas/inspeccion.pdf"
