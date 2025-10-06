@@ -117,6 +117,137 @@ router.post('/getfotoscontrato', OperacionesController.get_fotoscontrato);
  */
 
  router.post('/uploadplantilla',upload.single('file'), OperacionesController.upload_plantilla);
+ /**
+  * @swagger
+  * /operaciones/setplantilla:
+  *   post:
+  *     summary: Crear o actualizar una plantilla
+  *     description: >
+  *       Crea una nueva plantilla o actualiza una existente en la base de datos `LokPlantillas`.
+  *       Si el campo `IDPlantilla` es **-1**, se crea una nueva plantilla.
+  *       En caso contrario, se actualiza la plantilla con el ID especificado.
+  *       Requiere autenticación mediante token JWT en el header `Authorization`.
+  *     tags:
+  *       - Operaciones
+  *     security:
+  *       - bearerAuth: []
+  *     requestBody:
+  *       required: true
+  *       content:
+  *         application/json:
+  *           schema:
+  *             type: object
+  *             required:
+  *               - IDPlantilla
+  *               - NombrePlantilla
+  *               - JsonData
+  *               - FKEmpresa
+  *               - UrlFile
+  *             properties:
+  *               IDPlantilla:
+  *                 type: integer
+  *                 example: -1
+  *                 description: >
+  *                   ID de la plantilla.
+  *                   Use **-1** para insertar una nueva plantilla.
+  *                   Use un ID existente para actualizar.
+  *               NombrePlantilla:
+  *                 type: string
+  *                 example: "Formato Inspección Vehicular"
+  *               JsonData:
+  *                 type: string
+  *                 example: "{\"campos\": [{\"nombre\": \"placa\", \"tipo\": \"texto\"}]}"
+  *                 description: Estructura JSON que define los campos del formulario o plantilla
+  *               FKEmpresa:
+  *                 type: integer
+  *                 example: 5
+  *                 description: ID de la empresa asociada
+  *               UrlFile:
+  *                 type: string
+  *                 example: "https://misarchivos.blob.core.windows.net/plantillas/inspeccion.pdf"
+  *                 description: URL del archivo asociado a la plantilla
+  *     responses:
+  *       200:
+  *         description: Operación exitosa (inserción o actualización)
+  *         content:
+  *           application/json:
+  *             schema:
+  *               type: object
+  *               properties:
+  *                 success:
+  *                   type: boolean
+  *                   example: true
+  *                 data:
+  *                   type: object
+  *                   description: Resultado de la consulta SQL
+  *       400:
+  *         description: Faltan parámetros requeridos
+  *       401:
+  *         description: Token JWT faltante o inválido
+  *       500:
+  *         description: Error interno del servidor
+  */
+
+router.post('/setplantilla', OperacionesController.set_plantilla);
+/**
+ * @swagger
+ * /operaciones/getplantillas:
+ *   get:
+ *     summary: Obtener las plantillas de la empresa
+ *     description: >
+ *       Retorna todas las plantillas registradas en la tabla **LokPlantillas**
+ *       asociadas a la empresa del usuario autenticado.
+ *       Requiere autenticación mediante token JWT en el header `Authorization`.
+ *     tags:
+ *       - Operaciones
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: header
+ *         name: Authorization
+ *         required: true
+ *         schema:
+ *           type: string
+ *           example: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+ *         description: Token JWT del usuario autenticado
+ *     responses:
+ *       200:
+ *         description: Lista de plantillas obtenida correctamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       IDPlantilla:
+ *                         type: integer
+ *                         example: 12
+ *                       NombrePlantilla:
+ *                         type: string
+ *                         example: "Formato de Inspección Vehicular"
+ *                       JsonData:
+ *                         type: string
+ *                         example: "{\"campos\": [{\"nombre\": \"placa\", \"tipo\": \"texto\"}]}"
+ *                       FKEmpresa:
+ *                         type: integer
+ *                         example: 5
+ *                       UrlFile:
+ *                         type: string
+ *                         example: "https://misarchivos.blob.core.windows.net/plantillas/inspeccion.pdf"
+ *       401:
+ *         description: Token JWT faltante o inválido
+ *       500:
+ *         description: Error interno del servidor
+ */
+
+router.get('/getplantillas', OperacionesController.get_plantillas);
 /**
  * @swagger
  * /operaciones/getjsonvisuallogistic:

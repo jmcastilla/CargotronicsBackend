@@ -69,6 +69,91 @@ controller.upload_plantilla = async (req, res) => {
     }
 };
 
+controller.set_plantilla = async (req, res) => {
+    try{
+        var token = req.headers.authorization;
+        if (!token) {
+            return res.json({ success: false, message: 'Token is missing' });
+        }else{
+            token = req.headers.authorization.split(' ')[1];
+            jwt.verify(token, 'secret_key', async (err, decoded) => {
+                if (err) {
+                    res.json({ success: false, message: 'Failed to authenticate token' });
+                } else {
+                    var id= req.body.IDPlantilla;
+                    var nombreplantilla= req.body.NombrePlantilla;
+                    var jsondata= req.body.JsonData;
+                    var fkempresa= req.body.FKEmpresa;
+                    var urlfile= req.body.UrlFile;
+                    var consulta="";
+                    if(id === -1){
+                      consulta = "INSERT INTO LokPlantillas (JsonData, NombrePlantilla, FKEmpresa, UrlFile) VALUES ("+
+                      "'"+jsondata+"','"+nombreplantilla+"',"+fkempresa+",'"+urlfile+"')";
+                    }else{
+                        consulta = "UPDATE LokPlantillas SET JsonData='"+jsondata+"', NombrePlantilla='"+nombreplantilla+"', FKEmpresa="+fkempresa+", UrlFile='"+urlfile+"' WHERE IDPlantilla="+id;
+                    }
+                    res.json({success : await sqlconfig.query(consulta)});
+                }
+            });
+        }
+    }catch(err){
+        res.json({success : false});
+    }
+
+}
+
+controller.get_plantillas = async (req, res) => {
+    try{
+        var token = req.headers.authorization;
+        if (!token) {
+          	return res.json({ success: false, message: 'Token is missing' });
+      	}else{
+            token = req.headers.authorization.split(' ')[1];
+            jwt.verify(token, 'secret_key', async (err, decoded) => {
+                if (err) {
+                    res.json({ success: false, message: 'Failed to authenticate token' });
+                } else {
+                    var contrato=req.body.contrato;
+
+                    var consulta= "SELECT * FROM LokPlantillas "+
+                    "WHERE FKEmpresa="+decoded.idempresa;
+                    let resultado=await sqlconfig.query(consulta);
+                    res.json({success : true, data : resultado.recordsets[0]});
+                }
+            });
+        }
+    }catch(err){
+        res.json({success : false});
+    }
+
+}
+
+controller.set_respuestaplantilla = async (req, res) => {
+    try{
+        var token = req.headers.authorization;
+        if (!token) {
+            return res.json({ success: false, message: 'Token is missing' });
+        }else{
+            token = req.headers.authorization.split(' ')[1];
+            jwt.verify(token, 'secret_key', async (err, decoded) => {
+                if (err) {
+                    res.json({ success: false, message: 'Failed to authenticate token' });
+                } else {
+                    var fkplantilla= req.body.FKPlantilla;
+                    var jsonrespuesta= req.body.JsonRespuesta;
+                    var fkusuario= req.body.FKUsuario;
+                    var consulta="INSERT INTO LokRespuestasPlantillas (FKPlantilla, JsonRespuesta, FKUsuario, Registro) VALUES ("+
+                    ""+fkplantilla+",'"+jsonrespuesta+"','"+fkusuario+"',GETDATE())";
+                    res.json({success : await sqlconfig.query(consulta)});
+                }
+            });
+        }
+    }catch(err){
+        res.json({success : false});
+    }
+
+}
+
 // FUNCION QUE RETORNA EL LISTADO DE CONTRATOS HISTORICOS ENTRE UN RANGO DE FECHA
 controller.list_historicos = async (req, res) => {
     try{
