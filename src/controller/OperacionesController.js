@@ -87,7 +87,7 @@ controller.set_plantilla = async (req, res) => {
                     var consulta="";
                     if(id === -1){
                       consulta = "INSERT INTO LokPlantillas (JsonData, NombrePlantilla, FKEmpresa, UrlFile) VALUES ("+
-                      "'"+jsondata+"','"+nombreplantilla+"',"+fkempresa+",'"+urlfile+"')";
+                      "'"+jsondata+"','"+nombreplantilla+"',"+decoded.idempresa+",'"+urlfile+"')";
                     }else{
                         consulta = "UPDATE LokPlantillas SET JsonData='"+jsondata+"', NombrePlantilla='"+nombreplantilla+"', FKEmpresa="+decoded.idempresa+", UrlFile='"+urlfile+"' WHERE IDPlantilla="+id;
                     }
