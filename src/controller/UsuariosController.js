@@ -595,7 +595,7 @@ controller.get_paginas = async (req, res) => {
                     res.json({ success: false, message: 'Failed to authenticate token' });
                 } else {
                     var rol= decoded.tipouser;
-                    var consulta= "SELECT pag.IdPagina, pag.DescripcionPagina "+
+                    var consulta= "SELECT pag.IdPagina, pag.DescripcionPagina, pag.Notas "+
                     "FROM CtPaginas AS pag";
                     let resultado=await sqlconfig.query(consulta);
                     res.json({success : true, data : resultado.recordset});
