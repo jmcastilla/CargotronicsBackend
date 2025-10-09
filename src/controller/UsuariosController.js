@@ -542,7 +542,7 @@ controller.get_permisosrol = async (req, res) => {
                     res.json({ success: false, message: 'Failed to authenticate token' });
                 } else {
                     var rol= req.body.tipouser;
-                    var consulta= "SELECT pag.IdPagina, pag.DescripcionPagina, perm.IdRolP, perm.bitOpen, perm.bitInsert, perm.bitEdit, perm.bitDelete "+
+                    var consulta= "SELECT pag.IdPagina, pag.DescripcionPagina, pag.Notas, perm.IdRolP, perm.bitOpen, perm.bitInsert, perm.bitEdit, perm.bitDelete "+
                     "FROM CtPermisos as perm "+
                     "inner join CtPaginas AS pag on pag.IdPagina = perm.IdPaginaP WHERE perm.IdRolP="+rol;
                     let resultado=await sqlconfig.query(consulta);
