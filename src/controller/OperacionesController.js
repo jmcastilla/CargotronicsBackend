@@ -163,7 +163,6 @@ controller.set_respuestaplantillasinauth = async (req, res) => {
           ""+fkplantilla+",'"+jsonrespuesta+"','"+fkusuario+"',GETDATE())";
           res.json({success : await sqlconfig.query(consulta)});
 
-        }
     }catch(err){
         res.json({success : false});
     }
