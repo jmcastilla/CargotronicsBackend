@@ -161,6 +161,7 @@ controller.set_respuestaplantillasinauth = async (req, res) => {
           var fkusuario= req.body.FKUsuario;
           var consulta="INSERT INTO LokRespuestasPlantillas (FKPlantilla, JsonRespuesta, FKUsuario, Registro) VALUES ("+
           ""+fkplantilla+",'"+jsonrespuesta+"','"+fkusuario+"',GETDATE())";
+          console.log(consulta);
           res.json({success : await sqlconfig.query(consulta)});
 
     }catch(err){
