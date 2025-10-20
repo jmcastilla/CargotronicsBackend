@@ -165,6 +165,7 @@ controller.set_respuestaplantillasinauth = async (req, res) => {
           res.json({success : await sqlconfig.query(consulta)});
 
     }catch(err){
+        console.log(err);
         res.json({success : false});
     }
 
