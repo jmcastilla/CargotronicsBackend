@@ -153,6 +153,23 @@ controller.set_respuestaplantilla = async (req, res) => {
 
 }
 
+controller.set_respuestaplantillasinauth = async (req, res) => {
+    try{
+
+          var fkplantilla= req.body.FKPlantilla;
+          var jsonrespuesta= req.body.JsonRespuesta;
+          var fkusuario= req.body.FKUsuario;
+          var consulta="INSERT INTO LokRespuestasPlantillas (FKPlantilla, JsonRespuesta, FKUsuario, Registro) VALUES ("+
+          ""+fkplantilla+",'"+jsonrespuesta+"','"+fkusuario+"',GETDATE())";
+          res.json({success : await sqlconfig.query(consulta)});
+
+        }
+    }catch(err){
+        res.json({success : false});
+    }
+
+}
+
 // FUNCION QUE RETORNA EL LISTADO DE CONTRATOS HISTORICOS ENTRE UN RANGO DE FECHA
 controller.list_historicos = async (req, res) => {
     try{
