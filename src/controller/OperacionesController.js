@@ -1487,11 +1487,10 @@ controller.get_contractvisuallogistic = async (req, res) => {
                 } else {
                     var contrato=req.body.contrato;
                     const varEndpoint= `https://${Configuracion.URL_VISUALLOGISTIC}.azurewebsites.net/get-contract-comparisons/${contrato}`;
-                    const response = await axios.get(varEndpoint, {
-                      // Para GET no es necesario 'Content-Type'; si quieres, usa Accept
-                      headers: { 'Accept': 'application/json' },
-                      timeout: 15000,
-                      validateStatus: () => true, // no tirará excepción por 4xx/5xx
+                    const response = await axios.get(varEndpoint, null, {
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
                     });
                     if (response.status === 200) {
                       return res.json({ success: true, info: response.data });
