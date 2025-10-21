@@ -1492,7 +1492,20 @@ controller.get_contractvisuallogistic = async (req, res) => {
                             'Content-Type': 'application/x-www-form-urlencoded',
                         },
                     });
-                    res.json({ success: true, info: response.data });
+                    if (response.status === 200) {
+                      return res.json({ success: true, info: response.data });
+                    }
+                    if (response.status === 404) {
+                      return res.status(404).json({
+                        success: false,
+                        message: `Contrato "${contrato}" no encontrado en Visual Logistic`,
+                      });
+                    }
+                    return res.status(response.status).json({
+                      success: false,
+                      message: 'Error al consultar Visual Logistic',
+                      details: response.data,
+                    });
                 }
             });
         }
