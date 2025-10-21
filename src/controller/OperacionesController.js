@@ -1487,25 +1487,17 @@ controller.get_contractvisuallogistic = async (req, res) => {
                 } else {
                     var contrato=req.body.contrato;
                     const varEndpoint= `https://${Configuracion.URL_VISUALLOGISTIC}.azurewebsites.net/get-contract-comparisons/${contrato}`;
-                    const response = await axios.get(varEndpoint, null, {
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded',
-                        },
-                    });
-                    if (response.status === 200) {
-                      return res.json({ success: true, info: response.data });
-                    }
-                    if (response.status === 404) {
-                      return res.status(404).json({
-                        success: false,
-                        message: `Contrato "${contrato}" no encontrado en Visual Logistic`,
+                    try{
+                      const response = await axios.get(varEndpoint, null, {
+                          headers: {
+                              'Content-Type': 'application/x-www-form-urlencoded',
+                          },
                       });
+                      res.json({ success: true, info: response.data });
+                    }catch(e){
+                      res.json({ success: false, msg: "contrato no existe" });
                     }
-                    return res.status(response.status).json({
-                      success: false,
-                      message: 'Error al consultar Visual Logistic',
-                      details: response.data,
-                    });
+
                 }
             });
         }
