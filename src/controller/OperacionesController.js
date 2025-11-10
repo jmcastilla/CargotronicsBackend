@@ -1862,6 +1862,7 @@ controller.get_existencontratos = async (req, res) => {
                     return res.json({ success: false, message: 'Failed to authenticate token' });
                 } else {
                     var contratos=req.body.contratos;
+                    console.log(contratos);
                     var consulta = "SELECT ContractID FROM LokContractID WHERE ContractID IN ("+contratosS+")";
 
                     let resultado=await sqlconfig.query(consulta);
