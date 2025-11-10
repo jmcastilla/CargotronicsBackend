@@ -1863,7 +1863,7 @@ controller.get_existencontratos = async (req, res) => {
                 } else {
                     var contratos=req.body.contratos;
                     console.log(contratos);
-                    var consulta = "SELECT ContractID FROM LokContractID WHERE ContractID IN ("+contratosS+")";
+                    var consulta = "SELECT ContractID FROM LokContractID WHERE ContractID IN ("+contratos+")";
 
                     let resultado=await sqlconfig.query(consulta);
                     return res.json({success : true, data : resultado});
