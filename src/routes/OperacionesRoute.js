@@ -2387,6 +2387,8 @@ router.get('/notificacionprueba', OperacionesController.notificacionprueba);
  */
 router.post('/getdispositivoscambio', OperacionesController.get_dispositivoscambio);
 
+router.post('/getexistencontratos', OperacionesController.get_existencontratos);
+
 /**
  * @swagger
  * /operaciones/updatecambioproyecto:

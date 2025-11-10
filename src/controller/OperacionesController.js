@@ -1850,6 +1850,30 @@ controller.get_dispositivoscambio = async (req, res) => {
     }
 }
 
+controller.get_existencontratos = async (req, res) => {
+    try{
+        var token = req.headers.authorization;
+        if (!token) {
+            return res.json({ success: false, message: 'Token is missing' });
+        }else{
+            token = req.headers.authorization.split(' ')[1];
+            jwt.verify(token, 'secret_key', async (err, decoded) => {
+                if (err) {
+                    return res.json({ success: false, message: 'Failed to authenticate token' });
+                } else {
+                    var contratos=req.body.contratos;
+                    var consulta = "SELECT ContractID FROM LokContractID WHERE ContractID IN ("+contratosS+")";
+
+                    let resultado=await sqlconfig.query(consulta);
+                    return res.json({success : true, data : resultado});
+                }
+            });
+        }
+    }catch(err){
+        return res.json({success : false});
+    }
+}
+
 controller.update_cambioproyecto = async (req, res) => {
     try{
         var token = req.headers.authorization;
