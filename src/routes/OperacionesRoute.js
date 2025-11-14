@@ -2386,6 +2386,60 @@ router.get('/notificacionprueba', OperacionesController.notificacionprueba);
  *                   example: false
  */
 router.post('/getdispositivoscambio', OperacionesController.get_dispositivoscambio);
+/**
+ * @swagger
+ * /operaciones/getexistencontratos:
+ *   post:
+ *     summary: Verifica si existen contratos en la base de datos
+ *     description: >
+ *       Recibe una lista de IDs de contratos y retorna aquellos que existen
+ *       en la tabla **LokContractID**, según la empresa del usuario autenticado.
+ *       Requiere autenticación mediante token JWT en el header `Authorization`.
+ *     tags:
+ *       - Operaciones
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: header
+ *         name: Authorization
+ *         required: true
+ *         schema:
+ *           type: string
+ *           example: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+ *         description: Token JWT del usuario autenticado
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               contratos:
+ *                 type: string
+ *                 example: "1001,1002,1005"
+ *                 description: Lista separada por coma de ContractID a validar
+ *     responses:
+ *       200:
+ *         description: Resultado de contratos encontrados
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   example:
+ *                     recordset:
+ *                       - ContractID: 1001
+ *                       - ContractID: 1005
+ *       401:
+ *         description: Token JWT faltante o inválido
+ *       500:
+ *         description: Error interno del servidor
+ */
 
 router.post('/getexistencontratos', OperacionesController.get_existencontratos);
 

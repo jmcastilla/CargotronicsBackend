@@ -612,6 +612,390 @@ router.get('/getciudades', MaestrosController.get_ciudades);
  */
 
 router.post('/getlocationciudad', MaestrosController.get_locationciudad);
+/**
+ * @swagger
+ * /maestros/getpropietario:
+ *   get:
+ *     summary: Obtiene la lista de propietarios
+ *     description: >
+ *       Retorna todos los propietarios registrados en la tabla **CtPropietarios**.
+ *       Requiere autenticación mediante token JWT en el header `Authorization`.
+ *     tags:
+ *       - Maestros
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: header
+ *         name: Authorization
+ *         required: true
+ *         schema:
+ *           type: string
+ *           example: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+ *         description: Token JWT del usuario autenticado
+ *     responses:
+ *       200:
+ *         description: Lista de propietarios obtenida correctamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       IdPropietario:
+ *                         type: integer
+ *                         example: 12
+ *                       NombrePropietario:
+ *                         type: string
+ *                         example: "Juan Pérez"
+ *                       EmailPropietario:
+ *                         type: string
+ *                         example: "juanperez@mail.com"
+ *                       CelularPropietario:
+ *                         type: string
+ *                         example: "3001234567"
+ *       401:
+ *         description: Token faltante o inválido
+ *       500:
+ *         description: Error interno del servidor
+ */
+
+router.get('/getpropietario', MaestrosController.get_propietario);
+/**
+ * @swagger
+ * /maestros/setpropietario:
+ *   post:
+ *     summary: Crea o actualiza un propietario
+ *     description: >
+ *       Inserta o actualiza registros en **CtPropietarios** según el valor de `id`.
+ *       - Si `id = -1`: crea un nuevo propietario.
+ *       - Si `id` es diferente de -1: actualiza el propietario existente.
+ *       Requiere autenticación mediante token JWT en el header `Authorization`.
+ *     tags:
+ *       - Maestros
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: header
+ *         name: Authorization
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Token JWT con formato `Bearer <token>`
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - id
+ *               - NombrePropietario
+ *               - EmailPropietario
+ *               - CelularPropietario
+ *             properties:
+ *               id:
+ *                 type: integer
+ *                 example: -1
+ *                 description: >
+ *                   - **-1** para crear un nuevo propietario
+ *                   - ID existente para actualizar
+ *               NombrePropietario:
+ *                 type: string
+ *                 example: "Juan Pérez"
+ *               EmailPropietario:
+ *                 type: string
+ *                 example: "juan@example.com"
+ *               CelularPropietario:
+ *                 type: string
+ *                 example: "3001234567"
+ *     responses:
+ *       200:
+ *         description: Propietario creado o actualizado correctamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   description: Resultado del query SQL
+ *       400:
+ *         description: Datos inválidos o faltantes
+ *       401:
+ *         description: Token faltante o inválido
+ *       500:
+ *         description: Error interno del servidor
+ */
+
+router.post('/setpropietario', MaestrosController.set_propietario);
+/**
+ * @swagger
+ * /maestros/getvehiculos:
+ *   get:
+ *     summary: Obtiene la lista de vehículos
+ *     description: >
+ *       Retorna todos los vehículos registrados en la tabla **LokVehiculos**.
+ *       Requiere autenticación mediante token JWT en el header `Authorization`.
+ *     tags:
+ *       - Maestros
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: header
+ *         name: Authorization
+ *         required: true
+ *         schema:
+ *           type: string
+ *           example: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+ *         description: Token JWT del usuario autenticado
+ *     responses:
+ *       200:
+ *         description: Lista de vehículos obtenida correctamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       idLokVehiculo:
+ *                         type: integer
+ *                         example: 10
+ *                       Placa:
+ *                         type: string
+ *                         example: "ABC123"
+ *                       Color:
+ *                         type: string
+ *                         example: "Blanco"
+ *                       Marca:
+ *                         type: string
+ *                         example: "Toyota"
+ *                       Linea:
+ *                         type: string
+ *                         example: "Corolla"
+ *                       Modelo:
+ *                         type: string
+ *                         example: "2020"
+ *                       FkOperadorGPS:
+ *                         type: integer
+ *                         example: 5
+ *                       FkPropietario:
+ *                         type: integer
+ *                         example: 12
+ *       401:
+ *         description: Token faltante o inválido
+ *       500:
+ *         description: Error interno del servidor
+ */
+
+router.get('/getvehiculos', MaestrosController.get_vehiculos);
+/**
+ * @swagger
+ * /maestros/setvehiculo:
+ *   post:
+ *     summary: Crea o actualiza un vehículo
+ *     description: >
+ *       Inserta o actualiza registros en **LokVehiculos** según el valor de `id`.
+ *       - Si `id = -1`: crea un nuevo vehículo.
+ *       - Si `id` es diferente de -1: actualiza el vehículo existente.
+ *       Requiere autenticación mediante token JWT en el header `Authorization`.
+ *     tags:
+ *       - Maestros
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: header
+ *         name: Authorization
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Token JWT con formato `Bearer <token>`
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - id
+ *               - Placa
+ *               - Color
+ *               - Marca
+ *               - Linea
+ *               - Modelo
+ *               - FkOperadorGPS
+ *               - FkPropietario
+ *             properties:
+ *               id:
+ *                 type: integer
+ *                 example: -1
+ *                 description: >
+ *                   - **-1** para crear un nuevo vehículo
+ *                   - ID existente para actualizar
+ *               Placa:
+ *                 type: string
+ *                 example: "ABC123"
+ *               Color:
+ *                 type: string
+ *                 example: "Negro"
+ *               Marca:
+ *                 type: string
+ *                 example: "Toyota"
+ *               Linea:
+ *                 type: string
+ *                 example: "Corolla"
+ *               Modelo:
+ *                 type: string
+ *                 example: "2021"
+ *               FkOperadorGPS:
+ *                 type: integer
+ *                 example: 3
+ *               FkPropietario:
+ *                 type: integer
+ *                 example: 12
+ *     responses:
+ *       200:
+ *         description: Vehículo creado o actualizado correctamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   description: Resultado del query SQL
+ *       400:
+ *         description: Datos inválidos o faltantes
+ *       401:
+ *         description: Token faltante o inválido
+ *       500:
+ *         description: Error interno del servidor
+ */
+
+router.post('/setvehiculo', MaestrosController.set_vehiculo);
+/**
+ * @swagger
+ * /maestros/getoperadorgps:
+ *   get:
+ *     summary: Obtiene la lista de operadores GPS
+ *     description: >
+ *       Retorna todos los operadores GPS registrados en **CtOperadorGPS**.
+ *       Requiere autenticación mediante token JWT en el header `Authorization`.
+ *     tags:
+ *       - Maestros
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: header
+ *         name: Authorization
+ *         required: true
+ *         schema:
+ *           type: string
+ *           example: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+ *         description: Token JWT del usuario autenticado
+ *     responses:
+ *       200:
+ *         description: Lista de operadores GPS obtenida correctamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       IdOperadorGPS:
+ *                         type: integer
+ *                         example: 1
+ *                       OperadorGPS:
+ *                         type: string
+ *                         example: "TrackZone"
+ *                       FkCtPaises:
+ *                         type: integer
+ *                         example: 57
+ *                       urlOperador:
+ *                         type: string
+ *                         example: "https://trackzone.com/api"
+ *       401:
+ *         description: Token faltante o inválido
+ *       500:
+ *         description: Error interno del servidor
+ */
+
+router.get('/getoperadorgps', MaestrosController.get_operadorgps);
+/**
+ * @swagger
+ * /maestros/getpaises:
+ *   get:
+ *     summary: Obtiene la lista de países
+ *     description: >
+ *       Retorna todos los países registrados en **CtPaises**.
+ *       Requiere autenticación mediante token JWT en el header `Authorization`.
+ *     tags:
+ *       - Maestros
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: header
+ *         name: Authorization
+ *         required: true
+ *         schema:
+ *           type: string
+ *           example: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+ *         description: Token JWT válido
+ *     responses:
+ *       200:
+ *         description: Lista de países obtenida correctamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       IdPais:
+ *                         type: integer
+ *                         example: 57
+ *                       NombrePais:
+ *                         type: string
+ *                         example: "Colombia"
+ *       401:
+ *         description: Token faltante o inválido
+ *       500:
+ *         description: Error interno del servidor
+ */
+
+router.get('/getpaises', MaestrosController.getpaises);
 
 
 
