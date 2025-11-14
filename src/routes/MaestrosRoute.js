@@ -995,7 +995,7 @@ router.get('/getoperadorgps', MaestrosController.get_operadorgps);
  *         description: Error interno del servidor
  */
 
-router.get('/getpaises', MaestrosController.getpaises);
+router.get('/getpaises', MaestrosController.get_paises);
 
 
 
