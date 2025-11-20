@@ -296,7 +296,7 @@ controller.get_vehiculos = async (req, res) => {
                 if (err) {
                     res.json({ success: false, message: 'Failed to authenticate token' });
                 } else {
-                    var consulta="SELECT idLokVehiculo, Placa, Color, Marca, Linea, Modelo, FkOperadorGPS, FkPropietario FROM LokVehiculos ORDER BY idLokVehiculo";
+                    var consulta="SELECT top 100 idLokVehiculo, Placa, Color, Marca, Linea, Modelo, FkOperadorGPS, FkPropietario FROM LokVehiculos ORDER BY idLokVehiculo";
                     //agregar antes el no asignado
                     let resultado=await sqlconfig.query(consulta);
                     res.json({success : true, data : resultado.recordsets[0]});
