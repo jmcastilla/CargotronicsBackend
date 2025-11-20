@@ -321,7 +321,7 @@ controller.set_vehiculo = async (req, res) => {
                 } else {
                     if(req.body.id == -1){
                         var consulta = "INSERT INTO LokVehiculos (Placa, Color, Marca, Linea, Modelo, FkOperadorGPS, FkPropietario) VALUES ("+
-                        "'"+req.body.Placa+"','"+req.body.Color+",'"+req.body.Marca+"','"+req.body.Linea+"','"+req.body.Modelo+"',"+req.body.FkOperadorGPS+","+req.body.FkPropietario+")";
+                        "'"+req.body.Placa+"','"+req.body.Color+"','"+req.body.Marca+"','"+req.body.Linea+"','"+req.body.Modelo+"',"+req.body.FkOperadorGPS+","+req.body.FkPropietario+")";
 
                         res.json({success : true, data : await sqlconfig.query(consulta)});
                     }else{
