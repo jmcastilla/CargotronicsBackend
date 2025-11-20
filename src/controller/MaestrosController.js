@@ -264,8 +264,8 @@ controller.set_propietario = async (req, res) => {
                     res.json({ success: false, message: 'Failed to authenticate token' });
                 } else {
                     if(req.body.id == -1){
-                        var consulta = "INSERT INTO CtPropietarios (NombrePropietario, EmailPropietario, CelularPropietario) VALUES ("+
-                        "'"+req.body.NombrePropietario+"','"+req.body.EmailPropietario+"','"+req.body.CelularPropietario+"')";
+                        var consulta = "INSERT INTO CtPropietarios (IdPropietario,NombrePropietario, EmailPropietario, CelularPropietario) VALUES ("+
+                        "'"+req.body.IdPropietario+"','"+req.body.NombrePropietario+"','"+req.body.EmailPropietario+"','"+req.body.CelularPropietario+"')";
                         console.log(consulta);
                         res.json({success : true, data : await sqlconfig.query(consulta)});
                     }else{
