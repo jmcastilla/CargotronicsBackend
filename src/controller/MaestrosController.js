@@ -265,8 +265,8 @@ controller.set_propietario = async (req, res) => {
                 } else {
                     if(req.body.id == -1){
                         var consulta = "INSERT INTO CtPropietarios (NombrePropietario, EmailPropietario, CelularPropietario) VALUES ("+
-                        "'"+req.body.NombrePropietario+"','"+req.body.EmailPropietario+",'"+req.body.CelularPropietario+"')";
-                        console.log(consulta);  
+                        "'"+req.body.NombrePropietario+"','"+req.body.EmailPropietario+"','"+req.body.CelularPropietario+"')";
+                        console.log(consulta);
                         res.json({success : true, data : await sqlconfig.query(consulta)});
                     }else{
                         try{
