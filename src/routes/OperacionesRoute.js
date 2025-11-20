@@ -243,7 +243,7 @@ router.post('/setplantilla', OperacionesController.set_plantilla);
  *         description: Error interno del servidor
  */
 
-router.get('/getplantillas', OperacionesController.get_plantillas);
+router.post('/getplantillas', OperacionesController.get_plantillas);
 router.post('/setrespuestaplantillasinauth', OperacionesController.set_respuestaplantillasinauth);
 /**
  * @swagger
