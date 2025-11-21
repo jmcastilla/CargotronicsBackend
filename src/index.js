@@ -358,7 +358,8 @@ app.post('/login', async (req, res) => {
                     proyecto: resultado.recordset[0].FKProyecto,
                     token,
                     empresa: resultado.recordset[0].IdEmpresa,
-                    TiempoSesionH: resultado.recordset[0].TiempoSesionH
+                    TiempoSesionH: resultado.recordset[0].TiempoSesionH,
+                    logo: resultado.recordset[0].logo
                 });
             } else {
                 res.json({ success: false, message: 'Password Incorrecto' });
