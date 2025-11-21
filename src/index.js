@@ -318,7 +318,7 @@ app.post('/login', async (req, res) => {
 
         var consulta = "SELECT u.Pwd, u.Salt, u.FKProyecto, p.DiferenciaServidor, p.DiferenciaHorariaM, " +
             "u.RolTrafico, u.Trafico, ISNULL(p.ProyectoPrincipal, 1) as ownr, ISNULL(p.varidcliente, 2) as varidcliente, " +
-            "e.IdEmpresa, ISNULL(clientede, 0) as clientede, p.TimeReload, u.tipoUser, r.Jerarquia, u.EmpresasTrafico, u.TiempoSesionH FROM ICUsers as u " +
+            "e.IdEmpresa, ISNULL(clientede, 0) as clientede, p.TimeReload, u.tipoUser, r.Jerarquia, u.EmpresasTrafico, u.TiempoSesionH, p.logo FROM ICUsers as u " +
             "INNER JOIN ICEmpresa as e on e.IdEmpresa = u.FKICEmpresa " +
             "INNER JOIN LokProyectos as p on p.IDProyecto = u.FKProyecto " +
             "INNER JOIN LokRoles as r on r.IDRol = u.tipoUser " +
