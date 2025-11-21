@@ -804,7 +804,7 @@ router.post('/setpropietario', MaestrosController.set_propietario);
  *         description: Error interno del servidor
  */
 
-router.get('/getvehiculos', MaestrosController.get_vehiculos);
+router.post('/getvehiculos', MaestrosController.get_vehiculos);
 /**
  * @swagger
  * /maestros/setvehiculo:
