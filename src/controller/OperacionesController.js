@@ -813,7 +813,7 @@ controller.get_reportesdevicesimplificado = async (req, res) => {
                     }else if(req.body.tipoequipo == 7){
                         procedure="SelectNuevoMsg";
                     }else if(req.body.tipoequipo == 10){
-                        procedure="SelectJT707TrackMsg";
+                        procedure="SelectJT707TrackMsgSimple";
                     }
                     console.log(procedure);
                     console.log(datos);
