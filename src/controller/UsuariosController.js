@@ -624,7 +624,7 @@ controller.crear_pagina = async (req, res) => {
                     var consulta="";
                     if(idPagina === -1 ){
                         consulta = "INSERT CtPaginas(DescripcionPagina, Notas) VALUES ("+
-                        "'"+descripcionPagina+"')";
+                        "'"+descripcionPagina+"','"+notasPagina+"')";
                     }else{
                         consulta = "UPDATE CtPaginas SET DescripcionPagina = '"+descripcionPagina+"', Notas = '"+notasPagina+"' WHERE IdPagina="+idPagina;
                     }
