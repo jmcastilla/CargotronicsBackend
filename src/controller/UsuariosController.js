@@ -620,12 +620,13 @@ controller.crear_pagina = async (req, res) => {
                 } else {
                     var idPagina=req.body.IdPagina;
                     var descripcionPagina=req.body.DescripcionPagina;
+                    var notasPagina=req.body.NotasPagina;
                     var consulta="";
                     if(idPagina === -1 ){
-                        consulta = "INSERT CtPaginas(DescripcionPagina) VALUES ("+
+                        consulta = "INSERT CtPaginas(DescripcionPagina, Notas) VALUES ("+
                         "'"+descripcionPagina+"')";
                     }else{
-                        consulta = "UPDATE CtPaginas SET DescripcionPagina = '"+descripcionPagina+"' WHERE IdPagina="+idPagina;
+                        consulta = "UPDATE CtPaginas SET DescripcionPagina = '"+descripcionPagina+"', Notas = '"+notasPagina+"' WHERE IdPagina="+idPagina;
                     }
                     res.json({success : true, data : await sqlconfig.query(consulta)});
                 }
