@@ -165,38 +165,40 @@ async function getUltimaPosicionPorPlaca(placa, token) {
 async function guardarUltimaPosicion(info) {
   if (!info) return;
 
-  const sql = `
-    INSERT INTO mainData (
-      deviceID,
-      latitude,
-      longitude,
-      speed,
-      datetime,
-      bat,
-      battery,
-      insertDateTime
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-  `;
+
   const fechaEvento = new Date(info.generationDateGMT);
   const ahora = new Date();
   const diffMs = ahora.getTime() - fechaEvento.getTime();
   const diffMin = diffMs / 60000;
-  const params = [
-    info.serviceCode,
-    info.latitude,
-    info.longitude,
-    info.speed,
-    info.generationDateGMT,
-    100,
-    100,
-    ahora.toISOString()
-  ];
+
    if (diffMin >= 1) {
      console.log(
       `No se guarda ${info.serviceCode}: diferencia ${diffMin.toFixed(2)} min >= 1`
     );
     return;
    }else{
+     const sql = `
+       INSERT INTO mainData (
+         deviceID,
+         latitude,
+         longitude,
+         speed,
+         datetime,
+         bat,
+         battery,
+         insertDateTime
+       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+     `;
+     const params = [
+       info.serviceCode,
+       info.latitude,
+       info.longitude,
+       info.speed,
+       info.generationDateGMT,
+       100,
+       100,
+       ahora.toISOString()
+     ];
      await mysqlPool.execute(sql, params);
    }
 
