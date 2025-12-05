@@ -187,7 +187,7 @@ async function guardarUltimaPosicion(info) {
     info.generationDateGMT,
     100,
     100,
-    nowUtcForMysql()
+    ahora.toISOString()
   ];
 
   await mysqlPool.execute(sql, params);
