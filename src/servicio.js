@@ -44,19 +44,116 @@ async function getToken() {
   throw new Error('No se pudo encontrar el token en la respuesta');
 }
 
-async function getPlacas(){
-    var consulta = "SELECT TOP (1000) c.FKLokDeviceID FROM LokContractID c INNER JOIN LokDeviceID d ON c.FKLokDeviceID = d.DeviceID where c.LokTipoServicios = 12 AND c.Active = 1 AND d.FkLokCommOp = 1";
+async function getPlacas() {
+  const consulta = `
+    SELECT TOP (1000) c.FKLokDeviceID
+    FROM LokContractID c
+    INNER JOIN LokDeviceID d ON c.FKLokDeviceID = d.DeviceID
+    WHERE c.LokTipoServicios = 12
+      AND c.Active = 1
+      AND d.FkLokCommOp = 1
+  `;
 
-    let resultado = await sqlconfig.query(consulta);
-    console.log(resultado.recordset.length);
-    if (resultado.recordset.length > 0) {
-      const placas = resultado.recordset.map(row => row.FKLokDeviceID);
+  const resultado = await sqlconfig.query(consulta);
 
-      console.log(placas);
-    }else{
-        console.log("no hay placas");
-    }
+  if (!resultado.recordset || resultado.recordset.length === 0) {
+    console.log("no hay placas");
+    return [];
+  }
 
+  const placas = resultado.recordset.map(r => r.FKLokDeviceID); // <-- el campo que sea tu placa
+
+  return placas;
 }
 
-getPlacas();
+
+async function procesarPlacas() {
+  const token = await getToken();
+  const placas = await getPlacas();
+
+  if (placas.length === 0) {
+    console.log('No hay placas para procesar');
+    return [];
+  }
+
+  // Si quieres ir de a una (secuencial, más seguro para no saturar el API):
+  const resultados = [];
+
+  for (const placa of placas) {
+    try {
+      const info = await getUltimaPosicionPorPlaca(placa, token);
+      resultados.push({ placa, info });
+      console.log('OK placa:', placa, 'info:', info);
+    } catch (err) {
+      console.error('Error con placa', placa, err.message);
+      resultados.push({ placa, error: err.message });
+    }
+  }
+
+  return resultados;
+}
+
+async function getUltimaPosicionPorPlaca(placa, token) {
+  const query = `
+    query {
+      last(serviceCodes: ["${placa}"]) {
+        serviceCode
+        latitude
+        longitude
+        address
+        town
+        state
+        district
+        suburb
+        direction
+        generationDate
+        generationDateEpoch
+        generationDateGMT
+        generationDateEpochGMT
+        recordDate
+        recordDateEpoch
+        unifiedEventCode
+        description
+        speed
+        odometer
+        temperature
+        ignition
+        deviceType
+        vehicleStatus
+        locationStatus
+        batteryLevel
+        customerPoint
+        customerPointDistance
+        customerPointName
+        id
+        samePlaceMinutes
+      }
+    }
+  `;
+
+  const body = { query };
+
+  const response = await axios.post(
+    'http://locationintegrationapi.satrack.com/api/location',
+    body,
+    {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,   // <--- aquí va el token
+      },
+    }
+  );
+
+  // Respuesta típica GraphQL: { data: { last: [...] } }
+  const data = response.data;
+
+  if (!data || !data.data || !data.data.last || data.data.last.length === 0) {
+    return null; // no hay datos para esa placa
+  }
+
+  return data.data.last[0]; // primer (y normalmente único) registro
+}
+
+
+
+procesarPlacas();
