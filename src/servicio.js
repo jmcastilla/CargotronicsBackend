@@ -6,6 +6,7 @@ var app = express();
 var sqlconfig = require("./model/dbpool");
 var FormData = require('form-data');
 const axios = require('axios');
+import { mysqlPool } from './db-mysql.js';
 
 
 async function getToken() {
@@ -82,11 +83,16 @@ async function procesarPlacas() {
   for (const placa of placas) {
     try {
       const info = await getUltimaPosicionPorPlaca(placa, token);
-      resultados.push({ placa, info });
-      console.log('OK placa:', placa, 'info:', info);
+
+      if (!info) {
+        console.log(`Sin info para placa ${placa}`);
+        continue;
+      }
+
+      await guardarUltimaPosicion(info);
+      console.log(`Guardado OK para placa ${placa}`);
     } catch (err) {
-      console.error('Error con placa', placa, err.message);
-      resultados.push({ placa, error: err.message });
+      console.error(`Error procesando placa ${placa}:`, err.message);
     }
   }
 
@@ -155,6 +161,34 @@ async function getUltimaPosicionPorPlaca(placa, token) {
   return data.data.last[0]; // primer (y normalmente único) registro
 }
 
+import { mysqlPool } from './db-mysql.js';
+
+async function guardarUltimaPosicion(info) {
+  if (!info) return;
+
+  const sql = `
+    INSERT INTO mainData (
+      deviceID,
+      latitude,
+      longitude,
+      speed,
+      datetime,
+      bat
+    ) VALUES (?, ?, ?, ?, ?, ?)
+  `;
+
+  const params = [
+    info.serviceCode,
+    info.latitude,
+    info.longitude,
+    info.speed,
+    info.generationDateGMT,
+    100
+  ];
+
+  await mysqlPool.execute(sql, params);
+}
 
 
-procesarPlacas();
+
+module.exports = { procesarPlacas };
