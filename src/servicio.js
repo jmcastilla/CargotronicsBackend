@@ -179,9 +179,8 @@ async function guardarUltimaPosicion(info) {
   `;
   const fechaEvento = new Date(info.generationDateGMT);
   const ahora = new Date();
-  console.log(fechaEvento+" , "+ahora);
   const diffMs = ahora.getTime() - fechaEvento.getTime();
-  console.log(diffMs);
+  const diffMin = diffMs / 60000;
   const params = [
     info.serviceCode,
     info.latitude,
@@ -192,8 +191,15 @@ async function guardarUltimaPosicion(info) {
     100,
     ahora.toISOString()
   ];
+   if (diffMin >= 1) {
+     console.log(
+      `No se guarda ${info.serviceCode}: diferencia ${diffMin.toFixed(2)} min >= 1`
+    );
+    return;
+   }else{
+     await mysqlPool.execute(sql, params);
+   }
 
-  await mysqlPool.execute(sql, params);
 }
 
 function nowUtcForMysql() {
