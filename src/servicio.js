@@ -161,7 +161,6 @@ async function getUltimaPosicionPorPlaca(placa, token) {
   return data.data.last[0]; // primer (y normalmente único) registro
 }
 
-import { mysqlPool } from './db-mysql.js';
 
 async function guardarUltimaPosicion(info) {
   if (!info) return;
