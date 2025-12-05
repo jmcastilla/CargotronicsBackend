@@ -9,5 +9,5 @@ const { procesarPlacas } = require('./servicio');
 // Inventario - cada 30 min
 cron.schedule('* * * * *', () => {
   console.log(`[cron] placas`);
-  await procesarPlacas();
+  procesarPlacas();
 });
