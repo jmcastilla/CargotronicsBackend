@@ -175,7 +175,7 @@ async function guardarUltimaPosicion(info) {
       bat,
       battery,
       insertDateTime
-    ) VALUES (?, ?, ?, ?, ?, ?)
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
   `;
   const ahora = new Date();
   const params = [
