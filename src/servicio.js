@@ -176,7 +176,7 @@ async function guardarUltimaPosicion(info) {
       `No se guarda ${info.serviceCode}: diferencia ${diffMin.toFixed(2)} min >= 1`
     );
     return;
-   }else{
+   }
      const sql = `
        INSERT INTO mainData (
          deviceID,
@@ -189,6 +189,7 @@ async function guardarUltimaPosicion(info) {
          insertDateTime
        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
      `;
+     console.log(sql);
      const params = [
        info.serviceCode,
        info.latitude,
@@ -200,7 +201,7 @@ async function guardarUltimaPosicion(info) {
        ahora.toISOString()
      ];
      await mysqlPool.execute(sql, params);
-   }
+
 
 }
 
