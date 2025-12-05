@@ -172,17 +172,21 @@ async function guardarUltimaPosicion(info) {
       longitude,
       speed,
       datetime,
-      bat
+      bat,
+      battery,
+      insertDateTime
     ) VALUES (?, ?, ?, ?, ?, ?)
   `;
-
+  const ahora = new Date();
   const params = [
     info.serviceCode,
     info.latitude,
     info.longitude,
     info.speed,
     info.generationDateGMT,
-    100
+    100,
+    100,
+    ahora.toISOString()
   ];
 
   await mysqlPool.execute(sql, params);
