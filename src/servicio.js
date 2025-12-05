@@ -146,6 +146,7 @@ async function getUltimaPosicionPorPlaca(placa, token) {
 
   // Respuesta típica GraphQL: { data: { last: [...] } }
   const data = response.data;
+  console.log(response.data);
 
   if (!data || !data.data || !data.data.last || data.data.last.length === 0) {
     return null; // no hay datos para esa placa
