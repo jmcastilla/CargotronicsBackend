@@ -6,7 +6,7 @@ var app = express();
 var sqlconfig = require("./model/dbpool");
 var FormData = require('form-data');
 const axios = require('axios');
-import { mysqlPool } from './db-mysql.js';
+var mysqlPool =require('./db-mysql.js');
 
 
 async function getToken() {

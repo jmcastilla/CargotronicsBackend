@@ -1,6 +1,6 @@
 // db-mysql.js
-import mysql from 'mysql2/promise';
-import dotenv from 'dotenv';
+var mysql =require('mysql2/promise');
+var dotenv =require('dotenv');
 
 dotenv.config(); // carga .env
 
