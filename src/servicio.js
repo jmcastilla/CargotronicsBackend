@@ -50,7 +50,9 @@ async function getPlacas(){
     let resultado = await sqlconfig.query(consulta);
     console.log(resultado.recordset.length);
     if (resultado.recordset.length > 0) {
-        console.log(resultado.recordset[0]);
+      const placas = resultado.recordset.map(row => row.FKLokDeviceID);
+
+      console.log(placas);
     }else{
         console.log("no hay placas");
     }
