@@ -1,8 +1,8 @@
-// db-mysql.js
-var mysql =require('mysql2/promise');
-var dotenv =require('dotenv');
+// model/db-mysql.js
+const mysql = require('mysql2/promise');
+const dotenv = require('dotenv');
 
-dotenv.config(); // carga .env
+dotenv.config();
 
 const pool = mysql.createPool({
   host: '104.236.24.69',
@@ -15,10 +15,4 @@ const pool = mysql.createPool({
   queueLimit: 0,
 });
 
-// helper opcional para hacer queries rápido
-export async function mysqlQuery(sql, params = []) {
-  const [rows] = await pool.execute(sql, params);
-  return rows;
-}
-
-export default pool;
+module.exports = pool;
