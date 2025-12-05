@@ -178,7 +178,6 @@ async function guardarUltimaPosicion(info) {
     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
   `;
   const ahora = new Date();
-  ahora.setHours(ahora.getHours() + 1);
   const params = [
     info.serviceCode,
     info.latitude,
