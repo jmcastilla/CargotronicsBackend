@@ -48,7 +48,7 @@ async function getPlacas(){
     var consulta = "SELECT TOP (1000) c.FKLokDeviceID FROM LokContractID c INNER JOIN LokDeviceID d ON c.FKLokDeviceID = d.DeviceID where c.LokTipoServicios = 12 AND c.Active = 1 AND d.FkLokCommOp = 1";
 
     let resultado = await sqlconfig.query(consulta);
-    console.log(resultado);
+    console.log(resultado.recordset.length);
     if (resultado.recordset.length > 0) {
         console.log(resultado.recordset[0]);
     }else{
