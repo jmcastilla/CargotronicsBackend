@@ -177,7 +177,11 @@ async function guardarUltimaPosicion(info) {
       insertDateTime
     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
   `;
+  const fechaEvento = new Date(info.generationDateGMT);
   const ahora = new Date();
+  console.log(fechaEvento+" , "+ahora);
+  const diffMs = ahora.getTime() - fechaEvento.getTime();
+  console.log(diffMs);
   const params = [
     info.serviceCode,
     info.latitude,
