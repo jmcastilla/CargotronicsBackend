@@ -1951,6 +1951,61 @@ controller.update_checklist = async (req, res) => {
     }
 }
 
+controller.get_operadorgps = async (req, res) => {
+    try{
+        var token = req.headers.authorization;
+        if (!token) {
+            res.json({ success: false, message: 'Token is missing' });
+        }else{
+            token = req.headers.authorization.split(' ')[1];
+            jwt.verify(token, 'secret_key', async (err, decoded) => {
+                if (err) {
+                    res.json({ success: false, message: 'Failed to authenticate token' });
+                } else {
+                    var consulta = "SELECT IdOperadorGPS, OperadorGPS, FkCtPaises, urlOperador, Integrado FROM CtOperadorGPS";
+                    let resultado=await sqlconfig.query(consulta);
+                    res.json({success : true, data : resultado.recordsets[0]});
+                }
+            });
+        }
+    }catch(err){
+        res.json({success : false});
+    }
+
+}
+
+controller.set_devicegps = async (req, res) => {
+    try{
+        var token = req.headers.authorization;
+        if (!token) {
+            return res.json({ success: false, message: 'Token is missing' });
+        }else{
+            token = req.headers.authorization.split(' ')[1];
+            jwt.verify(token, 'secret_key', async (err, decoded) => {
+                if (err) {
+                    res.json({ success: false, message: 'Failed to authenticate token' });
+                } else {
+                    var id= req.body.ID;
+                    var deviceID= req.body.DeviceID;
+                    var fkLokCommOp= req.body.FkLokCommOp;
+                    var fKLokProyecto= req.body.FKLokProyecto;
+                    var consulta="";
+                    if(id === -1){
+                      consulta = "INSERT INTO LokDeviceID (DeviceID, FkLokCommOp, FKLokTipoEquipo, FKLokProyecto, Estado, EmpresaActiva, CategoriaTipo, EmpresaFija, Locked, Mounted, LastContractID) VALUES ("+
+                      "'"+deviceID+"',"+fkLokCommOp+",12,"+fKLokProyecto+", 1, 2, 2, 2, 0, 1, 'none')";
+                    }else{
+                        consulta = "UPDATE LokDeviceID SET FkLokCommOp="+fkLokCommOp+" WHERE LokDeviceID="+deviceID;
+                    }
+                    res.json({success : await sqlconfig.query(consulta)});
+                }
+            });
+        }
+    }catch(err){
+        res.json({success : false});
+    }
+
+}
+
 // FUNCION PARA CONVERTIR GRADOS A RADIANES
 function gradosARadianes(grados){
     return grados * Math.PI / 180;

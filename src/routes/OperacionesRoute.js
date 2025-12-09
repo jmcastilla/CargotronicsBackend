@@ -2924,6 +2924,136 @@ router.get('/getusuarios', OperacionesController.get_usuarios);
  */
 
 router.get('/getproyectos', OperacionesController.get_proyectos);
+/**
+ * @swagger
+ * /operaciones/getoperadorgps:
+ *   get:
+ *     summary: Obtiene la lista de operadores GPS
+ *     description: |
+ *       Retorna los operadores GPS registrados en el sistema.
+ *       Requiere un token JWT en el header **Authorization: Bearer {token}**.
+ *     tags:
+ *       - Operaciones
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Operadores GPS obtenidos correctamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       IdOperadorGPS:
+ *                         type: integer
+ *                         example: 1
+ *                       OperadorGPS:
+ *                         type: string
+ *                         example: "Waze Carriers"
+ *                       FkCtPaises:
+ *                         type: integer
+ *                         example: 57
+ *                       urlOperador:
+ *                         type: string
+ *                         example: "https://api.operadorgps.com"
+ *                       Integrado:
+ *                         type: boolean
+ *                         example: true
+ *       401:
+ *         description: Token inválido o faltante
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Failed to authenticate token"
+ *       500:
+ *         description: Error interno del servidor
+ */
+
+router.get('/getoperadorgps', OperacionesController.get_operadorgps);
+/**
+ * @swagger
+ * /operaciones/setdevicegps:
+ *   post:
+ *     summary: Inserta o actualiza un dispositivo GPS
+ *     description: |
+ *       Inserta un nuevo registro en **LokDeviceID** cuando `ID = -1`,
+ *       o actualiza el operador de comunicación de un dispositivo existente.
+ *       Requiere un token JWT en el encabezado **Authorization: Bearer {token}**.
+ *     tags:
+ *       - Operaciones
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               ID:
+ *                 type: integer
+ *                 example: -1
+ *               DeviceID:
+ *                 type: string
+ *                 example: "DEV-12345"
+ *               FkLokCommOp:
+ *                 type: integer
+ *                 example: 5
+ *               FKLokProyecto:
+ *                 type: integer
+ *                 example: 12
+ *             required:
+ *               - ID
+ *               - DeviceID
+ *               - FkLokCommOp
+ *               - FKLokProyecto
+ *     responses:
+ *       200:
+ *         description: Operación realizada correctamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   description: Resultado devuelto por SQL (recordsets, rowsAffected, etc.)
+ *       401:
+ *         description: Token inválido o faltante
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Failed to authenticate token"
+ *       500:
+ *         description: Error interno del servidor
+ */
+
+router.post('/setdevicegps', OperacionesController.set_devicegps);
 
 
 module.exports = router;
