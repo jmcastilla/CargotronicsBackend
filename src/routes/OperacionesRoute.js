@@ -2987,6 +2987,56 @@ router.get('/getproyectos', OperacionesController.get_proyectos);
 router.get('/getoperadorgps', OperacionesController.get_operadorgps);
 /**
  * @swagger
+ * /operaciones/getdevicegps:
+ *   get:
+ *     summary: Obtiene la lista de dispositivos GPS registrados
+ *     tags:
+ *       - Operaciones
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Lista de dispositivos GPS
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       DeviceID:
+ *                         type: string
+ *                         example: "DEV12345"
+ *                       FkLokCommOp:
+ *                         type: integer
+ *                         example: 25
+ *                       FKLokProyecto:
+ *                         type: integer
+ *                         example: 7
+ *       401:
+ *         description: Token faltante o inválido
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Token is missing
+ */
+
+router.get('/getdevicegps', OperacionesController.get_devicegps);
+/**
+ * @swagger
  * /operaciones/setdevicegps:
  *   post:
  *     summary: Inserta o actualiza un dispositivo GPS
