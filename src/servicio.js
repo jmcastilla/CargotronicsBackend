@@ -205,6 +205,40 @@ async function guardarUltimaPosicion(info) {
 
 }
 
+async function assignVehicle(serviceCode) {
+  // Generar token internamente
+  const token = await getToken();
+
+  const body = {
+    serviceCode: serviceCode,
+    expiredDate: "2026-06-01T23:59:59",
+    isEnabled: true
+  };
+
+  const url = "https://userintegrationapi.satrack.com/api/UserManager/assignmentVehicle";
+
+  try {
+    const response = await axios.post(url, body, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    console.log(`Asignación exitosa para ${serviceCode}:`, response.data);
+    return response.data;
+
+  } catch (error) {
+    console.error(
+      `Error asignando vehículo ${serviceCode}:`,
+      error.response?.data || error.message
+    );
+    return null;
+  }
+}
+
+
+
 function nowUtcForMysql() {
   const d = new Date();
   const pad = (n) => String(n).padStart(2, '0');
@@ -221,4 +255,4 @@ function nowUtcForMysql() {
 
 
 
-module.exports = { procesarPlacas };
+module.exports = { procesarPlacas, assignVehicle };

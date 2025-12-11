@@ -9,6 +9,7 @@ const API_KEY = 'AIzaSyAF-lo1H_DaXWarJqU1sF1l0cil68y0ANQ';
 const decodePolyline = require('decode-google-map-polyline');
 const moment = require('moment');
 const FormData = require('form-data');
+const { assignVehicle } = require('../servicio');
 
 var publicConfig = {
   key: API_KEY,
@@ -2017,6 +2018,9 @@ controller.set_devicegps = async (req, res) => {
                     if(id === -1){
                       consulta = "INSERT INTO LokDeviceID (DeviceID, FkLokCommOp, FKLokTipoEquipo, FKLokProyecto, Estado, EmpresaActiva, CategoriaTipo, EmpresaFija, Locked, Mounted, LastContractID) VALUES ("+
                       "'"+deviceID+"',"+fkLokCommOp+",12,"+fKLokProyecto+", 1, 2, 2, 2, 0, 1, 'none')";
+                      assignVehicle(deviceID)
+                            .then(() => console.log("assignVehicle ejecutado correctamente"))
+                            .catch(err => console.error("Error en assignVehicle:", err));
                     }else{
                         consulta = "UPDATE LokDeviceID SET FkLokCommOp="+fkLokCommOp+" WHERE DeviceID='"+deviceID+"'";
                     }
