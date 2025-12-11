@@ -2017,7 +2017,7 @@ controller.set_devicegps = async (req, res) => {
                       consulta = "INSERT INTO LokDeviceID (DeviceID, FkLokCommOp, FKLokTipoEquipo, FKLokProyecto, Estado, EmpresaActiva, CategoriaTipo, EmpresaFija, Locked, Mounted, LastContractID) VALUES ("+
                       "'"+deviceID+"',"+fkLokCommOp+",12,"+fKLokProyecto+", 1, 2, 2, 2, 0, 1, 'none')";
                     }else{
-                        consulta = "UPDATE LokDeviceID SET FkLokCommOp="+fkLokCommOp+" WHERE LokDeviceID='"+deviceID+"'";
+                        consulta = "UPDATE LokDeviceID SET FkLokCommOp="+fkLokCommOp+" WHERE DeviceID='"+deviceID+"'";
                     }
                     res.json({success : await sqlconfig.query(consulta)});
                 }
