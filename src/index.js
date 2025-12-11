@@ -521,6 +521,30 @@ app.get('/actualizartoken', async (req, res) => {
     }
 });
 
+app.post('/confirmartoken', async (req, res) => {
+    try {
+        var token = req.headers.authorization;
+        if (!token) {
+          	return res.json({ success: false, message: 'Token is missing' });
+      	}else{
+            token = req.headers.authorization.split(' ')[1];
+            jwt.verify(token, 'secret_key', async (err, decoded) => {
+                if (err) {
+                    // Si hay un error en la verificación del token, devolvemos un mensaje de error
+                    res.json({ success: false, message: 'Failed to authenticate token' });
+                } else {
+                    // Si el token es válido, podemos continuar con la lógica de la función
+                    res.json({ success: true, message: 'success authenticate token' });
+                }
+            });
+
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        res.json({ success: false });
+    }
+});
+
 /**
  * @swagger
  * /token:
