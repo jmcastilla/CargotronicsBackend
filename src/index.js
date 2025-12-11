@@ -521,7 +521,7 @@ app.get('/actualizartoken', async (req, res) => {
     }
 });
 
-app.post('/confirmartoken', async (req, res) => {
+app.get('/confirmartoken', async (req, res) => {
     try {
         var token = req.headers.authorization;
         if (!token) {
