@@ -1520,6 +1520,7 @@ controller.get_fotoscontractvisuallogistic = async (req, res) => {
                 } else {
                     var contrato=req.body.contrato;
                     const varEndpoint= `https://${Configuracion.URL_VISUALLOGISTIC}.azurewebsites.net/get-contract-summary/${contrato}`;
+                    console.log(varEndpoint);
                     try {
                         const response = await axios.get(varEndpoint, {
                             headers: {
