@@ -140,7 +140,7 @@ async function procesarPlacasLogitrack() {
         console.log(`Sin info para placa ${placa}`);
         continue;
       }
-
+      console.log(info);
       await guardarUltimaPosicion(info);
       console.log(`Guardado OK para placa ${placa}`);
     } catch (err) {
@@ -234,12 +234,9 @@ async function getUltimaPosicionPorPlacaLogitrack(placa) {
 
   // Respuesta típica GraphQL: { data: { last: [...] } }
   const data = response.data;
-  console.log(data);
 
   const plateKey = Object.keys(data)[0];
-  console.log(plateKey);
   const info = data[plateKey];
-  console.log(info);
   return {
     serviceCode: plateKey,
     generationDateGMT: info.event_time,
