@@ -69,7 +69,7 @@ async function getPlacas() {
 
 async function getPlacasLogitrack() {
   const consulta = `
-    SELECT TOP (1000) c.FKLokDeviceID, d.UsuarioS AS usuario, d.ClaveS AS clave
+    SELECT TOP (1000) c.FKLokDeviceID as placa, d.UsuarioS AS usuario, d.ClaveS AS clave
     FROM LokContractID c
     INNER JOIN LokDeviceID d ON c.FKLokDeviceID = d.DeviceID
     WHERE c.LokTipoServicios = 12
