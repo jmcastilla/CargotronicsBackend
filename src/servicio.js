@@ -241,7 +241,7 @@ async function getUltimaPosicionPorPlacaLogitrack(placa) {
   }
 
   const plateKey = Object.keys(data)[0];
-  console.log(plateKey);
+  console.log(data.last);
   const info = data[plateKey];
   console.log(info);
   return {
