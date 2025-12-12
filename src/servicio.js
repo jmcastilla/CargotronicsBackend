@@ -141,7 +141,7 @@ async function procesarPlacasLogitrack() {
         continue;
       }
 
-      //await guardarUltimaPosicion(info);
+      await guardarUltimaPosicion(info);
       console.log(`Guardado OK para placa ${placa}`);
     } catch (err) {
       console.error(`Error procesando placa ${placa}:`, err.message);
@@ -240,7 +240,17 @@ async function getUltimaPosicionPorPlacaLogitrack(placa) {
     return null; // no hay datos para esa placa
   }
 
-  return data.data.last[0]; // primer (y normalmente único) registro
+  const plateKey = Object.keys(data)[0];
+  const info = data[plateKey];
+
+  return {
+    serviceCode: plateKey,
+    generationDateGMT: info.event_time,
+    speed: info.speed,
+    latitude: info.coordinates[0],
+    longitude: info.coordinates[1],
+  };
+
 }
 
 
@@ -286,6 +296,8 @@ async function guardarUltimaPosicion(info) {
 
 
 }
+
+
 
 async function assignVehicle(serviceCode) {
   // Generar token internamente
