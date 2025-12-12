@@ -88,8 +88,7 @@ controller.set_updateruta = async (req, res) => {
                         "Longcenter": null,
                         "ZoomLevel": null,
                         "FKLokCiudadOrigen": req.body.FKLokCiudadOrigen,
-                        "FKLokCiudadDestino": req.body.FKLokCiudadDestino,
-                        "Proyecto": decoded.proyecto
+                        "FKLokCiudadDestino": req.body.FKLokCiudadDestino
                     };
                     console.log(data);
                     let resultado=await sqlconfig.queryProcedure('ICUpdateRutas', data);
