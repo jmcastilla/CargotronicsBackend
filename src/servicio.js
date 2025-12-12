@@ -67,6 +67,28 @@ async function getPlacas() {
   return placas;
 }
 
+async function getPlacasLogitrack() {
+  const consulta = `
+    SELECT TOP (1000) c.FKLokDeviceID
+    FROM LokContractID c
+    INNER JOIN LokDeviceID d ON c.FKLokDeviceID = d.DeviceID
+    WHERE c.LokTipoServicios = 12
+      AND c.Active = 1
+      AND d.FkLokCommOp = 2
+  `;
+
+  const resultado = await sqlconfig.query(consulta);
+
+  if (!resultado.recordset || resultado.recordset.length === 0) {
+    console.log("no hay placas");
+    return [];
+  }
+
+  const placas = resultado.recordset.map(r => r.FKLokDeviceID); // <-- el campo que sea tu placa
+
+  return placas;
+}
+
 
 async function procesarPlacas() {
   const token = await getToken();
@@ -90,6 +112,36 @@ async function procesarPlacas() {
       }
 
       await guardarUltimaPosicion(info);
+      console.log(`Guardado OK para placa ${placa}`);
+    } catch (err) {
+      console.error(`Error procesando placa ${placa}:`, err.message);
+    }
+  }
+
+  return resultados;
+}
+
+async function procesarPlacasLogitrack() {
+  const placas = await getPlacasLogitrack();
+
+  if (placas.length === 0) {
+    console.log('No hay placas para procesar');
+    return [];
+  }
+
+  // Si quieres ir de a una (secuencial, más seguro para no saturar el API):
+  const resultados = [];
+
+  for (const placa of placas) {
+    try {
+      const info = await getUltimaPosicionPorPlacaLogitrack(placa);
+
+      if (!info) {
+        console.log(`Sin info para placa ${placa}`);
+        continue;
+      }
+
+      //await guardarUltimaPosicion(info);
       console.log(`Guardado OK para placa ${placa}`);
     } catch (err) {
       console.error(`Error procesando placa ${placa}:`, err.message);
@@ -146,6 +198,36 @@ async function getUltimaPosicionPorPlaca(placa, token) {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,   // <--- aquí va el token
+      },
+    }
+  );
+
+  // Respuesta típica GraphQL: { data: { last: [...] } }
+  const data = response.data;
+  console.log(response.data);
+
+  if (!data || !data.data || !data.data.last || data.data.last.length === 0) {
+    return null; // no hay datos para esa placa
+  }
+
+  return data.data.last[0]; // primer (y normalmente único) registro
+}
+
+async function getUltimaPosicionPorPlacaLogitrack(placa) {
+
+  const body = {
+    "password": "Trazabilidad2025",
+    "plate": placa,
+    "provider": "logitracs",
+    "username": "trazabilidad@intranscar.com.co"
+  };
+
+  const response = await axios.post(
+    'https://visuallogisticscontroltower.azurewebsites.net/vehicle/location',
+    body,
+    {
+      headers: {
+        'Content-Type': 'application/json' // <--- aquí va el token
       },
     }
   );
@@ -255,4 +337,4 @@ function nowUtcForMysql() {
 
 
 
-module.exports = { procesarPlacas, assignVehicle };
+module.exports = { procesarPlacas, assignVehicle, procesarPlacasLogitrack};
