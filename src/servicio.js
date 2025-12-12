@@ -239,7 +239,7 @@ async function getUltimaPosicionPorPlacaLogitrack(placa) {
   const info = data[plateKey];
   return {
     serviceCode: plateKey,
-    generationDateGMT: info.event_time,
+    generationDateGMT: new Date(info.event_time).toISOString(),
     speed: info.speed,
     latitude: info.coordinates[0],
     longitude: info.coordinates[1],
