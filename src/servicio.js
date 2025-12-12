@@ -214,39 +214,52 @@ async function getUltimaPosicionPorPlaca(placa, token) {
 }
 
 async function getUltimaPosicionPorPlacaLogitrack(placa, usuario, clave) {
-
   const body = {
-    "password": clave,
-    "plate": placa,
-    "provider": "logitracs",
-    "username": usuario
+    password: clave,
+    plate: placa,
+    provider: "logitracs",
+    username: usuario
   };
 
-  console.log(body);
+  try {
+    const response = await axios.post(
+      'https://visuallogisticscontroltower.azurewebsites.net/vehicle/location',
+      body,
+      {
+        headers: {
+          'Content-Type': 'application/json'
+        },
+      }
+    );
 
-  const response = await axios.post(
-    'https://visuallogisticscontroltower.azurewebsites.net/vehicle/location',
-    body,
-    {
-      headers: {
-        'Content-Type': 'application/json'
-      },
+    const data = response.data;
+
+    const plateKey = Object.keys(data)[0];
+    const info = data[plateKey];
+
+    return {
+      serviceCode: plateKey,
+      generationDateGMT: new Date(info.event_time).toISOString(),
+      speed: info.speed,
+      latitude: info.coordinates[0],
+      longitude: info.coordinates[1],
+    };
+
+  } catch (err) {
+
+    // Si la API devolvió un 500
+    if (err.response) {
+      console.error(`Error API Logitrack placa ${placa}:`, err.response.status, err.response.data);
+    } else {
+      // Error de red, timeout, DNS, etc.
+      console.error(`Error Axios placa ${placa}:`, err.message);
     }
-  );
 
-  const data = response.data;
-
-  const plateKey = Object.keys(data)[0];
-  const info = data[plateKey];
-
-  return {
-    serviceCode: plateKey,
-    generationDateGMT: new Date(info.event_time).toISOString(),
-    speed: info.speed,
-    latitude: info.coordinates[0],
-    longitude: info.coordinates[1],
-  };
+    // devolver null para que el for lo ignore
+    return null;
+  }
 }
+
 
 
 
