@@ -234,15 +234,16 @@ async function getUltimaPosicionPorPlacaLogitrack(placa) {
 
   // Respuesta típica GraphQL: { data: { last: [...] } }
   const data = response.data;
-  console.log(response.data);
+
 
   if (!data || !data.data || !data.data.last || data.data.last.length === 0) {
     return null; // no hay datos para esa placa
   }
 
   const plateKey = Object.keys(data)[0];
+  console.log(plateKey);
   const info = data[plateKey];
-
+  console.log(info);
   return {
     serviceCode: plateKey,
     generationDateGMT: info.event_time,
