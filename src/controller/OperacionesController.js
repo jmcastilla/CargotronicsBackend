@@ -1278,7 +1278,7 @@ controller.get_reportescontroldevicexequipo = async (req, res) => {
                         consulta += " guardado AS UltActualizacion, lock, 'GPRS' as source, satelites AS gpsStatus, 4 AS voltages, velocidad AS speed, WSNuevo.Ciudad + ', ' + Departamento AS position, nombreUltGeo as Nombre, ";
                         consulta += " '' AS Compania, '' AS servername FROM WSNuevo";
                         consulta += " WHERE device = '" + device + "' AND DATEADD(MINUTE, -" + utcServidor + ",fecha) BETWEEN '" + inicio + "' AND '" + fin + "' ORDER BY fecha DESC";
-                    }else if(tipo == 9){
+                    }else if(tipo == 9 || tipo == 12){
                         consulta = "SELECT TOP 10000 WSJ701trackMsg.ID, latitud as latitude , longitud as longitude, '' AS DiffTime,  DATEADD(MINUTE, -" + utcServidor + ",datetimenormal) AS eventDateTime, 0 AS csq, ISNULL(evento,'') as event, fklokdeviceid AS device, ";
                         consulta += " DateTimeActualizacion AS UltActualizacion, 'GPRS' as source, '2' AS gpsStatus, ISNULL(ROUND(voltage, 2),3) AS voltages, velocidad AS speed, WSJ701trackMsg.Ciudad + ', ' + Departamento AS position, nombreUltGeo as Nombre, ";
                         consulta += " 'Pendiente' AS Compania, lock, ISNULL(servername,'') AS servername FROM WSJ701trackMsg ";
@@ -1294,6 +1294,7 @@ controller.get_reportescontroldevicexequipo = async (req, res) => {
                         consulta += " 'Pendiente' AS Compania, lock, ISNULL(servername,'') AS servername FROM WSJT301trackMsg ";
                         consulta += " WHERE FKLokDeviceID = '" + device + "' AND DATEADD(MINUTE, -" + utcServidor + ",datetimenormal) BETWEEN '" + inicio + "' AND '" + fin + "' ORDER BY eventDateTime DESC";
                     }
+                    console.log(consulta);
                     let resultado=await sqlconfig.query2(consulta);
                     return res.json({success : true, data : resultado.recordsets[0]});
                 }
