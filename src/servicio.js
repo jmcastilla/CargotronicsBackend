@@ -76,7 +76,9 @@ async function getPlacasLogitrack() {
       AND c.Active = 1
       AND d.FkLokCommOp = 2
       AND d.UsuarioS IS NOT NULL
+      AND LTRIM(RTRIM(d.UsuarioS)) <> ''
       AND d.ClaveS IS NOT NULL
+      AND LTRIM(RTRIM(d.ClaveS)) <> ''
   `;
 
   const resultado = await sqlconfig.query(consulta);
