@@ -1988,7 +1988,7 @@ controller.get_devicegps = async (req, res) => {
                 if (err) {
                     res.json({ success: false, message: 'Failed to authenticate token' });
                 } else {
-                    var consulta = "SELECT DeviceID, FkLokCommOp, FKLokProyecto, UsuarioS, ClaveS FROM LokDeviceID where FKLokTipoEquipo=12";
+                    var consulta = "SELECT DeviceID, FKCtOperadorGPS as FkLokCommOp, FKLokProyecto, UsuarioS, ClaveS FROM LokDeviceID where FKLokTipoEquipo=12";
                     let resultado=await sqlconfig.query(consulta);
                     res.json({success : true, data : resultado.recordsets[0]});
                 }
@@ -2020,13 +2020,13 @@ controller.set_devicegps = async (req, res) => {
                     var claveS= req.body.ClaveS;
                     var consulta="";
                     if(id === -1){
-                      consulta = "INSERT INTO LokDeviceID (DeviceID, FkLokCommOp, FKLokTipoEquipo, FKLokProyecto, Estado, EmpresaActiva, CategoriaTipo, EmpresaFija, Locked, Mounted, LastContractID, UsuarioS, ClaveS) VALUES ("+
+                      consulta = "INSERT INTO LokDeviceID (DeviceID, FKCtOperadorGPS, FKLokTipoEquipo, FKLokProyecto, Estado, EmpresaActiva, CategoriaTipo, EmpresaFija, Locked, Mounted, LastContractID, UsuarioS, ClaveS) VALUES ("+
                       "'"+deviceID+"',"+fkLokCommOp+",12,"+fKLokProyecto+", 1, 2, 2, 2, 0, 1, 'none','"+usuarioS+"','"+claveS+"')";
                       assignVehicle(deviceID)
                             .then(() => console.log("assignVehicle ejecutado correctamente"))
                             .catch(err => console.error("Error en assignVehicle:", err));
                     }else{
-                        consulta = "UPDATE LokDeviceID SET FkLokCommOp="+fkLokCommOp+", UsuarioS='"+usuarioS+"', ClaveS='"+claveS+"' WHERE DeviceID='"+deviceID+"'";
+                        consulta = "UPDATE LokDeviceID SET FKCtOperadorGPS="+fkLokCommOp+", UsuarioS='"+usuarioS+"', ClaveS='"+claveS+"' WHERE DeviceID='"+deviceID+"'";
                     }
                     res.json({success : await sqlconfig.query(consulta)});
                 }

@@ -52,7 +52,7 @@ async function getPlacas() {
     INNER JOIN LokDeviceID d ON c.FKLokDeviceID = d.DeviceID
     WHERE c.LokTipoServicios = 12
       AND c.Active = 1
-      AND d.FkLokCommOp = 1
+      AND d.FKCtOperadorGPS = 1
   `;
 
   const resultado = await sqlconfig.query(consulta);
@@ -68,13 +68,27 @@ async function getPlacas() {
 }
 
 async function getPlacasLogitrack() {
-  const consulta = `
+  /*const consulta = `
     SELECT TOP (1000) c.FKLokDeviceID as placa, d.UsuarioS AS usuario, d.ClaveS AS clave
     FROM LokContractID c
     INNER JOIN LokDeviceID d ON c.FKLokDeviceID = d.DeviceID
     WHERE c.LokTipoServicios = 12
       AND c.Active = 1
       AND d.FkLokCommOp = 2
+      AND d.UsuarioS IS NOT NULL
+      AND LTRIM(RTRIM(d.UsuarioS)) <> ''
+      AND d.ClaveS IS NOT NULL
+      AND LTRIM(RTRIM(d.ClaveS)) <> ''
+  `;*/
+
+  const consulta = `
+    SELECT TOP (1000) c.FKLokDeviceID as placa, d.UsuarioS AS usuario, d.ClaveS AS clave, o.OperadorGPS as provider
+    FROM LokContractID c
+    INNER JOIN LokDeviceID d ON c.FKLokDeviceID = d.DeviceID
+    INNER JOIN CtOperadorGPS o ON o.IdOperadorGPS =d.FKCtOperadorGPS
+    WHERE c.LokTipoServicios = 12
+      AND c.Active = 1
+      AND d.FKCtOperadorGPS <> 1
       AND d.UsuarioS IS NOT NULL
       AND LTRIM(RTRIM(d.UsuarioS)) <> ''
       AND d.ClaveS IS NOT NULL
@@ -131,9 +145,9 @@ async function procesarPlacasLogitrack() {
     return [];
   }
 
-  for (const { placa, usuario, clave } of registros) {
+  for (const { placa, usuario, clave, provider } of registros) {
     try {
-      const info = await getUltimaPosicionPorPlacaLogitrack(placa, usuario, clave);
+      const info = await getUltimaPosicionPorPlacaLogitrack(placa, usuario, clave, provider);
 
       if (!info) {
         console.log(`Sin info para placa ${placa}`);
@@ -213,11 +227,11 @@ async function getUltimaPosicionPorPlaca(placa, token) {
   return data.data.last[0]; // primer (y normalmente único) registro
 }
 
-async function getUltimaPosicionPorPlacaLogitrack(placa, usuario, clave) {
+async function getUltimaPosicionPorPlacaLogitrack(placa, usuario, clave, provider) {
   const body = {
     password: clave,
     plate: placa,
-    provider: "logitracs",
+    provider: provider,
     username: usuario
   };
 
