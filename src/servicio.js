@@ -335,7 +335,8 @@ async function assignVehicle(serviceCode) {
     isEnabled: true
   };
 
-  const url = "https://userintegrationapi.satrack.com/api/UserManager/assignmentVehicle";
+  //const url = "https://userintegrationapi.satrack.com/api/UserManager/assignmentVehicle";
+  const url = "https://visuallogisticscontroltowertest.azurewebsites.net/vehicle/location";
 
   try {
     const response = await axios.post(url, body, {
