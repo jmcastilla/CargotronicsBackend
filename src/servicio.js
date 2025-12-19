@@ -127,7 +127,7 @@ async function procesarPlacas() {
         continue;
       }
 
-      await guardarUltimaPosicion(info);
+      await guardarUltimaPosicion(info, "Satrack");
       console.log(`Guardado OK para placa ${placa}`);
     } catch (err) {
       console.error(`Error procesando placa ${placa}:`, err.message);
@@ -155,7 +155,7 @@ async function procesarPlacasLogitrack() {
       }
 
       console.log(info);
-      await guardarUltimaPosicion(info);
+      await guardarUltimaPosicion(info, provider);
       console.log(`Guardado OK para placa ${placa}`);
 
     } catch (err) {
@@ -257,6 +257,7 @@ async function getUltimaPosicionPorPlacaLogitrack(placa, usuario, clave, provide
       speed: info.speed,
       latitude: info.coordinates[0],
       longitude: info.coordinates[1],
+      provider: provider
     };
 
   } catch (err) {
@@ -277,7 +278,7 @@ async function getUltimaPosicionPorPlacaLogitrack(placa, usuario, clave, provide
 
 
 
-async function guardarUltimaPosicion(info) {
+async function guardarUltimaPosicion(info, provider) {
   if (!info) return;
 
 
@@ -301,8 +302,9 @@ async function guardarUltimaPosicion(info) {
          datetime,
          bat,
          battery,
-         insertDateTime
-       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+         insertDateTime,
+         OperadorGps
+       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
      `;
      console.log(sql);
      const params = [
@@ -313,7 +315,8 @@ async function guardarUltimaPosicion(info) {
        info.generationDateGMT,
        100,
        100,
-       ahora.toISOString()
+       ahora.toISOString(),
+       provider
      ];
      await mysqlPool.execute(sql, params);
 
