@@ -237,7 +237,7 @@ async function getUltimaPosicionPorPlacaLogitrack(placa, usuario, clave, provide
 
   try {
     const response = await axios.post(
-      'https://visuallogisticscontroltower.azurewebsites.net/vehicle/location',
+      'https://visuallogisticscontroltowertest.azurewebsites.net/vehicle/location',
       body,
       {
         headers: {
@@ -335,8 +335,7 @@ async function assignVehicle(serviceCode) {
     isEnabled: true
   };
 
-  //const url = "https://userintegrationapi.satrack.com/api/UserManager/assignmentVehicle";
-  const url = "https://visuallogisticscontroltowertest.azurewebsites.net/vehicle/location";
+  const url = "https://userintegrationapi.satrack.com/api/UserManager/assignmentVehicle";
 
   try {
     const response = await axios.post(url, body, {
