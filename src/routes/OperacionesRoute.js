@@ -3034,7 +3034,7 @@ router.get('/getoperadorgps', OperacionesController.get_operadorgps);
  *                   example: Token is missing
  */
 
-router.get('/getdevicegps', OperacionesController.get_devicegps);
+router.post('/getdevicegps', OperacionesController.get_devicegps);
 /**
  * @swagger
  * /operaciones/setdevicegps:
