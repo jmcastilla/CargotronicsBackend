@@ -2026,6 +2026,7 @@ controller.set_devicegps = async (req, res) => {
                     if(id === -1){
                       consulta = "INSERT INTO LokDeviceID (DeviceID, FKCtOperadorGPS, FKLokTipoEquipo, FKLokProyecto, Estado, EmpresaActiva, CategoriaTipo, EmpresaFija, Locked, Mounted, LastContractID, UsuarioS, ClaveS) VALUES ("+
                       "'"+deviceID+"',"+fkLokCommOp+",12,"+fKLokProyecto+", 1, 2, 2, 2, 0, 1, 'none','"+usuarioS+"','"+claveS+"')";
+                      console.log(consulta);
                       assignVehicle(deviceID)
                             .then(() => console.log("assignVehicle ejecutado correctamente"))
                             .catch(err => console.error("Error en assignVehicle:", err));
