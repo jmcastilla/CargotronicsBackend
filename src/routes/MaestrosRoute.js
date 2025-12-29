@@ -807,6 +807,120 @@ router.post('/setpropietario', MaestrosController.set_propietario);
 router.post('/getvehiculos', MaestrosController.get_vehiculos);
 /**
  * @swagger
+ * /maestros/getgeorutasactivas:
+ *   post:
+ *     summary: Obtener georutas activas por lista de trayectos
+ *     tags:
+ *       - Maestros
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               trayectos:
+ *                 type: string
+ *                 description: Lista de IDs de trayectos separados por coma
+ *                 example: "1,2,3,5"
+ *     responses:
+ *       200:
+ *         description: Listado de georutas activas
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       DescripcionTrayecto:
+ *                         type: string
+ *                         example: "Ruta Norte - Centro"
+ *                       Polyline:
+ *                         type: string
+ *                         example: "encoded_polyline_string"
+ *       401:
+ *         description: Token faltante o inválido
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Token is missing
+ */
+
+router.post('/getgeorutasactivas', MaestrosController.get_georutasactivas);
+
+/**
+ * @swagger
+ * /maestros/existevehiculos:
+ *   post:
+ *     summary: Verifica si existe un vehículo por placa
+ *     tags:
+ *       - Maestros
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               Placa:
+ *                 type: string
+ *                 example: "ABC123"
+ *     responses:
+ *       200:
+ *         description: Resultado de la validación del vehículo
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       Placa:
+ *                         type: string
+ *                         example: "ABC123"
+ *       401:
+ *         description: Token faltante o inválido
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Token is missing
+ */
+
+router.post('/existevehiculos', MaestrosController.existe_vehiculos);
+
+/**
+ * @swagger
  * /maestros/setvehiculo:
  *   post:
  *     summary: Crea o actualiza un vehículo

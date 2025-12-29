@@ -2004,6 +2004,29 @@ controller.get_devicegps = async (req, res) => {
 
 }
 
+controller.existe_devicegps = async (req, res) => {
+    try{
+        var token = req.headers.authorization;
+        if (!token) {
+            res.json({ success: false, message: 'Token is missing' });
+        }else{
+            token = req.headers.authorization.split(' ')[1];
+            jwt.verify(token, 'secret_key', async (err, decoded) => {
+                if (err) {
+                    res.json({ success: false, message: 'Failed to authenticate token' });
+                } else {
+                    var consulta = "SELECT DeviceID FROM LokDeviceID where DeviceID = '"+req.body.Placa+"' and FKLokTipoEquipo=12";
+                    let resultado=await sqlconfig.query(consulta);
+                    res.json({success : true, data : resultado.recordsets[0]});
+                }
+            });
+        }
+    }catch(err){
+        res.json({success : false});
+    }
+
+}
+
 controller.set_devicegps = async (req, res) => {
     try{
         var token = req.headers.authorization;

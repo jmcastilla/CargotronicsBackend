@@ -205,6 +205,29 @@ controller.get_geocercas = async (req, res) => {
     }
 }
 
+controller.get_georutasactivas = async (req, res) => {
+    try{
+        var token = req.headers.authorization;
+        if (!token) {
+            return res.json({ success: false, message: 'Token is missing' });
+        }else{
+            token = req.headers.authorization.split(' ')[1];
+            jwt.verify(token, 'secret_key', async (err, decoded) => {
+                if (err) {
+                    res.json({ success: false, message: 'Failed to authenticate token' });
+                } else {
+                    var consulta="select DescripcionTrayecto, Polyline from Trayectos where IDTrayecto IN ("+req.body.trayectos+")";
+                    //agregar antes el no asignado
+                    let resultado=await sqlconfig.query(consulta);
+                    res.json({success : true, data : resultado.recordsets[0]});
+                }
+            });
+        }
+    }catch(err){
+        res.json({success : false});
+    }
+}
+
 controller.get_locationciudad = async (req, res) => {
     try{
         var token = req.headers.authorization;
@@ -296,6 +319,29 @@ controller.get_vehiculos = async (req, res) => {
                     res.json({ success: false, message: 'Failed to authenticate token' });
                 } else {
                     var consulta="SELECT top 100 idLokVehiculo, Placa, Color, Marca, Linea, Modelo, FkOperadorGPS, FkPropietario FROM LokVehiculos where Placa LIKE '%"+req.body.Placa+"%' ORDER BY idLokVehiculo desc";
+                    //agregar antes el no asignado
+                    let resultado=await sqlconfig.query(consulta);
+                    res.json({success : true, data : resultado.recordsets[0]});
+                }
+            });
+        }
+    }catch(err){
+        res.json({success : false});
+    }
+}
+
+controller.existe_vehiculos = async (req, res) => {
+    try{
+        var token = req.headers.authorization;
+        if (!token) {
+            return res.json({ success: false, message: 'Token is missing' });
+        }else{
+            token = req.headers.authorization.split(' ')[1];
+            jwt.verify(token, 'secret_key', async (err, decoded) => {
+                if (err) {
+                    res.json({ success: false, message: 'Failed to authenticate token' });
+                } else {
+                    var consulta="SELECT Placa FROM LokVehiculos where Placa= '"+req.body.Placa+"'";
                     //agregar antes el no asignado
                     let resultado=await sqlconfig.query(consulta);
                     res.json({success : true, data : resultado.recordsets[0]});
