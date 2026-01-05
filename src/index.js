@@ -410,9 +410,9 @@ app.post('/loginapi', async (req, res) => {
         let pass = req.body.pass;
 
         var consulta = "SELECT UserExt, PwdExt, FkProyecto, FkEmpresa, SessionTimeH FROM CtExternalUsers where UserExt='"+user+"' and PwdExt='"+pass+"' AND ActiveUser=1";
-
+        console.log(consulta);
         let resultado = await sqlconfig.query(consulta);
-
+        console.log(resultado);
         if (resultado.recordset.length > 0) {
             var tokenPayload = {
                 username: user,
