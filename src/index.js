@@ -417,7 +417,7 @@ app.post('/loginapi', async (req, res) => {
             var tokenPayload = {
                 username: user,
                 proyecto: resultado.recordset[0].FKProyecto,
-                idempresa: resultado.recordset[0].FkEmpresa,
+                idempresa2: resultado.recordset[0].FkEmpresa,
                 tiempo: resultado.recordset[0].SessionTimeH,
             };
             var time= resultado.recordset[0].SessionTimeH+"h";
