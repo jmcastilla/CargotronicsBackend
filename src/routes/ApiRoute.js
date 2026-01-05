@@ -4,8 +4,8 @@ const APIController = require('../controller/APIController');
 
 
 
-router.get('/getrutas', APIController.get_rutas);
-router.post('/crearcontrato', APIController.crear_contrato);
+router.get('/api/getrutas', APIController.get_rutas);
+router.post('/api/crearcontrato', APIController.crear_contrato);
 
 
 module.exports = router;
