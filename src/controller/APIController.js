@@ -6,6 +6,7 @@ var sqlconfig = require("../model/dbpool");
 controller.get_rutas = async (req, res) => {
     try{
         var token = req.headers.authorization;
+        console.log(token);
         if (!token) {
             return res.json({ success: false, message: 'Token is missing' });
         }else{
