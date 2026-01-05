@@ -51,6 +51,22 @@ const verifyToken = (req, res, next) => {
   }
 };
 
+const verifyTokenApi = (req, res, next) => {
+  const token = req.headers.authorization;
+  if (token) {
+    jwt.verify(token, 'secret_api', (err, decoded) => {
+      if (err) {
+        return res.status(403).json({ success: false, message: 'Failed to authenticate token' });
+      } else {
+        req.decoded = decoded;
+        next();
+      }
+    });
+  } else {
+    return res.status(403).json({ success: false, message: 'No token provided' });
+  }
+};
+
 const allowedOrigins = [
   'https://infocarga-frontend-jwt-theta.vercel.app',
   'https://infocarga-frontend-jwt-fkp2.vercel.app',
@@ -111,6 +127,7 @@ const operacionesRouters2 = require('./routes/OperacionesRoute2');
 const empresasRouters = require('./routes/EmpresasRoute');
 const dianRouters = require('./routes/DianRoute');
 const usuariosRouters = require('./routes/UsuariosRoute');
+const apiRouters = require('./routes/ApiRoute');
 app.use('/contratos', contratosRouters);
 app.use('/maestros', maestrosRouters);
 app.use('/solicitudes', solicitudesRouters);
@@ -119,6 +136,7 @@ app.use('/operaciones2', operacionesRouters2);
 app.use('/empresas', empresasRouters);
 app.use('/dian', dianRouters);
 app.use('/usuarios', usuariosRouters);
+app.use('/api', apiRouters);
 
 app.post('/enviarnotificacion', async (req, res) => {
   try {
@@ -365,6 +383,50 @@ app.post('/login', async (req, res) => {
             } else {
                 res.json({ success: false, message: 'Password Incorrecto' });
             }
+        } else {
+            res.json({ success: false, message: 'No existe el usuario' });
+        }
+    } catch (err) {
+        console.error('Error en /login:', err);
+        res.json({ success: false, message: err.message || String(err) });
+    }
+});
+
+app.post('/loginapi', async (req, res) => {
+    try {
+        const userAgent = req.headers['user-agent'] || '';
+
+        // Detecta automatización (headless browsers, Selenium, scripts Python, etc.)
+        const patronesBot = /headless|selenium|phantomjs|python|webdriver|curl|node-fetch/i;
+
+        if (patronesBot.test(userAgent) || userAgent.length < 10) {
+            return res.status(403).json({
+                success: false,
+                message: 'Automatización detectada. Acceso denegado.'
+            });
+        }
+
+        let user = req.body.user;
+        let pass = req.body.pass;
+
+        var consulta = "SELECT UserExt, PwdExt, FkProyecto, FkEmpresa, SessionTimeH FROM CtExternalUsers where UserExt='"+user+"' and PwdExt='"+pass+"' AND ActiveUser=1";
+
+        let resultado = await sqlconfig.query(consulta);
+
+        if (resultado.recordset.length > 0) {
+            var tokenPayload = {
+                username: user,
+                proyecto: resultado.recordset[0].FKProyecto,
+                idempresa: resultado.recordset[0].FkEmpresa,
+                tiempo: resultado.recordset[0].SessionTimeH,
+            };
+            var time= resultado.recordset[0].SessionTimeH+"h";
+            const token = jwt.sign(tokenPayload, 'secret_api', { expiresIn: time });
+            res.json({
+                success: true,
+                token,
+                TiempoSesionH: resultado.recordset[0].TiempoSesionH
+            });
         } else {
             res.json({ success: false, message: 'No existe el usuario' });
         }

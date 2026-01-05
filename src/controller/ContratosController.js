@@ -809,7 +809,6 @@ controller.insert_filtro = async (req, res) => {
     }catch(err){
         res.json({success : false});
     }
-
 }
 
 controller.delete_filtro = async (req, res) => {
