@@ -12,6 +12,7 @@ controller.get_rutas = async (req, res) => {
         }else{
             token = req.headers.authorization.split(' ')[1];
             jwt.verify(token, 'secret_api', async (err, decoded) => {
+              console.log(decoded);
                 if (err) {
                     res.json({ success: false, message: 'Failed to authenticate token' });
                 } else {
