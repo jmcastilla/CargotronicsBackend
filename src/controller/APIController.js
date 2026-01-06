@@ -107,6 +107,7 @@ function formatYYYYMMDD_HHMMSS(date) {
 }
 
 async function existePlaca(placa) {
+    console.log(placa);
     const consulta = `
       SELECT DeviceID
       FROM LokDeviceID WHERE DeviceID =${placa}
