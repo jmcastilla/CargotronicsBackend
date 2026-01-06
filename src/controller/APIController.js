@@ -57,14 +57,14 @@ controller.crear_contrato = async (req, res) => {
                                 "FKICRutas": req.body.Ruta,
                                 "Ref": req.body.Ref,
                                 "PlacaTruck": req.body.Placa,
-                                "NombreConductor": NULL,
-                                "NitConductor": NULL,
-                                "MovilConductor": NULL,
+                                "NombreConductor": null,
+                                "NitConductor": null,
+                                "MovilConductor": null,
                                 "ContainerNum": req.body.Contenedor,
-                                "DigitoVerificacion": NULL,
+                                "DigitoVerificacion": null,
                                 "Notas": "CREADO DESDE API CLIENTE",
                                 "FKLokCategoriaServ": 2,
-                                "FKLokModalidadServ": NULL,
+                                "FKLokModalidadServ": null,
                                 "error": { type: sql.Int, dir: sql.Output }
                             };
                             console.log(data);
