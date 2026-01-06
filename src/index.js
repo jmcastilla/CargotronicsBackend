@@ -412,12 +412,13 @@ app.post('/loginapi', async (req, res) => {
         var consulta = "SELECT UserExt, PwdExt, FkProyecto, FkEmpresa, SessionTimeH FROM CtExtenalUsers where UserExt='"+user+"' and PwdExt='"+pass+"' AND ActiveUser=1";
         console.log(consulta);
         let resultado = await sqlconfig.query(consulta);
-        console.log(resultado);
+        let proy = resultado.recordset[0].FKProyecto;
+        console.log(proy);
         if (resultado.recordset.length > 0) {
             var tokenPayload = {
                 username: user,
-                proyecto: resultado.recordset[0].FKProyecto,
-                idempresa2: resultado.recordset[0].FkEmpresa,
+                proyecto: resultado.recordset[0].FkProyecto,
+                idempresa: resultado.recordset[0].FkEmpresa,
                 tiempo: resultado.recordset[0].SessionTimeH,
             };
             var time= resultado.recordset[0].SessionTimeH+"h";
