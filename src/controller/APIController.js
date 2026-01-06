@@ -67,6 +67,7 @@ controller.crear_contrato = async (req, res) => {
                                 "FKLokModalidadServ": NULL,
                                 "error": { type: sql.Int, dir: sql.Output }
                             };
+                            console.log(data);
                             let resultado=await sqlconfig.queryProcedureconoutput('LokCrearContractGeneralMovil', data);
                             var resbool = true;
                             var mensaje = "";
