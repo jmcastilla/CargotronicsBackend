@@ -108,10 +108,8 @@ function formatYYYYMMDD_HHMMSS(date) {
 
 async function existePlaca(placa) {
     const consulta = `
-      SELECT c.FKLokDeviceID
-      FROM LokContractID c
-      INNER JOIN LokDeviceID d ON c.FKLokDeviceID = d.DeviceID
-      WHERE c.LokTipoServicios = 12 AND c.FKLokDeviceID=${placa}
+      SELECT DeviceID
+      FROM LokDeviceID WHERE DeviceID =${placa}
     `;
 
     const resultado = await sqlconfig.query(consulta);
