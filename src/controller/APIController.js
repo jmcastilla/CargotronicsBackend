@@ -44,6 +44,7 @@ controller.crear_contrato = async (req, res) => {
                         res.json({ success: false, message: 'Faltan campos por llenar.' });
                     }else{
                         var valorresultado = await existePlaca(req.body.Placa, decoded.proyecto);
+                        console.log("resultado:   "+valorresultado);
                         if(valorresultado === 1 ){
                             const hoy = new Date();
                             hoy.setHours(hoy.getHours() - 5);
