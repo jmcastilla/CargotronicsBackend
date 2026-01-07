@@ -43,7 +43,8 @@ controller.crear_contrato = async (req, res) => {
                     if(req.body.Placa === '' || req.body.Placa === null){
                         res.json({ success: false, message: 'Faltan campos por llenar.' });
                     }else{
-                        if(await existePlaca(req.body.Placa, decoded.proyecto)){
+                        var valorresultado = await existePlaca(req.body.Placa, decoded.proyecto);
+                        if(valorresultado === 1 ){
                             const hoy = new Date();
                             hoy.setHours(hoy.getHours() - 5);
                             let data = {
@@ -81,8 +82,10 @@ controller.crear_contrato = async (req, res) => {
                             }
                             res.json({success : resbool, data : resultado.recordsets[0], mensaje: mensaje});
 
+                        }else if(valorresultado === 0){
+                            res.json({ success: false, message: 'La placa no existe.' });
                         }else{
-                            res.json({ success: false, message: 'La placa no existe o no esta disponible.' });
+                            res.json({ success: false, message: 'La placa no esta disponible.' });
                         }
                     }
 
@@ -108,20 +111,22 @@ function formatYYYYMMDD_HHMMSS(date) {
 }
 
 async function existePlaca(placa, proyecto) {
-    console.log(placa);
-    const consulta = `
-      SELECT DeviceID
-      FROM LokDeviceID WHERE DeviceID ='${placa}' and FKLokProyecto=${proyecto} and FKLokTipoEquipo=12 and Estado=1
-    `;
+  const consulta = `
+    SELECT TOP 1 DeviceID, Estado
+    FROM LokDeviceID
+    WHERE DeviceID='${placa}'
+      AND FKLokProyecto=${proyecto}
+      AND FKLokTipoEquipo=12
+  `;
 
-    const resultado = await sqlconfig.query(consulta);
+  const resultado = await sqlconfig.query(consulta);
 
-    if (!resultado.recordset || resultado.recordset.length === 0) {
-      console.log("no hay placas");
-      return false;
-    }
+  if (!resultado.recordset || resultado.recordset.length === 0) {
+    return -1;
+  }
 
-    return true;
+  const estado = resultado.recordset[0].Estado;
+  return estado === 1 ? 1 : 2;
 }
 
 
