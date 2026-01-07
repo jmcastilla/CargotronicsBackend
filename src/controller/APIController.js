@@ -43,7 +43,7 @@ controller.crear_contrato = async (req, res) => {
                     if(req.body.Placa === '' || req.body.Placa === null){
                         res.json({ success: false, message: 'Faltan campos por llenar.' });
                     }else{
-                        if(await existePlaca(req.body.Placa)){
+                        if(await existePlaca(req.body.Placa, decoded.proyecto)){
                             const hoy = new Date();
                             hoy.setHours(hoy.getHours() - 5);
                             let data = {
@@ -107,11 +107,11 @@ function formatYYYYMMDD_HHMMSS(date) {
   return `${yyyy}-${MM}-${dd} ${HH}:${mm}:${ss}`;
 }
 
-async function existePlaca(placa) {
+async function existePlaca(placa, proyecto) {
     console.log(placa);
     const consulta = `
       SELECT DeviceID
-      FROM LokDeviceID WHERE DeviceID ='${placa}'
+      FROM LokDeviceID WHERE DeviceID ='${placa}' and FKLokProyecto=${proyecto} and FKLokTipoEquipo=12 and Estado=1 
     `;
 
     const resultado = await sqlconfig.query(consulta);
