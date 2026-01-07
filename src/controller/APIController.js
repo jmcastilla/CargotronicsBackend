@@ -48,6 +48,40 @@ controller.crear_contrato = async (req, res) => {
                     if (esVacio(Placa) || esVacio(Ruta) || esVacio(Ref) || esVacio(Contenedor)) {
                       return res.json({ success: false, message: "Faltan parametros." });
                     }
+
+                    // 2) Tipos y tamaños
+                    // Placa
+                    if (typeof Placa !== "string") {
+                      return res.json({ success: false, message: "Placa debe ser tipo string" });
+                    }
+                    if (Placa.trim().length > 20) {
+                      return res.json({ success: false, message: "Placa supera el máximo de 20 caracteres" });
+                    }
+
+                    // Ref
+                    if (typeof Ref !== "string") {
+                      return res.json({ success: false, message: "Ref debe ser tipo string" });
+                    }
+                    if (Ref.trim().length > 20) {
+                      return res.json({ success: false, message: "Ref supera el máximo de 20 caracteres" });
+                    }
+
+                    // Contenedor
+                    if (typeof Contenedor !== "string") {
+                      return res.json({ success: false, message: "Contenedor debe ser tipo string" });
+                    }
+                    if (Contenedor.trim().length > 20) {
+                      return res.json({ success: false, message: "Contenedor supera el máximo de 20 caracteres" });
+                    }
+
+                    // Ruta (INT)
+                    // Acepta número o string numérico, pero lo convierte a int
+                    const rutaInt = Number.parseInt(Ruta, 10);
+                    if (!Number.isInteger(rutaInt) || String(rutaInt) !== String(Ruta).trim()) {
+                      // Esta condición evita casos como "12.5" o "12abc"
+                      return res.json({ success: false, message: "Ruta debe ser tipo int" });
+                    }
+
                     var valorresultado = await existePlaca(req.body.Placa, decoded.proyecto);
                     console.log("resultado:   "+valorresultado);
                     if(valorresultado === 1 ){
