@@ -40,12 +40,18 @@ controller.crear_contrato = async (req, res) => {
                 if (err) {
                     res.json({ success: false, message: 'Token incorrecto.' });
                 } else {
-                    if(req.body.Placa === '' || req.body.Placa === null){
-                        res.json({ success: false, message: 'Faltan campos por llenar.' });
-                    }else{
-                        var valorresultado = await existePlaca(req.body.Placa, decoded.proyecto);
-                        console.log("resultado:   "+valorresultado);
-                        if(valorresultado === 1 ){
+                    const { Placa, Ruta, Ref, Contenedor } = req.body;
+
+                    const esVacio = (v) =>
+                      v === undefined || v === null || (typeof v === "string" && v.trim() === "");
+
+                    if (esVacio(Placa) || esVacio(Ruta) || esVacio(Ref) || esVacio(Contenedor)) {
+                      return res.json({ success: false, message: "Faltan parametros." });
+                    }
+                    var valorresultado = await existePlaca(req.body.Placa, decoded.proyecto);
+                    console.log("resultado:   "+valorresultado);
+                    if(valorresultado === 1 ){
+                        if(await existeRuta(req.body.Ruta, decoded.proyecto)){
                             const hoy = new Date();
                             hoy.setHours(hoy.getHours() - 5);
                             let data = {
@@ -82,12 +88,15 @@ controller.crear_contrato = async (req, res) => {
                                 mensaje = "El contrato no fue creado, se presento un error.";
                             }
                             res.json({success : resbool, data : resultado.recordsets[0], mensaje: mensaje});
-
-                        }else if(valorresultado === -1){
-                            res.json({ success: false, message: 'La placa no existe.' });
                         }else{
-                            res.json({ success: false, message: 'La placa no esta disponible.' });
+                            res.json({ success: false, message: 'La ruta no existe.' });
                         }
+
+
+                    }else if(valorresultado === -1){
+                        res.json({ success: false, message: 'La placa no existe.' });
+                    }else{
+                        res.json({ success: false, message: 'La placa no esta disponible.' });
                     }
 
                 }
@@ -128,6 +137,23 @@ async function existePlaca(placa, proyecto) {
 
   const estado = resultado.recordset[0].Estado;
   return estado === 1 ? 1 : 2;
+}
+
+async function existeRuta(ruta, proyecto) {
+  const consulta = `
+    SELECT TOP 1 IdRuta
+    FROM ICRutas
+    WHERE FKProyecto=${proyecto}
+      AND IdRuta=${ruta}
+  `;
+
+  const resultado = await sqlconfig.query(consulta);
+
+  if (!resultado.recordset || resultado.recordset.length === 0) {
+    return false;
+  }
+
+  return true;
 }
 
 
