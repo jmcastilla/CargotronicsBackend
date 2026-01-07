@@ -83,7 +83,7 @@ controller.crear_contrato = async (req, res) => {
                             }
                             res.json({success : resbool, data : resultado.recordsets[0], mensaje: mensaje});
 
-                        }else if(valorresultado === 0){
+                        }else if(valorresultado === -1){
                             res.json({ success: false, message: 'La placa no existe.' });
                         }else{
                             res.json({ success: false, message: 'La placa no esta disponible.' });
