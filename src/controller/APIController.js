@@ -82,7 +82,7 @@ controller.crear_contrato = async (req, res) => {
                             res.json({success : resbool, data : resultado.recordsets[0], mensaje: mensaje});
 
                         }else{
-                            res.json({ success: false, message: 'La placa no existe.' });
+                            res.json({ success: false, message: 'La placa no existe o no esta disponible.' });
                         }
                     }
 
@@ -111,7 +111,7 @@ async function existePlaca(placa, proyecto) {
     console.log(placa);
     const consulta = `
       SELECT DeviceID
-      FROM LokDeviceID WHERE DeviceID ='${placa}' and FKLokProyecto=${proyecto} and FKLokTipoEquipo=12 and Estado=1 
+      FROM LokDeviceID WHERE DeviceID ='${placa}' and FKLokProyecto=${proyecto} and FKLokTipoEquipo=12 and Estado=1
     `;
 
     const resultado = await sqlconfig.query(consulta);
