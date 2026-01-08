@@ -2756,6 +2756,62 @@ router.post('/getreportescontroldevice', OperacionesController.get_reportescontr
  *               success: false
  */
 router.post('/getreportescontroldeviceunico', OperacionesController.get_reportescontroldeviceunico);
+
+/**
+ * @swagger
+ * /operaciones/geticonomapcenter:
+ *   post:
+ *     summary: Obtener ícono del map center por dispositivo
+ *     tags:
+ *       - Operaciones
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               Device:
+ *                 type: string
+ *                 description: Identificador del dispositivo GPS
+ *                 example: "455678888"
+ *     responses:
+ *       200:
+ *         description: Ícono asociado al dispositivo
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       icono:
+ *                         type: string
+ *                         example: "truck_online"
+ *       401:
+ *         description: Token faltante o inválido
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Failed to authenticate token
+ */
+
+router.post('/geticonomapcenter', OperacionesController.get_iconomapcenter);
 /**
  * @swagger
  * /operaciones/getkeyapp:
