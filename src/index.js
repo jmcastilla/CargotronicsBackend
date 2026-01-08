@@ -1123,6 +1123,7 @@ const getTraficoGlobal = async () => {
     "ISNULL(CONVERT(varchar,DATEADD(minute,0,c.FechaHoraFin),20), CONVERT(varchar,DATEADD(minute,120,GETDATE()),20)) as fechafin, c.LastMsgLat, c.LastMsgLong, "+
     "d.Locked, c.Active, ISNULL(t.DistanciaReal,0) as DistanciaCompleta, t.Origen, d.FKLokTipoEquipo, "+
     "dbo.Tiempo(DATEDIFF(SECOND, LoksysServerTime, GETUTCDATE())) as Tiempo, DATEDIFF(SECOND, '1970-01-01 00:00:00', LoksysServerTime) as tiempoUnix, "+
+    "dbo.IconoMapcenter(d.DeviceID) as iconmapcenter,"
     "dbo.iconbateria2(ISNULL(ROUND(BatteryVoltage, 2),3), d.FKLokTipoEquipo, c.FKLokDeviceID) as icon_bat, ROUND(BatteryVoltage, 2) as bateria, "+
     "c.LastReportNota, tr.TipoReporte, c.LastReportUbica+ ' ('+CONVERT(NVARCHAR(20), DATEDIFF(MINUTE, LastReportTime, DATEADD(MINUTE,120, GETDATE())))+' min)' as LastReportUbica, "+
     "d.Ciudad+': '+d.Location+ CASE WHEN ContadorGps <> 0 THEN ' ('+CONVERT(NVARCHAR(20), ContadorGps)+')' ELSE '' END as Ciudad, "+
