@@ -698,7 +698,7 @@ controller.get_reportesdevice = async (req, res) => {
                           "allreport": req.body.allreport
                         }
                     }
-                    var procedure="SelectJ701TrackMsg2-prueba"
+                    var procedure="SelectJ701TrackMsg2"
                     if(req.body.tipoequipo == 1){
                         procedure="SelectWSLoksysMsg";
                     }else if(req.body.tipoequipo == 2){
