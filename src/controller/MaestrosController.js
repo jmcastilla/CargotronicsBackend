@@ -52,6 +52,7 @@ controller.set_insertruta = async (req, res) => {
                         "FKLokCiudadDestino": req.body.FKLokCiudadDestino,
                         "Proyecto": decoded.proyecto
                     };
+                    console.log("insert ruta");
                     console.log(data);
                     let resultado=await sqlconfig.queryProcedure('ICInsertRutas', data);
                     console.log(resultado);
@@ -90,6 +91,7 @@ controller.set_updateruta = async (req, res) => {
                         "FKLokCiudadOrigen": req.body.FKLokCiudadOrigen,
                         "FKLokCiudadDestino": req.body.FKLokCiudadDestino
                     };
+                    console.log("update ruta");
                     console.log(data);
                     let resultado=await sqlconfig.queryProcedure('ICUpdateRutas', data);
                     console.log(resultado);
