@@ -1993,7 +1993,7 @@ controller.get_devicegps = async (req, res) => {
                 if (err) {
                     res.json({ success: false, message: 'Failed to authenticate token' });
                 } else {
-                    var consulta = "SELECT TOP 100 DeviceID, FKCtOperadorGPS as FkLokCommOp, FKLokProyecto, UsuarioS, ClaveS FROM LokDeviceID where DeviceID LIKE '%"+req.body.Placa+"%' and FKLokTipoEquipo=12";
+                    var consulta = "SELECT TOP 100 DeviceID, FKCtOperadorGPS as FkLokCommOp, FKLokProyecto, UsuarioS, ClaveS FROM LokDeviceID where DeviceID LIKE '%"+req.body.Placa+"%' and FKLokTipoEquipo=12 and FKLokProyecto="+decoded.proyecto;
                     let resultado=await sqlconfig.query(consulta);
                     res.json({success : true, data : resultado.recordsets[0]});
                 }
