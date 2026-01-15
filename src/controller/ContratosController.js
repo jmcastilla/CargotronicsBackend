@@ -349,6 +349,7 @@ controller.crear_contratomovil = async (req, res) => {
                 if (err) {
                     res.json({ success: false, message: 'Token incorrecto.' });
                 } else {
+                    console.log(req.body);
                     const { Listaequipo, Ruta, Ref, Contenedor, Placa } = req.body;
 
                     const esVacio = (v) =>
