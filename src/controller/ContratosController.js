@@ -418,7 +418,7 @@ controller.crear_contratomovil = async (req, res) => {
                         "MovilConductor": null,
                         "ContainerNum": req.body.Contenedor,
                         "DigitoVerificacion": null,
-                        "Notas": "CREADO DESDE BACKEND CLIENTE",
+                        "Notas": "CREADO DESDE PLATAFORMA",
                         "FKLokCategoriaServ": 2,
                         "FKLokModalidadServ": null,
                         "error": { type: sql.Int, dir: sql.Output }
