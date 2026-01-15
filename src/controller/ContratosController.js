@@ -338,6 +338,132 @@ controller.crear_contrato = async (req, res) => {
     }
 }
 
+controller.crear_contratomovil = async (req, res) => {
+    try{
+        var token = req.headers.authorization;
+        if (!token) {
+            return res.json({ success: false, message: 'Token is missing' });
+        }else{
+            token = req.headers.authorization.split(' ')[1];
+            jwt.verify(token, 'secret_key', async (err, decoded) => {
+                if (err) {
+                    res.json({ success: false, message: 'Token incorrecto.' });
+                } else {
+                    const { Listaequipo, Ruta, Ref, Contenedor, Placa } = req.body;
+
+                    const esVacio = (v) =>
+                      v === undefined || v === null || (typeof v === "string" && v.trim() === "");
+
+                    if (esVacio(Listaequipo) || esVacio(Ruta) || esVacio(Ref) || esVacio(Contenedor) || esVacio(Placa)) {
+                      return res.json({ success: false, message: "Faltan parametros." });
+                    }
+
+                    // 2) Tipos y tamaños
+                    // Placa
+                    if (typeof Listaequipo !== "string") {
+                      return res.json({ success: false, message: "Device debe ser tipo string" });
+                    }
+                    if (Listaequipo.trim().length > 20) {
+                      return res.json({ success: false, message: "Device supera el máximo de 20 caracteres" });
+                    }
+
+                    if (typeof Placa !== "string") {
+                      return res.json({ success: false, message: "Placa debe ser tipo string" });
+                    }
+                    if (Placa.trim().length > 20) {
+                      return res.json({ success: false, message: "Placa supera el máximo de 20 caracteres" });
+                    }
+
+                    // Ref
+                    if (typeof Ref !== "string") {
+                      return res.json({ success: false, message: "Ref debe ser tipo string" });
+                    }
+                    if (Ref.trim().length > 20) {
+                      return res.json({ success: false, message: "Ref supera el máximo de 20 caracteres" });
+                    }
+
+                    // Contenedor
+                    if (typeof Contenedor !== "string") {
+                      return res.json({ success: false, message: "Contenedor debe ser tipo string" });
+                    }
+                    if (Contenedor.trim().length > 20) {
+                      return res.json({ success: false, message: "Contenedor supera el máximo de 20 caracteres" });
+                    }
+
+                    // Ruta (INT)
+                    // Acepta número o string numérico, pero lo convierte a int
+                    const rutaInt = Number.parseInt(Ruta, 10);
+                    if (!Number.isInteger(rutaInt) || String(rutaInt) !== String(Ruta).trim()) {
+                      // Esta condición evita casos como "12.5" o "12abc"
+                      return res.json({ success: false, message: "Ruta debe ser tipo int" });
+                    }
+
+                    if(await existeRuta(req.body.Ruta, decoded.proyecto)){
+                        const hoy = new Date();
+                        hoy.setHours(hoy.getHours() - 5);
+                        let data = {
+                            "DeviceID": req.body.Listaequipo,
+                            "PositionTimestamp": hoy.getTime(),
+                            "LokTipoServicios": req.body.tipoequipo,
+                            "ubicacion": "ORIGEN",
+                            "InicioContrato": formatYYYYMMDD_HHMMSS(hoy),
+                            "UserCreacion": decoded.username,
+                            "Proyecto": decoded.proyecto,
+                            "FKICEmpresa": decoded.idempresa,
+                            "FKICRutas": req.body.Ruta,
+                            "Ref": req.body.Ref,
+                            "PlacaTruck": req.body.Placa,
+                            "NombreConductor": null,
+                            "NitConductor": null,
+                            "MovilConductor": null,
+                            "ContainerNum": req.body.Contenedor,
+                            "DigitoVerificacion": null,
+                            "Notas": "CREADO DESDE BACKEND CLIENTE",
+                            "FKLokCategoriaServ": 2,
+                            "FKLokModalidadServ": null,
+                            "error": { type: sql.Int, dir: sql.Output }
+                        };
+                        console.log(data);
+                        let resultado=await sqlconfig.queryProcedureconoutput('LokCrearContractGeneralMovil', data);
+                        var resbool = true;
+                        var mensaje = "";
+                        if(resultado.returnValue === 1){
+                            resbool = true;
+                            mensaje = "El contrato creado exitosamente.";
+                        }else{
+                            resbool = false;
+                            mensaje = "El contrato no fue creado, se presento un error.";
+                        }
+                        res.json({success : resbool, data : resultado.recordsets[0], mensaje: mensaje});
+                    }else{
+                        res.json({ success: false, message: 'La ruta no existe.' });
+                    }
+
+                }
+            });
+        }
+    }catch(err){
+        res.json({success : false});
+    }
+}
+
+async function existeRuta(ruta, proyecto) {
+  const consulta = `
+    SELECT TOP 1 IdRuta
+    FROM ICRutas
+    WHERE FKProyecto=${proyecto}
+      AND IdRuta=${ruta}
+  `;
+
+  const resultado = await sqlconfig.query(consulta);
+
+  if (!resultado.recordset || resultado.recordset.length === 0) {
+    return false;
+  }
+
+  return true;
+}
+
 controller.crear_contratov = async (req, res) => {
     try{
         var token = req.headers.authorization;
