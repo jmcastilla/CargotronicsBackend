@@ -2343,6 +2343,7 @@ router.post('/getlistadispositivosdisponibles', ContratosController.get_listadis
  */
 
 router.post('/crearcontrato', ContratosController.crear_contrato);
+router.post('/crearcontratomovil', ContratosController.crear_contratomovil);
 /**
  * @swagger
  * /contratos/crearcontratov:
