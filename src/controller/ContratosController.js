@@ -398,7 +398,7 @@ controller.crear_contratomovil = async (req, res) => {
                       // Esta condición evita casos como "12.5" o "12abc"
                       return res.json({ success: false, message: "Ruta debe ser tipo int" });
                     }
-                    
+
                     const hoy = new Date();
                     hoy.setHours(hoy.getHours() - 5);
                     let data = {
@@ -442,6 +442,19 @@ controller.crear_contratomovil = async (req, res) => {
     }catch(err){
         res.json({success : false});
     }
+}
+
+function formatYYYYMMDD_HHMMSS(date) {
+  const pad = (n) => String(n).padStart(2, '0');
+
+  const yyyy = date.getFullYear();
+  const MM = pad(date.getMonth() + 1);
+  const dd = pad(date.getDate());
+  const HH = pad(date.getHours());
+  const mm = pad(date.getMinutes());
+  const ss = pad(date.getSeconds());
+
+  return `${yyyy}-${MM}-${dd} ${HH}:${mm}:${ss}`;
 }
 
 
