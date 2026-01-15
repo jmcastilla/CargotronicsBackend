@@ -398,47 +398,43 @@ controller.crear_contratomovil = async (req, res) => {
                       // Esta condición evita casos como "12.5" o "12abc"
                       return res.json({ success: false, message: "Ruta debe ser tipo int" });
                     }
-
-                    if(await existeRuta(req.body.Ruta, decoded.proyecto)){
-                        const hoy = new Date();
-                        hoy.setHours(hoy.getHours() - 5);
-                        let data = {
-                            "DeviceID": req.body.Listaequipo,
-                            "PositionTimestamp": hoy.getTime(),
-                            "LokTipoServicios": req.body.tipoequipo,
-                            "ubicacion": "ORIGEN",
-                            "InicioContrato": formatYYYYMMDD_HHMMSS(hoy),
-                            "UserCreacion": decoded.username,
-                            "Proyecto": decoded.proyecto,
-                            "FKICEmpresa": decoded.idempresa,
-                            "FKICRutas": req.body.Ruta,
-                            "Ref": req.body.Ref,
-                            "PlacaTruck": req.body.Placa,
-                            "NombreConductor": null,
-                            "NitConductor": null,
-                            "MovilConductor": null,
-                            "ContainerNum": req.body.Contenedor,
-                            "DigitoVerificacion": null,
-                            "Notas": "CREADO DESDE BACKEND CLIENTE",
-                            "FKLokCategoriaServ": 2,
-                            "FKLokModalidadServ": null,
-                            "error": { type: sql.Int, dir: sql.Output }
-                        };
-                        console.log(data);
-                        let resultado=await sqlconfig.queryProcedureconoutput('LokCrearContractGeneralMovil', data);
-                        var resbool = true;
-                        var mensaje = "";
-                        if(resultado.returnValue === 1){
-                            resbool = true;
-                            mensaje = "El contrato creado exitosamente.";
-                        }else{
-                            resbool = false;
-                            mensaje = "El contrato no fue creado, se presento un error.";
-                        }
-                        res.json({success : resbool, data : resultado.recordsets[0], mensaje: mensaje});
+                    
+                    const hoy = new Date();
+                    hoy.setHours(hoy.getHours() - 5);
+                    let data = {
+                        "DeviceID": req.body.Listaequipo,
+                        "PositionTimestamp": hoy.getTime(),
+                        "LokTipoServicios": req.body.tipoequipo,
+                        "ubicacion": "ORIGEN",
+                        "InicioContrato": formatYYYYMMDD_HHMMSS(hoy),
+                        "UserCreacion": decoded.username,
+                        "Proyecto": decoded.proyecto,
+                        "FKICEmpresa": decoded.idempresa,
+                        "FKICRutas": req.body.Ruta,
+                        "Ref": req.body.Ref,
+                        "PlacaTruck": req.body.Placa,
+                        "NombreConductor": null,
+                        "NitConductor": null,
+                        "MovilConductor": null,
+                        "ContainerNum": req.body.Contenedor,
+                        "DigitoVerificacion": null,
+                        "Notas": "CREADO DESDE BACKEND CLIENTE",
+                        "FKLokCategoriaServ": 2,
+                        "FKLokModalidadServ": null,
+                        "error": { type: sql.Int, dir: sql.Output }
+                    };
+                    console.log(data);
+                    let resultado=await sqlconfig.queryProcedureconoutput('LokCrearContractGeneralMovil', data);
+                    var resbool = true;
+                    var mensaje = "";
+                    if(resultado.returnValue === 1){
+                        resbool = true;
+                        mensaje = "El contrato creado exitosamente.";
                     }else{
-                        res.json({ success: false, message: 'La ruta no existe.' });
+                        resbool = false;
+                        mensaje = "El contrato no fue creado, se presento un error.";
                     }
+                    res.json({success : resbool, data : resultado.recordsets[0], mensaje: mensaje});
 
                 }
             });
@@ -448,22 +444,6 @@ controller.crear_contratomovil = async (req, res) => {
     }
 }
 
-async function existeRuta(ruta, proyecto) {
-  const consulta = `
-    SELECT TOP 1 IdRuta
-    FROM ICRutas
-    WHERE FKProyecto=${proyecto}
-      AND IdRuta=${ruta}
-  `;
-
-  const resultado = await sqlconfig.query(consulta);
-
-  if (!resultado.recordset || resultado.recordset.length === 0) {
-    return false;
-  }
-
-  return true;
-}
 
 controller.crear_contratov = async (req, res) => {
     try{
