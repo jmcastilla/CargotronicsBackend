@@ -132,7 +132,7 @@ controller.crear_contrato = async (req, res) => {
                                 "error": { type: sql.Int, dir: sql.Output }
                             };
                             console.log(data);
-                            let resultado=await sqlconfig.queryProcedureconoutput('LokCrearContractGeneralMovil', data);
+                            let resultado=await sqlconfig.queryProcedureconoutput('LokCrearContractGeneralAPI', data);
                             var resbool = true;
                             var mensaje = "";
                             if(resultado.returnValue === 1){
