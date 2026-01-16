@@ -40,12 +40,12 @@ controller.crear_contrato = async (req, res) => {
                 if (err) {
                     res.json({ success: false, message: 'Token incorrecto.' });
                 } else {
-                    const { Placa, Origen, Destino, Ref, Contenedor, Conductor, Telefono } = req.body;
+                    const { Placa, Ruta, Ref, Contenedor } = req.body;
 
                     const esVacio = (v) =>
                       v === undefined || v === null || (typeof v === "string" && v.trim() === "");
 
-                    if (esVacio(Placa) || esVacio(Origen) || esVacio(Destino) || esVacio(Ref) || esVacio(Contenedor) || esVacio(Conductor) || esVacio(Telefono)) {
+                    if (esVacio(Placa) || esVacio(Ruta) || esVacio(Ref) || esVacio(Contenedor)) {
                       return res.json({ success: false, message: "Faltan parametros." });
                     }
 
@@ -74,39 +74,18 @@ controller.crear_contrato = async (req, res) => {
                       return res.json({ success: false, message: "Contenedor supera el máximo de 20 caracteres" });
                     }
 
-                    if (typeof Origen !== "string") {
-                      return res.json({ success: false, message: "Origen debe ser tipo string" });
-                    }
-                    if (Origen.trim().length > 20) {
-                      return res.json({ success: false, message: "Origen supera el máximo de 20 caracteres" });
-                    }
-
-                    if (typeof Destino !== "string") {
-                      return res.json({ success: false, message: "Destino debe ser tipo string" });
-                    }
-                    if (Destino.trim().length > 20) {
-                      return res.json({ success: false, message: "Destino supera el máximo de 20 caracteres" });
-                    }
-
-                    if (typeof Conductor !== "string") {
-                      return res.json({ success: false, message: "Conductor debe ser tipo string" });
-                    }
-                    if (Conductor.trim().length > 20) {
-                      return res.json({ success: false, message: "Conductor supera el máximo de 20 caracteres" });
-                    }
-
-                    if (typeof Telefono !== "string") {
-                      return res.json({ success: false, message: "Telefono debe ser tipo string" });
-                    }
-                    if (Telefono.trim().length > 20) {
-                      return res.json({ success: false, message: "Telefono supera el máximo de 20 caracteres" });
+                    // Ruta (INT)
+                    // Acepta número o string numérico, pero lo convierte a int
+                    const rutaInt = Number.parseInt(Ruta, 10);
+                    if (!Number.isInteger(rutaInt) || String(rutaInt) !== String(Ruta).trim()) {
+                      // Esta condición evita casos como "12.5" o "12abc"
+                      return res.json({ success: false, message: "Ruta debe ser tipo int" });
                     }
 
                     var valorresultado = await existePlaca(req.body.Placa, decoded.proyecto);
                     console.log("resultado:   "+valorresultado);
                     if(valorresultado === 1 ){
-                        var ruta = await existeRuta(req.body.Origen, req.body.Destino, decoded.proyecto)
-                        if(ruta !== -1){
+                        if(await existeRuta(req.body.Ruta, decoded.proyecto)){
                             const hoy = new Date();
                             hoy.setHours(hoy.getHours() - 5);
                             let data = {
@@ -118,12 +97,12 @@ controller.crear_contrato = async (req, res) => {
                                 "UserCreacion": decoded.username,
                                 "Proyecto": decoded.proyecto,
                                 "FKICEmpresa": decoded.idempresa,
-                                "FKICRutas": ruta,
+                                "FKICRutas": req.body.Ruta,
                                 "Ref": req.body.Ref,
                                 "PlacaTruck": req.body.Placa,
-                                "NombreConductor": req.body.Conductor,
+                                "NombreConductor": null,
                                 "NitConductor": null,
-                                "MovilConductor": req.body.Telefono,
+                                "MovilConductor": null,
                                 "ContainerNum": req.body.Contenedor,
                                 "DigitoVerificacion": null,
                                 "Notas": "CREADO DESDE API CLIENTE",
@@ -194,23 +173,21 @@ async function existePlaca(placa, proyecto) {
   return estado === 1 ? 1 : 2;
 }
 
-async function existeRuta(origen, destino, proyecto) {
+async function existeRuta(ruta, proyecto) {
   const consulta = `
-  SELECT TOP 1 r.IdRuta
-  FROM ICRutas as r
-  inner join LokCiudades AS o on o.IDCiudad = r.FKLokCiudadOrigen
-  inner join LokCiudades AS d on d.IDCiudad = r.FKLokCiudadDestino
-  WHERE r.FKProyecto=${proyecto} AND o.NombreCiudad = '${origen}' AND d.NombreCiudad='${destino}'
+    SELECT TOP 1 IdRuta
+    FROM ICRutas
+    WHERE FKProyecto=${proyecto}
+      AND IdRuta=${ruta}
   `;
 
   const resultado = await sqlconfig.query(consulta);
 
   if (!resultado.recordset || resultado.recordset.length === 0) {
-    return -1;
+    return false;
   }
 
-  const ruta = resultado.recordset[0].IdRuta;
-  return ruta;
+  return true;
 }
 
 
