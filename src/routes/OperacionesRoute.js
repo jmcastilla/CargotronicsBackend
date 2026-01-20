@@ -245,6 +245,8 @@ router.post('/setplantilla', OperacionesController.set_plantilla);
 
 router.post('/getplantillas', OperacionesController.get_plantillas);
 router.post('/setrespuestaplantillasinauth', OperacionesController.set_respuestaplantillasinauth);
+
+router.get('/getinviasinformation', OperacionesController.get_inviasinformation);
 /**
  * @swagger
  * /operaciones/getjsonvisuallogistic:

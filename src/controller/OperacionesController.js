@@ -1450,6 +1450,35 @@ controller.set_reportesBI = async (req, res) => {
 
 }
 
+//FUNCION QUE RETORNA EL JSON DE INVIAS
+controller.get_inviasinformation = async (req, res) => {
+    try{
+        var token = req.headers.authorization;
+        if (!token) {
+            return res.json({ success: false, message: 'Token is missing' });
+        }else{
+            token = req.headers.authorization.split(' ')[1];
+            jwt.verify(token, 'secret_key', async (err, decoded) => {
+                if (err) {
+                    res.json({ success: false, message: 'Failed to authenticate token' });
+                } else {
+                    const varEndpoint= `https://hermes2.invias.gov.co/server/rest/services/N_767/Consulta767/MapServer/0/query?where=estado%3D%270%27&outFields=*&f=geojson`;
+                    const response = await axios.get(varEndpoint, null, {
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    });
+
+                    res.json({ success: true, info: response.data });
+                }
+            });
+        }
+    }catch(err){
+        res.json({success : false});
+    }
+
+}
+
 //FUNCION QUE RETORNA EL JSON DE VISUALLOGISTIC
 controller.get_jsonvisuallogistic = async (req, res) => {
     try{
