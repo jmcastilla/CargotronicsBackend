@@ -402,7 +402,7 @@ controller.get_trayectos = async (req, res) => {
                       res.json({ success: false, message: "Invalid proyecto" });
                     }
                     try{
-                        var consulta= "SELECT * FROM Trayectos WHERE FKLokProyecto="+proyecto+" ORDER BY DescripcionTrayecto;";
+                        var consulta= "SELECT * FROM Trayectos WHERE FKLokProyecto="+proyecto+";";
                         let resultado=await sqlconfig.query(consulta);
                         res.json({success : true, data : resultado.recordset});
                     }catch(e){
