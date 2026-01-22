@@ -439,7 +439,6 @@ controller.get_trayectoslist = async (req, res) => {
                         var consulta= "SELECT IDTrayecto, DescripcionTrayecto FROM Trayectos WHERE FKLokProyecto="+proyecto+" ORDER BY DescripcionTrayecto;";
 
                         let resultado=await sqlconfig.query(consulta);
-                        console.log(resultado.recordset);
                         res.json({success : true, data : resultado.recordset});
                     }catch(e){
                         console.error("get_trayectos error:", e?.message || e);
