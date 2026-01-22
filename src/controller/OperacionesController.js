@@ -421,6 +421,41 @@ controller.get_trayectos = async (req, res) => {
 
 }
 
+controller.get_trayectoslist = async (req, res) => {
+    try{
+        var token = req.headers.authorization;
+        if (!token) {
+    		    return res.json({ success: false, message: 'Token is missing' });
+	      }else{
+            token = req.headers.authorization.split(' ')[1];
+            jwt.verify(token, 'secret_key', async (err, decoded) => {
+                if (err) {
+                    res.json({ success: false, message: 'Failed to authenticate token' });
+                } else {
+                    const proyecto = Number(decoded?.proyecto);
+                    if (!Number.isInteger(proyecto) || proyecto <= 0) {
+                      res.json({ success: false, message: "Invalid proyecto" });
+                    }
+                    try{
+                        var consulta= "SELECT IDTrayecto, DescripcionTrayecto FROM Trayectos WHERE FKLokProyecto="+proyecto+" ORDER BY DescripcionTrayecto;";
+
+                        let resultado=await sqlconfig.query(consulta);
+                        console.log(resultado.recordset);
+                        res.json({success : true, data : resultado.recordset});
+                    }catch(e){
+                        console.error("get_trayectos error:", e?.message || e);
+                        res.json({success : false, message: "problemas en la consulta"});
+                    }
+
+                }
+            });
+        }
+    }catch(err){
+        res.json({success : false});
+    }
+
+}
+
 // FUNCION QUE RETORNA EL SECRET KEY DE LA APLICACION
 controller.get_keyApp = async (req, res) => {
     try{

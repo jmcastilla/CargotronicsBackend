@@ -1518,6 +1518,8 @@ router.post('/getpoly', OperacionesController.get_poly);
  *               success: false
  */
 router.get('/gettrayectos', OperacionesController.get_trayectos);
+
+router.get('/gettrayectoslist', OperacionesController.get_trayectoslist);
 /**
  * @swagger
  * /operaciones/geteventos:
