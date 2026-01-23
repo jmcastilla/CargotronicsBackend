@@ -117,7 +117,7 @@ async function procesarPlacas() {
 
   // Si quieres ir de a una (secuencial, más seguro para no saturar el API):
   const resultados = [];
-  console.log(placas);
+  console.log("satrack: "+placas);
   for (const placa of placas) {
     try {
       const info = await getUltimaPosicionPorPlaca(placa, token);
