@@ -101,7 +101,7 @@ async function getPlacasLogitrack() {
     console.log("no hay placas");
     return [];
   }
-  console.warning(resultado.recordset);
+  console.warn(resultado.recordset);
   return resultado.recordset;
 }
 
