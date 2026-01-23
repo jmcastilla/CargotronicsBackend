@@ -154,7 +154,6 @@ async function procesarPlacasLogitrack() {
         continue;
       }
 
-      console.log(info);
       await guardarUltimaPosicion(info, provider);
       console.log(`Guardado OK para placa ${placa}`);
 
@@ -218,7 +217,6 @@ async function getUltimaPosicionPorPlaca(placa, token) {
 
   // Respuesta típica GraphQL: { data: { last: [...] } }
   const data = response.data;
-  console.log(response.data);
 
   if (!data || !data.data || !data.data.last || data.data.last.length === 0) {
     return null; // no hay datos para esa placa
@@ -306,7 +304,6 @@ async function guardarUltimaPosicion(info, provider) {
          OperadorGps
        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
      `;
-     console.log(sql);
      const params = [
        info.serviceCode,
        info.latitude,
