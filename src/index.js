@@ -1485,7 +1485,7 @@ setInterval(checkContratos, Configuracion.TIME_TRAFICO);
         console.error("Error al registrar notificación:", err);
     });*/
 
-    sqlconfig.registerNotification('Sol_Queue', 'Sol_Notifications', async (message) => {
+    /*sqlconfig.registerNotification('Sol_Queue', 'Sol_Notifications', async (message) => {
         console.log("Mensaje procesado:", message);
         await checkSolicitudes();
     });
@@ -1493,7 +1493,7 @@ setInterval(checkContratos, Configuracion.TIME_TRAFICO);
     sqlconfig.registerNotification('Noti_Queue', 'Noti_Notifications', async (message) => {
         console.log("Mensaje procesado:", message);
         await checkNotificaciones();
-    });
+    });*/
 
 
     const PORT = process.env.PORT || Configuracion.PUERTO || 3000;
