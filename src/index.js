@@ -12,6 +12,7 @@ var sqlconfig = require("./model/dbpool");
 const sharp = require('sharp');
 const ffmpeg = require('fluent-ffmpeg');
 const axios = require('axios');
+const http = require('http');
 const XlsxPopulate = require('xlsx-populate');
 const bodyParser = require('body-parser');
 const net = require('net');
@@ -1084,7 +1085,7 @@ app.post('/uploadvideo', upload.array('files'), async (req, res) => {
 /*const wss = new WebSocket.Server({ port: Configuracion.PORT_WS_SOLICITUDES });
 const wss2 = new WebSocket.Server({ port: Configuracion.PORT_WS_TRAFICO });
 const wss3 = new WebSocket.Server({ port: Configuracion.PORT_WS_NOTIFICACIONES });*/
-
+const server = http.createServer(app);
 const wss = new WebSocket.Server({ server, path: "/ws/solicitudes" });
 const wss2 = new WebSocket.Server({ server, path: "/ws/trafico" });
 const wss3 = new WebSocket.Server({ server, path: "/ws/notificaciones" });
@@ -1497,7 +1498,7 @@ setInterval(checkContratos, Configuracion.TIME_TRAFICO);
 
     const PORT = process.env.PORT || Configuracion.PUERTO || 3000;
 
-    app.listen(PORT, () => {
+    server.listen(PORT, () => {
       console.log("Server listening on port:", PORT);
       swaggerDocs(app, PORT);
     });
