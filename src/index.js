@@ -20,7 +20,6 @@ const { Readable } = require('stream');
 const {swaggerDocs} = require('./swagger');
 const { GoogleAuth } = require('google-auth-library');
 const WebSocket = require('ws');
-const PORT = Configuracion.PUERTO;
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage, limits: {fileSize: 100 * 1024 * 1024} });
 
@@ -1491,8 +1490,9 @@ setInterval(checkContratos, Configuracion.TIME_TRAFICO);
     });
 
 
-app.listen(PORT, () =>{
-    console.log("Inicio Server = "+Configuracion.IP_BD+" - "+Configuracion.PUERTO);
+    const PORT = process.env.PORT || Configuracion.PUERTO || 3000;
 
-    swaggerDocs(app,PORT);
-});
+    app.listen(PORT, () => {
+      console.log("Server listening on port:", PORT);
+      swaggerDocs(app, PORT);
+    });
