@@ -30,17 +30,17 @@
   }
 
   const configuracionMix = {
-    IP_BD: "50.57.222.231",
-    NAME_BD: "infocarga",
-    NAME_BD_REPORTES: "reportes2",
-    NAME_BD_FOTOS: "reportes2",
+    IP_BD: "infocargatest.database.windows.net",
+    NAME_BD: "infocargatest",
+    NAME_BD_REPORTES: "reportes3",
+    NAME_BD_FOTOS: "reportes3",
     PUERTO: 3002,
     TIME_TRAFICO: 30000,
     HB_SOLICITUDES: 60000,
     PORT_WS_TRAFICO: 8081,
     PORT_WS_SOLICITUDES: 8080,
     PORT_WS_NOTIFICACIONES: 8083,
-    URL_VISUALLOGISTIC: "visuallogisticstest",
+    URL_VISUALLOGISTIC: "visuallogisticsapp",
   }
 
   module.exports = configuracionMix;
