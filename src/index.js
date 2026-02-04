@@ -1472,8 +1472,8 @@ wss3.on('connection', (ws, req) => {
 });
 
 // Ejecutar la consulta cada 10 segundos
-setInterval(solicitudesHB, Configuracion.HB_SOLICITUDES);
-setInterval(notificacionesHB, Configuracion.HB_SOLICITUDES);
+//setInterval(solicitudesHB, Configuracion.HB_SOLICITUDES);
+//setInterval(notificacionesHB, Configuracion.HB_SOLICITUDES);
 setInterval(checkContratos, Configuracion.TIME_TRAFICO);
 
 /*sqlconfig.registerNotification('SELECT IDSolicitudes FROM LokSolicitudes WHERE FKLokEstados = 2')
