@@ -52,4 +52,4 @@ jobs:
           app-name: 'CargotronicsBackend'
           slot-name: 'Production'
           package: .
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_E7373EED3CE249469B5072585305A97C }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_602EBB2EC0E74052B405FD9CBBBD1A66 }}
