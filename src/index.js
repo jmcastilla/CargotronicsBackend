@@ -1430,7 +1430,7 @@ wss.on('connection', (ws, req) => {
 });
 
 
-wss2.on('connection', (ws, req) => {
+/*wss2.on('connection', (ws, req) => {
     console.log("entro  a ws");
     const token = req.headers['sec-websocket-protocol'];
     if (!token || token === 'undefined') {
@@ -1449,7 +1449,75 @@ wss2.on('connection', (ws, req) => {
             }
         });
     }
+});*/
+
+wss2.on('connection', (ws, req) => {
+  console.log("entro a ws /ws/trafico");
+
+  // 1) Logs clave para saber por qué se cae
+  console.log("REQ Sec-WebSocket-Extensions:", req.headers['sec-websocket-extensions']);
+  console.log("NEGOTIATED ws.extensions:", ws.extensions || "(none)");
+
+  ws.on('error', (e) => {
+    console.log("WS ERROR:", e?.message || e);
+  });
+
+  ws.on('close', (code, reason) => {
+    console.log("WS CLOSE:", code, reason ? reason.toString() : "");
+    clientsTrafico.delete(ws);
+  });
+
+  ws.on('ping', () => console.log("WS PING <- client"));
+  ws.on('pong', () => console.log("WS PONG <- client"));
+
+  // 2) Si quieres ver lo que te manda el cliente (opcional)
+  ws.on('message', (data, isBinary) => {
+    const size = Buffer.byteLength(data);
+    console.log(`WS MESSAGE <- client | bytes=${size} | binary=${!!isBinary}`);
+    // console.log(data.toString()); // descomenta si necesitas ver el contenido
+  });
+
+  // 3) Autenticación por token en Sec-WebSocket-Protocol
+  const token = req.headers['sec-websocket-protocol'];
+
+  if (!token || token === 'undefined') {
+    ws.send(JSON.stringify({ success: false, message: 'Token is missing' }));
+    ws.close(1008, 'Token missing'); // 1008 = Policy Violation
+    return;
+  }
+
+  jwt.verify(token, 'secret_key', (err, decoded) => {
+    if (err) {
+      ws.send(JSON.stringify({ success: false, message: 'Failed to authenticate token' }));
+      ws.close(1008, 'Invalid token');
+      return;
+    }
+
+    ws.decoded = decoded;
+    clientsTrafico.add(ws);
+
+    // 4) Mensaje inicial
+    ws.send(JSON.stringify({ success: true, message: 'Successfully authenticated for contratos' }));
+
+    // 5) Heartbeat (ayuda a detectar caídas por proxy)
+    ws.isAlive = true;
+    ws.on('pong', () => (ws.isAlive = true));
+  });
 });
+
+// ---- Heartbeat global (recomendado) ----
+const intervalHB = setInterval(() => {
+  wss2.clients.forEach((ws) => {
+    if (ws.isAlive === false) {
+      console.log("WS HB: terminate dead socket");
+      return ws.terminate();
+    }
+    ws.isAlive = false;
+    ws.ping();
+  });
+}, 30000);
+
+wss2.on('close', () => clearInterval(intervalHB));
 
 wss3.on('connection', (ws, req) => {
     const token = req.headers['sec-websocket-protocol'];
