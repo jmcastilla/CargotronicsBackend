@@ -1086,10 +1086,10 @@ app.post('/uploadvideo', upload.array('files'), async (req, res) => {
 const wss2 = new WebSocket.Server({ port: Configuracion.PORT_WS_TRAFICO });
 const wss3 = new WebSocket.Server({ port: Configuracion.PORT_WS_NOTIFICACIONES });*/
 const server = http.createServer(app);
-const wss2 = new WebSocket.Server({ server, path: "/ws/trafico" });
-const wss = new WebSocket.Server({ server, path: "/ws/solicitudes" });
+const wss2 = new WebSocket.Server({ server, path: "/ws/trafico", perMessageDeflate: true });
+const wss = new WebSocket.Server({ server, path: "/ws/solicitudes", perMessageDeflate: true });
 
-const wss3 = new WebSocket.Server({ server, path: "/ws/notificaciones" });
+const wss3 = new WebSocket.Server({ server, path: "/ws/notificaciones", perMessageDeflate: true });
 
 //let lastSolicitudId = "2024-10-23 00:00:00"; // Variable para almacenar el último ID procesado
 let clients = new Set(); // Array para almacenar los clientes conectados
