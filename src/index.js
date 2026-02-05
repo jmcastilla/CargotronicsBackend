@@ -1090,12 +1090,13 @@ const server = http.createServer(app);
 const perMessageDeflate = {
   clientNoContextTakeover: true,
   serverNoContextTakeover: true,
+  threshold: 1024,
 };
 
 const wss2 = new WebSocket.Server({ server, path: "/ws/trafico", perMessageDeflate });
 const wss = new WebSocket.Server({ server, path: "/ws/solicitudes", perMessageDeflate });
 
-const wss3 = new WebSocket.Server({ server, path: "/ws/notificaciones", perMessageDeflate: true });
+const wss3 = new WebSocket.Server({ server, path: "/ws/notificaciones", perMessageDeflate });
 
 //let lastSolicitudId = "2024-10-23 00:00:00"; // Variable para almacenar el último ID procesado
 let clients = new Set(); // Array para almacenar los clientes conectados
