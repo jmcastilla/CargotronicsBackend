@@ -1086,8 +1086,14 @@ app.post('/uploadvideo', upload.array('files'), async (req, res) => {
 const wss2 = new WebSocket.Server({ port: Configuracion.PORT_WS_TRAFICO });
 const wss3 = new WebSocket.Server({ port: Configuracion.PORT_WS_NOTIFICACIONES });*/
 const server = http.createServer(app);
-const wss2 = new WebSocket.Server({ server, path: "/ws/trafico", perMessageDeflate: true });
-const wss = new WebSocket.Server({ server, path: "/ws/solicitudes", perMessageDeflate: true });
+
+const perMessageDeflate = {
+  clientNoContextTakeover: true,
+  serverNoContextTakeover: true,
+};
+
+const wss2 = new WebSocket.Server({ server, path: "/ws/trafico", perMessageDeflate });
+const wss = new WebSocket.Server({ server, path: "/ws/solicitudes", perMessageDeflate });
 
 const wss3 = new WebSocket.Server({ server, path: "/ws/notificaciones", perMessageDeflate: true });
 
