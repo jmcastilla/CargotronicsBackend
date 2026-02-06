@@ -70,6 +70,7 @@ const verifyTokenApi = (req, res, next) => {
 const allowedOrigins = [
   'https://infocarga-frontend-jwt-theta.vercel.app',
   'https://infocarga-frontend-jwt-fkp2.vercel.app',
+  'https://infocarga-frontend-jwt-2-6t5m.vercel.app',
   'http://localhost:3000',
   'https://cargotronics.com'
 ];
