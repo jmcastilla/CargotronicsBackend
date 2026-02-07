@@ -67,7 +67,7 @@ var config1 = {
 var config2 = {
     user: 'juan',
     password: 'Logiset.1',
-    server: Configuracion.IP_BD,
+    server: Configuracion.IP2_BD,
     database: Configuracion.NAME_BD_REPORTES,
     synchronize: true,
     trustServerCertificate: true,

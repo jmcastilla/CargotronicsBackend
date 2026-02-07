@@ -30,6 +30,7 @@
   }
 
   const configuracionMix = {
+    IP2_BD: "infocargatest.database.windows.net",
     IP_BD: "infocargatestbr.database.windows.net",
     NAME_BD: "infocargatest",
     NAME_BD_REPORTES: "reportes3",
